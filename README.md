@@ -45,4 +45,3 @@ Django [Django](https://www.djangoproject.com/start/) version 5.1.5
 
 ## 💁‍♀️ Ejemplo de uso
 - Inicia el servidor para desarrollo: `python3 mainRun.py`
-f
