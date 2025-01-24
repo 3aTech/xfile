@@ -1,0 +1,376 @@
+{% load static %}
+
+<!-- Menu -->
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+  <!-- Logo y Marca -->
+  <div class="app-brand demo">
+    <a href="{% url 'home' %}" class="app-brand-link">
+      <span class="app-brand-logo">
+        <img src="{% static '3atech/img/imagotipo.png' %}" alt="Logo" width="40px" class="rounded-circle" />
+      </span>
+      <span class="app-brand-text menu-text fw-bolder ms-2">Arrenda365+</span>
+    </a>
+
+    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+      <i class="bx bx-chevron-left bx-sm align-middle"></i>
+    </a>
+  </div>
+
+  <div class="menu-inner-shadow"></div>
+
+  <ul class="menu-inner py-1">
+    <!-- Dashboard - visible para todos los usuarios autenticados -->
+    {% if user.is_authenticated %}
+    <li class="menu-item">
+      <a href="{% url 'home' %}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-home-circle"></i>
+        <div data-i18n="dashboard">Dashboard</div>
+      </a>
+    </li>
+    {% endif %}
+
+    <!-- Gestión de Arriendos -->
+    {% if perms.gestionar_arriendos %}
+      <li class="menu-header small text-uppercase">
+        <span class="menu-header-text">Gestión de Promoción</span>
+      </li>
+      <li class="menu-item">
+        <a href="javascript:void(0);" class="menu-link menu-toggle">
+          <i class='menu-icon tf-icons bx bx-store-alt'></i>
+          <div data-i18n="promocion_ventas">Promoción y Ventas</div>
+        </a>
+        <ul class="menu-sub">
+          <li class="menu-item">
+            <a href="#" class="menu-link">
+              <div data-i18n="adjudicacines">Adjudicacines</div>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="#" class="menu-link">
+              <div data-i18n="asignaciones">Asignaciones</div>
+            </a>
+          </li>
+        </ul>
+      </li>
+    {% endif %}
+
+        <!-- Gestión de Urbanismos -->
+    {% if perms.gestionar_urbanismos %}
+        <li class="menu-header small text-uppercase">
+          <span class="menu-header-text">Gestión de Urbanismos</span>
+        </li>
+        <li class="menu-item">
+          <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <i class='menu-icon tf-icons bx bx-book'></i>
+            <div data-i18n="arriendos">CMG</div>
+          </a>
+          <ul class="menu-sub">
+            <li class="menu-item">
+              <a href="#" class="menu-link">
+                <div data-i18n="pagos">Lista</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="#" class="menu-link">
+                <div data-i18n="recibos">Reportes</div>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-item">
+          <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <i class='menu-icon tf-icons bx bxs-edit'></i>
+            <div data-i18n="arriendos">Actualizaciones</div>
+          </a>
+          <ul class="menu-sub">
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <div data-i18n="urbanismos">Urbanismos</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="#" class="menu-link">
+                    <div data-i18n="lista">Lista</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="#" class="menu-link">
+                    <div data-i18n="reportes">Reportes</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <div data-i18n="habitantes">Habitantes</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="#" class="menu-link">
+                    <div data-i18n="lista">Lista</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="#" class="menu-link">
+                    <div data-i18n="reportes">Reportes</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-item">
+          <a href="javascript:void(0);" class="menu-link menu-toggle">
+            <i class='menu-icon tf-icons bx bx-message-error'></i>
+            <div data-i18n="arriendos">Incidencias</div>
+          </a>
+          <ul class="menu-sub">
+            <li class="menu-item">
+              <a href="#" class="menu-link">
+                <div data-i18n="pagos">Lista</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="#" class="menu-link">
+                <div data-i18n="recibos">Reportes</div>
+              </a>
+            </li>
+          </ul>
+        </li>
+    {% endif %}
+
+    <!-- Gestión de Arriendos -->
+    {% if perms.gestionar_arriendos %}
+    <li class="menu-header small text-uppercase">
+      <span class="menu-header-text">Gestión de Arriendos</span>
+    </li>
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class='menu-icon tf-icons bx bx-store-alt'></i>
+        <div data-i18n="arriendos">Arriendos</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="pagos">Pagos</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="recibos">Recibos de pago</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class='menu-icon tf-icons bx bx-money'></i>
+        <div data-i18n="monedas">Monedas</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item">
+          <a href="{% url 'moneda_list' %}" class="menu-link">
+            <div data-i18n="lista">Lista</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="tasas">Tasas</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    {% endif %}
+
+    <!-- Datos Maestros -->
+    {% if perms.gestionar_ubicaciones or perms.gestionar_inmuebles %}
+    <li class="menu-header small text-uppercase">
+      <span class="menu-header-text">Datos Maestros</span>
+    </li>
+
+    <!-- Ubicación -->
+    {% if perms.gestionar_ubicaciones %}
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-map-alt"></i>
+        <div data-i18n="ubicacion">Ubicación</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item">
+          <a href="{% url 'pais_list' %}" class="menu-link">
+            <div data-i18n="pais">Países</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'estado_list' %}" class="menu-link">
+            <div data-i18n="estado">Estados</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'ciudad_list' %}" class="menu-link">
+            <div data-i18n="sector">Ciudades</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'municipio_list' %}" class="menu-link">
+            <div data-i18n="municipio">Municipios</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'parroquia_list' %}" class="menu-link">
+            <div data-i18n="parroquia">Parroquias</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'codigo_postal_list' %}" class="menu-link">
+            <div data-i18n="zona-postal">Códigos Postales</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'sector_list' %}" class="menu-link">
+            <div data-i18n="sector">Sectores</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    {% endif %}
+
+    <!-- Inmuebles -->
+    {% if perms.gestionar_inmuebles %}
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-building-house"></i>
+        <div data-i18n="inmuebles">Inmuebles</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item">
+          <a href="{% url 'urbanismo_list' %}" class="menu-link">
+            <div data-i18n="urbanismos">Urbanismos</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'torre_list' %}" class="menu-link">
+            <div data-i18n="torres">Torres</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'ambito_list' %}" class="menu-link">
+            <div data-i18n="ambito">Ámbitos</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'condicionesinmuebles_list' %}" class="menu-link">
+            <div data-i18n="cond_inmueble">Condición del Inmueble</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'tipovivienda_list' %}" class="menu-link">
+            <div data-i18n="tipo_vivienda">Tipos de Vivienda</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'tipoambito_list' %}" class="menu-link">
+            <div data-i18n="tipo_ambito">Tipos de Ámbito</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bxs-group"></i>
+        <div data-i18n="inmuebles">Habitantes</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item">
+          <a href="{% url 'profesion_list' %}" class="menu-link">
+            <div data-i18n="profesiones">Profesiones</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="{% url 'enfermedad_list' %}" class="menu-link">
+            <div data-i18n="enfermedades">Enfermedades</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    {% endif %}
+    {% endif %}
+
+    <!-- Administración del Sistema - Solo para MASTER y SISTEMAS -->
+    {% if perms.administrar_sistema %}
+    <li class="menu-header small text-uppercase">
+      <span class="menu-header-text">Administración</span>
+    </li>
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-user-circle"></i>
+        <div data-i18n="admin">Administración</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="usuarios">Gestión de Usuarios</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="roles">Gestión de Roles</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="permisos">Permisos</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    {% endif %}
+
+    <!-- Configuración personal - visible para todos los usuarios autenticados -->
+    {% if user.is_authenticated %}
+    <li class="menu-header small text-uppercase">
+      <span class="menu-header-text">Configuración</span>
+    </li>
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <i class="menu-icon tf-icons bx bx-cog"></i>
+        <div data-i18n="configuracion-cuenta">Mi Cuenta</div>
+      </a>
+      <ul class="menu-sub">
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="perfil">Mi Perfil</div>
+          </a>
+        </li>
+        <li class="menu-item">
+          <a href="#" class="menu-link">
+            <div data-i18n="cambiar-contrasena">Cambiar Contraseña</div>
+          </a>
+        </li>
+      </ul>
+    </li>
+    {% endif %}
+  </ul>
+</aside>
+<!-- / Menu -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('.menu-item > .menu-link');
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // Remover la clase 'active' de todos los elementos
+        menuItems.forEach(i => i.classList.remove('active open'));
+        // Agregar la clase 'active' al elemento clicado
+        this.classList.add('active open');
+
+        // Manejar la apertura del submenú
+        const submenu = this.nextElementSibling;
+        if (submenu) {
+          submenu.classList.toggle('show');
+        }
+      });
+    });
+  });
+</script>

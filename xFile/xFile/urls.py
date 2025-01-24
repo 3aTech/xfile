@@ -19,6 +19,8 @@ from django.urls import path, include
 from usuario.views import home, LoginView, RegisterView, SignOutView
 
 urlpatterns = [
+    path('', home, name='home'),
+    
     path('admin/', admin.site.urls),
     
     path('formulario/', include('formulario.urls')),

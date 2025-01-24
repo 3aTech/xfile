@@ -16,7 +16,7 @@ def home(request):
     context = {
         'perms': get_user_permissions(request.user)
     }
-    return render(request, 'pages/index.html', context)
+    return render(request, 'index.html', context)
 
 
 # Create your views here.

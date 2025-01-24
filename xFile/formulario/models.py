@@ -19,6 +19,7 @@ class Datos(ModeloAuditoria):
     nombre2 = models.CharField('Nombre 2', max_length=20, help_text='Nombre 2', null=True, blank=True)
     apellido1 = models.CharField('Apellido 1', max_length=20, help_text='Apellido 1')
     apellido2 = models.CharField('Apellido 2', max_length=20, help_text='Apellido 2', null=True, blank=True)
+    urbanismo = models.CharField('Urbanismo', max_length=120, help_text='Urbanismo')
     torre = models.CharField('Torre', max_length=10, help_text='Torre')
     piso = models.CharField('Piso', max_length=8, help_text='Piso')
     apartamento = models.CharField('Apartamento', max_length=8, help_text='Apartamento')
