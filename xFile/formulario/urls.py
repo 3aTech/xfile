@@ -11,5 +11,5 @@ urlpatterns = [
     path('', views.DatosListView.as_view(), name='datos_list'),
     path('crear/', views.DatosCreateView.as_view(), name='dato_create'),
     path('<str:pk>/editar/', views.DatosUpdateView.as_view(), name='dato_update'),
-    path('<str:pk>/eliminar/', views.DatosDeleteView, name='dato_delete'),
+    path('<str:pk>/eliminar/', views.DatosDeleteView.as_view(), name='dato_delete'),
 ]
