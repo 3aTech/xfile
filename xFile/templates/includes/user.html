@@ -1,84 +1,21 @@
-{% load static %}      
+{% load static %}  
 
-<ul class="navbar-nav flex-row align-items-center ms-auto">
-  <!-- Place this tag where you want the button to render. -->
-  <li class="nav-item lh-1 me-3">
-    <a
-      class="github-button"
-      href="https://github.com/3aTech/arrenda-365-plus"
-      data-icon="octicon-star"
-      data-size="large"
-      data-show-count="true"
-      aria-label="Star 3aTech/arrenda-365-plus on GitHub"
-      >Star</a
-    >
-  </li>
-<li class="nav-item navbar-dropdown dropdown-user dropdown">
-  {% if user.is_authenticated %}
-    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-      <div class="avatar avatar-online">
-        {% if user.profile.avatar %}
-          <img src="{{ user.profile.avatar.url }}" alt class="w-px-40 h-auto rounded-circle" />
-        {% else %}
-          <img src="{% static '3atech/media/profile_default.png' %}" alt class="w-px-40 h-auto rounded-circle" />
-        {% endif %}      
-      </div>
-    </a>
-    <ul class="dropdown-menu dropdown-menu-end">
-      <li>
-        <a class="dropdown-item" href="#">
-          <div class="d-flex">
-            <div class="flex-shrink-0 me-3">
-              <div class="avatar avatar-online">
-                {% if user.profile.avatar %}
-                  <img src="{{ user.profile.avatar.url }}" alt class="w-px-40 h-auto rounded-circle" />
-                {% else %}
-                  <img src="{% static '3atech/media/profile_default.png' %}" alt class="w-px-40 h-auto rounded-circle" />
-                {% endif %}
-              </div>
-            </div>
-            <div class="flex-grow-1">
-              <span class="fw-semibold d-block">{{ user.get_full_name }}</span>
-              <small class="text-muted">{{ user.groups.first.name }}</small>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li>
-        <div class="dropdown-divider"></div>
-      </li>
-      <li>
-        <a class="dropdown-item" href="#">
-          <i class="bx bx-user me-2"></i>
-          <span class="align-middle">Mi Perfil</span>
-        </a>
-      </li>
-      <li>
-        <a class="dropdown-item" href="#">
-          <i class="bx bx-cog me-2"></i>
-          <span class="align-middle">Configuración</span>
-        </a>
-      </li>
-      <li>
-        <a class="dropdown-item" href="#">
-          <span class="d-flex align-items-center align-middle">
-            <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-            <span class="flex-grow-1 align-middle">Billing</span>
-            <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-          </span>
-        </a>
-      </li>
-      <li>
-        <div class="dropdown-divider"></div>
-      </li>
-      <li>
-        <a class="dropdown-item" href="{% url 'logout' %}">
-          <i class="bx bx-power-off me-2"></i>
-          <span class="align-middle">Cerrar Sesión</span>
-        </a>
-      </li>
-    </ul>
+<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+  <div class="image">
+    <img src="{% static '3atech/media/profile_default.png' %}" class="img-circle elevation-2" alt="User Image">
+  </div>
+  <div class="info">
+    <a href="#" class="d-block">Alexis Pestano</a>
+  </div>
+</div>
+<!--
+{% if user.is_authenticated %}
+  {% if user.profile.avatar %}
+    <img src="{{ user.profile.avatar.url }}" class="img-circle elevation-2" alt="User Image">
   {% else %}
+    <img src="{% static '3atech/media/profile_default.png' %}" class="img-circle elevation-2" alt="User Image">
+  {% endif %} 
+{% else %}
     <a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="dropdown">
       <span class="align-middle"><i class="tf-icons bx bx-log-in-circle scaleX-n1-rtl me-md-1"></i>Intresar/Registrate</span>
     </a>
@@ -97,4 +34,4 @@
       </li>
     </ul>
   {% endif %}
-</li>
+  -->
