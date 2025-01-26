@@ -27,14 +27,14 @@ class DatosListView(LoginRequiredMixin, ListView):
 
 class DatosCreateView(LoginRequiredMixin, CreateView):
     model = Datos
-    template_name = 'frmRegistro.html'
+    template_name = 'pages/frmDatos.html'
     fields = [
         'serial_cliente', 'sello_dorado', 'cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
         'urbanismo', 'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
         'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
-        'contrato_nro', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo'
+        'contrato_nro', 'us_in'
     ]
     success_url = reverse_lazy('datos_list')
     
@@ -46,20 +46,20 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
 
 class DatosUpdateView(LoginRequiredMixin, UpdateView):
     model = Datos
-    template_name = 'frmRegistro.html'
+    template_name = 'frmDatos.html'
     fields = [
         'sello_dorado', 'cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
-        'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
+        'urbanismo', 'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
         'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
-        'contrato_nro', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo'
+        'contrato_nro', 'us_mo', 'fe_us_mo'
     ]
     success_url = reverse_lazy('datos_list')
     
     def form_valid(self, form):
         form.instance.us_mo = self.request.user.username
-        messages.success(self.request, 'País actualizado exitosamente.')
+        messages.success(self.request, 'Datos actualizado exitosamente.')
         return super().form_valid(form)
 
 class DatosDeleteView(LoginRequiredMixin, DeleteView):
@@ -68,5 +68,5 @@ class DatosDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('datos_list')
     
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, 'País eliminado exitosamente.')
+        messages.success(self.request, 'Datos eliminado exitosamente.')
         return super().delete(request, *args, **kwargs)
