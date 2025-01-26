@@ -2,152 +2,439 @@
 {% load static %}
 
 {% block extrahead %}
-  <!-- Bootstrap Color Picker -->
-  <link rel="stylesheet" href="{% static '3atech/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
-  <!-- Select2 -->
-  <link rel="stylesheet" href="{% static '3atech/plugins/select2/css/select2.min.css' %}">
-  <link rel="stylesheet" href="{% static '3atech/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
-  <!-- Bootstrap4 Duallistbox -->
-  <link rel="stylesheet" href="{% static '3atech/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css' %}">
-  
+<!-- Bootstrap Color Picker -->
+<link rel="stylesheet" href="{% static '3atech/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css' %}">
+<!-- Select2 -->
+<link rel="stylesheet" href="{% static '3atech/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static '3atech/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+<!-- Bootstrap4 Duallistbox -->
+<link rel="stylesheet" href="{% static '3atech/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css' %}">
+
 {% endblock extrahead %}
 
 {% block title %}Agregar Registro{% endblock title %}
 
 {% block contentheader %}
-    <div class="content-header">
-        <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>{% if object %}Actualizar Registro{% else %}Agregar Registro{% endif %}</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'datos_list' %}">Registros</a></li>
-                <li class="breadcrumb-item active">{% if object %}Actualizar{% else %}Agregar{% endif %}</li>
-                </ol>
-            </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-{% endblock contentheader %} 
-   
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1>{% if object %}Actualizar Registro{% else %}Agregar Registro{% endif %}</h1>
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'datos_list' %}">Registros</a></li>
+          <li class="breadcrumb-item active">{% if object %}Actualizar{% else %}Agregar{% endif %}</li>
+        </ol>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
+{% endblock contentheader %}
+
 {% block content %}
-    <div class="card-body">
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card card-default card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Datos para Registrar</h3>
+
+        <div class="card-tools">
+          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+          <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <div class="card-body">
         <form method="post">
-            {% csrf_token %}
-            
-            <div class="mb-3">
+          {% csrf_token %}
+            <div class="row mb-3">
+              <div class="col-md-3">
                 <label for="serial_cliente" class="form-label">Serial Cliente</label>
-                <input type="text" class="form-control" id="serial_cliente" name="serial_cliente" 
-                    value="{{ datos.serial_cliente|default:'' }}" required aria-label="Serial del cliente" {% if object %} readonly {% endif %}>
-            </div>
-            <div class="mb-3">
-                <label for="sello_dorado" class="form-label">Sello Dorado</label>
-                <div class="card-body">
-                    <input type="checkbox" name="sello_dorado" checked data-bootstrap-switch>
-                    <input type="checkbox" name="sello_dorado" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-light fa-qrcode"></i></span>
                   </div>
+                  <input type="text" class="form-control" placeholder="Serial Cliente">
+                </div>
+              </div>
+              <div class="col-md-1">
+                <label for="sello_dorado" class="form-label">Sello Dorado</label>
+                <div class="form-group">
+                  <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                    <input type="checkbox" class="custom-control-input" id="customSwitch3">
+                    <label class="custom-control-label" for="customSwitch3">No/Si</label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="cedula" class="form-label">Cédula</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
+                  </div>
+                  <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="nombre1" class="form-label">Primer Nombre</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>N1</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Primer Nombre">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="nombre2" class="form-label">Segundo Nombre</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>N2</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Segundo Nombre">
+                </div>
+              </div>
             </div>
-                        <!-- Bootstrap Switch -->
-                        <div class="card card-secondary">
-                            <div class="card-header">
-                              <h3 class="card-title">Bootstrap Switch</h3>
-                            </div>
-                            <div class="card-body">
-                              <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch>
-                              <input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">
-                            </div>
-                          </div>
-            <div class="mb-3">
-                <label for="des_urb" class="form-label">Descripción</label>
-                <textarea class="form-control" name="des_urb" id="des_urb" rows="4" cols="60" aria-label="Descripción del urbanismo">{{ datos.des_urb|default:''|slice:":-1" }}</textarea>
+
+            <div class="row mb-3">
+              <div class="col-md-3">
+                <label for="apellido1" class="form-label">Primer Apellido</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>A1</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Primer Apellido">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="apellido2" class="form-label">Segundo Apellido</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>A2</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Segundo Apellido">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="urbanismo" class="form-label">Urbanismo</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-light fa-city"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Urbanismo">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="torre" class="form-label">Torre</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Torre">
+                </div>
+              </div>
+              <div class="col-md-1">
+                <label for="piso" class="form-label">Piso</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Piso">
+                </div>
+              </div>
             </div>
-            
+
+            <div class="row mb-3">
+              <div class="col-md-2">
+                <label for="apartamento" class="form-label">Apartamento</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Apartamento">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="monto_credito" class="form-label">Monto del Crédito Hipotecario a Otorgar</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>Bs.</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Monto del Crédito">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="precio_venta" class="form-label">Precio Venta</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>Bs.</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Precio Venta">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="precio_venta_divisa" class="form-label">Precio Venta en Divisa</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>$/€</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Precio Venta en Divisa">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="inicial" class="form-label">Inicial</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>$/€</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Inicial">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="inicial_porcentaje" class="form-label">Inicial %</label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control"  placeholder="Inicial %">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><b>%</b></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="identificador" class="form-label">Identificado</label>
+                  <select class="form-control select2bs4" style="width: 100%;">
+                    <option>El</option>
+                    <option>La</option>
+                    <option>Los</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="denominara" class="form-label">Denominará</label>
+                  <select class="form-control select2bs4" style="width: 100%;">
+                    <option>Comprador</option>
+                    <option>Compradora</option>
+                    <option>Compradores</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
+                  <select class="form-control select2bs4" style="width: 100%;">
+                    <option>Ciudadano</option>
+                    <option>Ciudadana</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="anios" class="form-label">Años</label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control"  placeholder="Años">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><b>Año(s)</b></span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="meses" class="form-label">Meses</label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control"  placeholder="Meses">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><b>Mes(es)</b></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-2">
+                <label for="cuota_mensual" class="form-label">Cuota Mensuales</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>Bs.</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Cuota Mensual">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="cuota_mensual_divisa" class="form-label">Cuota Mensual en Divisa</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>$/€</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Cuota en Divisa">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="flat" class="form-label">Flat</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>Bs.</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Flat">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="flat_divisa" class="form-label">Flat en Divisa</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>$/€</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Flat en Divisa">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="cuota_financiera" class="form-label">Cuota Financiera Requerida</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>Bs.</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Cuota Financiera">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="cuota_financiera_divisa" class="form-label">Cuota Financiera Requerida en Divisa</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>$/€</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Cuota Financiera en Divisa">
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-2">
+                <label for="fongar" class="form-label">Fongar</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>Bs.</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Fongar">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="fongar_divisa" class="form-label">Fongar en Divisa</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>$/€</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Fongar en Divisa">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="expediente" class="form-label">Nro. Expediente</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>#</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Nro. Expediente">
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="contrato_nro" class="form-label">Nro. Contrato</label>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><b>#</b></span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Nro. Contrato">
+                </div>
+              </div>
+            </div>
+
             <input type="hidden" name="us_in" value="{{ request.user.username }}">
             <button type="submit" class="btn btn-primary">
-                {% if object %}Actualizar Registro{% else %}Guardar{% endif %}
+              {% if object %}Actualizar Registro{% else %}Guardar{% endif %}
             </button>
             <a href="{% url 'datos_list' %}" class="btn btn-secondary">Cancelar</a>
         </form>
-    </div>
+      </div>  
+    </div>  
+  </div>
+</section>
 {% endblock content %}
 
 {% block scripts %}
-    <!-- Select2 -->
-    <script src="{% static '3atech/plugins/select2/js/select2.full.min.js' %}"></script>
-    <!-- Bootstrap Switch -->
-    <script src="{% static '3atech/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+<!-- Select2 -->
+<script src="{% static '3atech/plugins/select2/js/select2.full.min.js' %}"></script>
+<!-- Bootstrap Switch -->
+<script src="{% static '3atech/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
 
-    <!-- Page script -->
+<!-- Page script -->
 <script>
-    $(function () {
-      //Initialize Select2 Elements
-      $('.select2').select2()
-  
-      //Initialize Select2 Elements
-      $('.select2bs4').select2({
-        theme: 'bootstrap4'
-      })
-  
-      //Datemask dd/mm/yyyy
-      $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-      //Datemask2 mm/dd/yyyy
-      $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-      //Money Euro
-      $('[data-mask]').inputmask()
-  
-      //Date range picker
-      $('#reservation').daterangepicker()
-      //Date range picker with time picker
-      $('#reservationtime').daterangepicker({
-        timePicker: true,
-        timePickerIncrement: 30,
-        locale: {
-          format: 'MM/DD/YYYY hh:mm A'
-        }
-      })
-      //Date range as a button
-      $('#daterange-btn').daterangepicker(
-        {
-          ranges   : {
-            'Today'       : [moment(), moment()],
-            'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-            'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-          },
-          startDate: moment().subtract(29, 'days'),
-          endDate  : moment()
-        },
-        function (start, end) {
-          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-        }
-      )
-  
-      //Timepicker
-      $('#timepicker').datetimepicker({
-        format: 'LT'
-      })
-      
-      //Bootstrap Duallistbox
-      $('.duallistbox').bootstrapDualListbox()
-  
-      //Colorpicker
-      $('.my-colorpicker1').colorpicker()
-      //color picker with addon
-      $('.my-colorpicker2').colorpicker()
-  
-      $('.my-colorpicker2').on('colorpickerChange', function(event) {
-        $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-      });
-  
-      $("input[data-bootstrap-switch]").each(function(){
-        $(this).bootstrapSwitch('state', $(this).prop('checked'));
-      });
-  
+  $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
     })
-  </script>
+
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
+
+    //Date range picker
+    $('#reservation').daterangepicker()
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'MM/DD/YYYY hh:mm A'
+      }
+    })
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+      {
+        ranges: {
+          'Today': [moment(), moment()],
+          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month': [moment().startOf('month'), moment().endOf('month')],
+          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment().subtract(29, 'days'),
+        endDate: moment()
+      },
+      function (start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+      }
+    )
+
+    //Timepicker
+    $('#timepicker').datetimepicker({
+      format: 'LT'
+    })
+
+    //Bootstrap Duallistbox
+    $('.duallistbox').bootstrapDualListbox()
+
+    //Colorpicker
+    $('.my-colorpicker1').colorpicker()
+    //color picker with addon
+    $('.my-colorpicker2').colorpicker()
+
+    $('.my-colorpicker2').on('colorpickerChange', function (event) {
+      $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+    });
+
+    $("input[data-bootstrap-switch]").each(function () {
+      $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    });
+
+  })
+</script>
 {% endblock scripts %}
