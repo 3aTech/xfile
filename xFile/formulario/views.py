@@ -15,7 +15,7 @@ from rest_framework import status
 class DatosListView(LoginRequiredMixin, ListView):
     model = Datos
     template_name = 'pages/list_datos.html'
-    context_object_name = 'Registros'
+    context_object_name = 'registros'
     paginate_by = 10
     
     def get_queryset(self):
@@ -34,14 +34,21 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
         'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
-        'contrato_nro', 'us_in'
+        'contrato_nro'
     ]
     success_url = reverse_lazy('datos_list')
     
     def form_valid(self, form):
+        print(form.instance)
         form.instance.us_in = self.request.user.username
         messages.success(self.request, 'Datos creado exitosamente.')
+        print(form.instance)
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        for field, error in form.errors.items():
+            messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
 
 
 class DatosUpdateView(LoginRequiredMixin, UpdateView):

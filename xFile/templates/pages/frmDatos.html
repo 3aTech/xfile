@@ -57,14 +57,18 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-light fa-qrcode"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Serial Cliente">
+                  <input type="text" class="form-control" id="serial_cliente" name="serial_cliente"
+                  value="{{ object.serial_cliente|default:'' }}" required 
+                  aria-label="Serial Cliente" {% if object %} readonly {% endif %}
+                  placeholder="Serial Cliente">
                 </div>
               </div>
               <div class="col-md-1">
                 <label for="sello_dorado" class="form-label">Sello Dorado</label>
                 <div class="form-group">
                   <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch3">
+                    <input type="checkbox" class="custom-control-input" id="customSwitch3" name="sello_dorado" 
+                    {% if object.sello_dorado %} checked {% endif %}>
                     <label class="custom-control-label" for="customSwitch3">No/Si</label>
                   </div>
                 </div>
@@ -75,7 +79,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
                   </div>
-                  <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask>
+                  <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
+                  id="cedula" name="cedula" value="{{ object.cedula|default:'' }}" required aria-label="Cédula">
                 </div>
               </div>
               <div class="col-md-3">
@@ -84,7 +89,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>N1</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Primer Nombre">
+                  <input type="text" class="form-control" id="nombre1" name="nombre1" 
+                  value="{{ object.nombre1|default:'' }}" required 
+                  aria-label="Primer Nombre" placeholder="Primer Nombre">
                 </div>
               </div>
               <div class="col-md-3">
@@ -93,7 +100,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>N2</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Segundo Nombre">
+                  <input type="text" class="form-control" id="nombre2" name="nombre2" 
+                  value="{{ object.nombre2|default:'' }}" required 
+                  aria-label="Segundo Nombre" placeholder="Segundo Nombre">
                 </div>
               </div>
             </div>
@@ -105,7 +114,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>A1</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Primer Apellido">
+                  <input type="text" class="form-control" id="apellido1" name="apellido1" 
+                  value="{{ object.apellido1|default:'' }}" required 
+                  aria-label="Primer Apellido" placeholder="Primer Apellido">
                 </div>
               </div>
               <div class="col-md-3">
@@ -114,7 +125,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>A2</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Segundo Apellido">
+                  <input type="text" class="form-control" id="apellido2" name="apellido2" 
+                  value="{{ object.apellido2|default:'' }}" required 
+                  aria-label="Segundo Apellido" placeholder="Segundo Apellido">
                 </div>
               </div>
               <div class="col-md-3">
@@ -123,7 +136,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-light fa-city"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Urbanismo">
+                  <input type="text" class="form-control" id="urbanismo" name="urbanismo" 
+                  value="{{ object.urbanismo|default:'' }}" required 
+                  aria-label="Urbanismo" placeholder="Urbanismo">
                 </div>
               </div>
               <div class="col-md-2">
@@ -132,7 +147,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Torre">
+                  <input type="text" class="form-control" id="torre" name="torre" 
+                  value="{{ object.torre|default:'' }}" required 
+                  aria-label="Torre" placeholder="Torre">
                 </div>
               </div>
               <div class="col-md-1">
@@ -141,7 +158,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Piso">
+                  <input type="text" class="form-control" id="piso" name="piso" 
+                  value="{{ object.piso|default:'' }}" required 
+                  aria-label="Piso" placeholder="Piso">
                 </div>
               </div>
             </div>
@@ -153,7 +172,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Apartamento">
+                  <input type="text" class="form-control" id="apartamento" name="apartamento" 
+                  value="{{ object.apartamento|default:'' }}" required 
+                  aria-label="Apartamento" placeholder="Apartamento">
                 </div>
               </div>
               <div class="col-md-2">
@@ -162,7 +183,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Monto del Crédito">
+                  <input type="text" class="form-control" id="monto_credito" name="monto_credito" 
+                  value="{{ object.monto_credito|default:'' }}" required 
+                  aria-label="Monto del Crédito" placeholder="Monto del Crédito">
                 </div>
               </div>
               <div class="col-md-2">
@@ -171,7 +194,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Precio Venta">
+                  <input type="text" class="form-control" id="precio_venta" name="precio_venta" 
+                  value="{{ object.precio_venta|default:'' }}" required 
+                  aria-label="Precio Venta" placeholder="Precio Venta">
                 </div>
               </div>
               <div class="col-md-2">
@@ -180,7 +205,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Precio Venta en Divisa">
+                  <input type="text" class="form-control" id="precio_venta_divisa" name="precio_venta_divisa" 
+                  value="{{ object.precio_venta_divisa|default:'' }}" required 
+                  aria-label="Precio Venta en Divisa" placeholder="Precio Venta en Divisa">
                 </div>
               </div>
               <div class="col-md-2">
@@ -189,13 +216,17 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Inicial">
+                  <input type="text" class="form-control" id="inicial" name="inicial" 
+                  value="{{ object.inicial|default:'' }}" required 
+                  aria-label="Inicial" placeholder="Inicial">
                 </div>
               </div>
               <div class="col-md-2">
                 <label for="inicial_porcentaje" class="form-label">Inicial %</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control"  placeholder="Inicial %">
+                  <input type="text" class="form-control" id="inicial_porcentaje" name="inicial_porcentaje" 
+                  value="{{ object.inicial_porcentaje|default:'' }}" required 
+                  aria-label="Inicial %" placeholder="Inicial %">
                   <div class="input-group-append">
                     <span class="input-group-text"><b>%</b></span>
                   </div>
@@ -207,7 +238,13 @@
               <div class="col-md-2">
                 <div class="form-group">
                   <label for="identificador" class="form-label">Identificado</label>
-                  <select class="form-control select2bs4" style="width: 100%;">
+                  <select class="form-control select2bs4" style="width: 100%;" 
+                  id="identificador" name="identificador" required>
+                  {% if object.identificador %} 
+                    <option value="{{ object.identificador|default:'' }} " selected>
+                      {{ object.identificador }}
+                    </option> 
+                  {% endif %}
                     <option>El</option>
                     <option>La</option>
                     <option>Los</option>
@@ -217,7 +254,13 @@
               <div class="col-md-2">
                 <div class="form-group">
                   <label for="denominara" class="form-label">Denominará</label>
-                  <select class="form-control select2bs4" style="width: 100%;">
+                  <select class="form-control select2bs4" style="width: 100%;"
+                  id="denominara" name="denominara" required>
+                  {% if object.denominara %} 
+                    <option value="{{ object.denominara|default:'' }} " selected>
+                      {{ object.denominara }}
+                    </option> 
+                  {% endif %}
                     <option>Comprador</option>
                     <option>Compradora</option>
                     <option>Compradores</option>
@@ -227,7 +270,13 @@
               <div class="col-md-2">
                 <div class="form-group">
                   <label for="ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
-                  <select class="form-control select2bs4" style="width: 100%;">
+                  <select class="form-control select2bs4" style="width: 100%;"
+                  id="ciudadano_ciudadana" name="ciudadano_ciudadana" required>
+                  {% if object.ciudadano_ciudadana %} 
+                    <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
+                      {{ object.ciudadano_ciudadana }}
+                    </option> 
+                  {% endif %}
                     <option>Ciudadano</option>
                     <option>Ciudadana</option>
                   </select>
@@ -236,7 +285,9 @@
               <div class="col-md-2">
                 <label for="anios" class="form-label">Años</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control"  placeholder="Años">
+                  <input type="text" class="form-control" id="anios" name="anios" 
+                  value="{{ object.anios|default:'' }}" required 
+                  aria-label="Años" placeholder="Años">
                   <div class="input-group-append">
                     <span class="input-group-text"><b>Año(s)</b></span>
                   </div>
@@ -245,7 +296,9 @@
               <div class="col-md-2">
                 <label for="meses" class="form-label">Meses</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control"  placeholder="Meses">
+                  <input type="text" class="form-control" id="meses" name="meses" 
+                  value="{{ object.meses|default:'' }}" required 
+                  aria-label="Meses" placeholder="Meses">
                   <div class="input-group-append">
                     <span class="input-group-text"><b>Mes(es)</b></span>
                   </div>
@@ -255,12 +308,14 @@
 
             <div class="row mb-3">
               <div class="col-md-2">
-                <label for="cuota_mensual" class="form-label">Cuota Mensuales</label>
+                <label for="cuota_mensual" class="form-label">Cuotas Mensuales</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Cuota Mensual">
+                  <input type="text" class="form-control" id="cuota_mensual" name="cuota_mensual" 
+                  value="{{ object.cuota_mensual|default:'' }}" required 
+                  aria-label="Cuota Mensual" placeholder="Cuota Mensual">
                 </div>
               </div>
               <div class="col-md-2">
@@ -269,7 +324,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Cuota en Divisa">
+                  <input type="text" class="form-control" id="cuota_mensual_divisa" name="cuota_mensual_divisa" 
+                  value="{{ object.cuota_mensual_divisa|default:'' }}" required 
+                  aria-label="Cuota en Divisa" placeholder="Cuota en Divisa">
                 </div>
               </div>
               <div class="col-md-2">
@@ -278,7 +335,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Flat">
+                  <input type="text" class="form-control" id="flat" name="flat" 
+                  value="{{ object.flat|default:'' }}" required 
+                  aria-label="Flat" placeholder="Flat">
                 </div>
               </div>
               <div class="col-md-2">
@@ -287,7 +346,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Flat en Divisa">
+                  <input type="text" class="form-control" id="flat_divisa" name="flat_divisa" 
+                  value="{{ object.flat_divisa|default:'' }}" required 
+                  aria-label="Flat en Divisa" placeholder="Flat en Divisa">
                 </div>
               </div>
               <div class="col-md-2">
@@ -296,7 +357,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Cuota Financiera">
+                  <input type="text" class="form-control" id="cuota_financiera" name="cuota_financiera" 
+                  value="{{ object.cuota_financiera|default:'' }}" required 
+                  aria-label="Cuota Financiera" placeholder="Cuota Financiera">
                 </div>
               </div>
               <div class="col-md-2">
@@ -305,7 +368,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Cuota Financiera en Divisa">
+                  <input type="text" class="form-control" id="cuota_financiera_divisa" name="cuota_financiera_divisa" 
+                  value="{{ object.cuota_financiera_divisa|default:'' }}" required 
+                  aria-label="Cuota Financiera en Divisa" placeholder="Cuota Financiera en Divisa">
                 </div>
               </div>
             </div>
@@ -317,7 +382,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Fongar">
+                  <input type="text" class="form-control" id="fongar" name="fongar" 
+                  value="{{ object.fongar|default:'' }}" required 
+                  aria-label="Fongar" placeholder="Fongar">
                 </div>
               </div>
               <div class="col-md-2">
@@ -326,7 +393,9 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Fongar en Divisa">
+                  <input type="text" class="form-control" id="fongar_divisa" name="fongar_divisa" 
+                  value="{{ object.fongar_divisa|default:'' }}" required 
+                  aria-label="Fongar en Divisa" placeholder="Fongar en Divisa">
                 </div>
               </div>
               <div class="col-md-2">
@@ -335,7 +404,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>#</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Nro. Expediente">
+                  <input type="text" class="form-control" id="expediente" name="expediente" 
+                  value="{{ object.expediente|default:'' }}" aria-label="Nro. Expediente" placeholder="Nro. Expediente">
                 </div>
               </div>
               <div class="col-md-2">
@@ -344,7 +414,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>#</b></span>
                   </div>
-                  <input type="text" class="form-control" placeholder="Nro. Contrato">
+                  <input type="text" class="form-control" id="contrato_nro" name="contrato_nro" 
+                  value="{{ object.contrato_nro|default:'' }}" aria-label="Nro. Contrato" placeholder="Nro. Contrato">
                 </div>
               </div>
             </div>

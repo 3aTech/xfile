@@ -21,7 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     #Generales
-    #path('', test, name='test'),
+    #path('', home, name='home'),
     # Nueva URL para cerrar sesión
     
 ]
