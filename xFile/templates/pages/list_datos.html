@@ -32,6 +32,7 @@
 </div>
 {% endblock contentheader %} 
 
+{% block total_registros %}{{ total_registros }}{% endblock total_registros %}
 {% block content %}
 <div class="card">
   <div class="card-header d-flex justify-content-end">
@@ -39,11 +40,6 @@
       <i class="fas fa-solid fa-plus me-1"></i>
     </a>
   </div>
-  {% if messages %}
-  <div class="swalDefaultSuccess">
-    {% for message in messages %} {{ message }} {% endfor %}
-  </div>
-  {% endif %}
   <!-- /.card-header -->
   <div class="card-body">
     <table id="example1" class="table table-bordered table-striped">
@@ -135,70 +131,27 @@
                     <p><strong>Urbanismo:</strong> {{ registro.urbanismo }}</p>
                     <p><strong>Torre:</strong> {{ registro.torre }}</p>
                     <p><strong>Piso:</strong> {{ registro.piso }}</p>
-                    <p>
-                      <strong>Apartamento:</strong> {{ registro.apartamento }}
-                    </p>
-                    <p>
-                      <strong>Monto Crédito:</strong> {{ registro.monto_credito
-                      }}
-                    </p>
-                    <p>
-                      <strong>Precio Venta:</strong> {{ registro.precio_venta }}
-                    </p>
-                    <p>
-                      <strong>Precio Venta Divisa:</strong> {{
-                      registro.precio_venta_divisa }}
-                    </p>
+                    <p><strong>Apartamento:</strong> {{ registro.apartamento }}</p>
+                    <p><strong>Monto Crédito:</strong> {{ registro.monto_credito }}</p>
+                    <p><strong>Precio Venta:</strong> {{ registro.precio_venta }}</p>
+                    <p><strong>Precio Venta Divisa:</strong> {{ registro.precio_venta_divisa }}</p>
                     <p><strong>Inicial:</strong> {{ registro.inicial }}</p>
-                    <p>
-                      <strong>% Inicial:</strong> {{ registro.inicial_porcentaje
-                      }}
-                    </p>
-                    <p>
-                      <strong>Identificador:</strong> {{ registro.identificador
-                      }}
-                    </p>
-                    <p>
-                      <strong>Denominará:</strong> {{ registro.denominara }}
-                    </p>
-                    <p>
-                      <strong>Ciudadano(a):</strong> {{
-                      registro.ciudadano_ciudadana }}
-                    </p>
+                    <p><strong>% Inicial:</strong> {{ registro.inicial_porcentaje }}</p>
+                    <p><strong>Identificador:</strong> {{ registro.identificador }}</p>
+                    <p><strong>Denominará:</strong> {{ registro.denominara }} </p>
+                    <p><strong>Ciudadano(a):</strong> {{ registro.ciudadano_ciudadana }}</p>
                     <p><strong>Años:</strong> {{ registro.anios }}</p>
                     <p><strong>Meses:</strong> {{ registro.meses }}</p>
-                    <p>
-                      <strong>Cuotas Mensuales:</strong> {{
-                      registro.cuota_mensual }}
-                    </p>
-                    <p>
-                      <strong>Cuotas Mensuales Divisa:</strong> {{
-                      registro.cuota_mensual_divisa }}
-                    </p>
+                    <p><strong>Cuotas Mensuales:</strong> {{ registro.cuota_mensual }}</p>
+                    <p><strong>Cuotas Mensuales Divisa:</strong> {{ registro.cuota_mensual_divisa }}</p>
                     <p><strong>Flat:</strong> {{ registro.flat }}</p>
-                    <p>
-                      <strong>Flat Divisa:</strong> {{ registro.flat_divisa }}
-                    </p>
-                    <p>
-                      <strong>Cuota Financiera:</strong> {{
-                      registro.cuota_financiera }}
-                    </p>
-                    <p>
-                      <strong>Cuota Financiera Divisa:</strong> {{
-                      registro.cuota_financiera_divisa }}
-                    </p>
+                    <p><strong>Flat Divisa:</strong> {{ registro.flat_divisa }}</p>
+                    <p><strong>Cuota Financiera:</strong> {{ registro.cuota_financiera }} </p>
+                    <p><strong>Cuota Financiera Divisa:</strong> {{ registro.cuota_financiera_divisa }} </p>
                     <p><strong>Fongar:</strong> {{ registro.fongar }}</p>
-                    <p>
-                      <strong>Fongar Divisa:</strong> {{ registro.fongar_divisa
-                      }}
-                    </p>
-                    <p>
-                      <strong>Expediente:</strong> {{ registro.expediente }}
-                    </p>
-                    <p>
-                      <strong>Contrato Nro.:</strong> {{ registro.contrato_nro
-                      }}
-                    </p>
+                    <p><strong>Fongar Divisa:</strong> {{ registro.fongar_divisa }}</p>
+                    <p><strong>Expediente:</strong> {{ registro.expediente }}</p>
+                    <p><strong>Contrato Nro.:</strong> {{ registro.contrato_nro }}</p>
                   </div>
                   <div class="modal-footer">
                     <button

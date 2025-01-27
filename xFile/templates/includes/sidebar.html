@@ -41,34 +41,9 @@
             </li>
           </ul>
         </li>
-        <!--
-        <li class="nav-item has-treeview">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-copy"></i>
-            <p>
-              Layout Options
-              <i class="fas fa-angle-left right"></i>
-              <span class="badge badge-info right">6</span>
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="pages/layout/top-nav.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Top Navigation</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Top Navigation + Sidebar</p>
-              </a>
-            </li>
-          </ul>
-        </li>-->
         <li class="nav-header">REGISTROS</li>
         <li class="nav-item has-treeview menu-open">
-          <a href="pages/widgets.html" class="nav-link active">
+          <a href="#" class="nav-link active">
             <i class="nav-icon fas fa-th"></i>
             <p>
               Formulario <i class="right fas fa-angle-left"></i>
@@ -78,13 +53,19 @@
             <li class="nav-item">
               <a href="{% url 'datos_list' %}" class="nav-link active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Lista <span class="badge badge-info right">2</span></p>
+                <p>Lista <span class="badge badge-info right">{{ total_registros }}</span></p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
+              <a href="#" class="nav-link">
                 <i class="nav-icon far fa-calendar-alt"></i>
-                <p>Reporte <span class="right badge badge-danger">New</span></p>
+                <p>Generar Contratos <span class="right badge badge-success">Nuevo</span></p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="nav-icon far fa-calendar-alt"></i>
+                <p>Reporte <span class="right badge badge-danger">Nuevo</span></p>
               </a>
             </li>
           </ul>

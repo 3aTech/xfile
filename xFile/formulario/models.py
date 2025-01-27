@@ -12,7 +12,7 @@ class ModeloAuditoria(models.Model):
 
 class Datos(ModeloAuditoria):
     """Modelo que representa las monedas."""
-    serial_cliente = models.CharField('Serial', help_text='Serial Cliente', max_length=10, primary_key=True, unique=True)
+    serial_cliente = models.CharField('Serial', help_text='Serial Cliente', max_length=20, primary_key=True, unique=True)
     sello_dorado = models.BooleanField('Sello Dorado', default=False, help_text='Sello Dorado')
     cedula = models.CharField('Cédula', max_length=12, help_text='Cédula')
     nombre1 = models.CharField('Nombre 1', max_length=20, help_text='Nombre 1')

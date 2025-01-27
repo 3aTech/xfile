@@ -24,6 +24,11 @@ class DatosListView(LoginRequiredMixin, ListView):
         if search:
             queryset = queryset.filter(cedula__icontains=search)
         return queryset.order_by('cedula')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+        return context
 
 class DatosCreateView(LoginRequiredMixin, CreateView):
     model = Datos
