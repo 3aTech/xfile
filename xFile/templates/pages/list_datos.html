@@ -1,342 +1,467 @@
-{% extends 'layouts/base.html' %}
-{% load static %}
-
-{% block extrahead %}
-    <!-- DataTables -->
-    <link rel="stylesheet" href="{% static '3atech/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
-    <link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
-{% endblock extrahead %}
-
-{% block title %}Datos Para Contratos{% endblock title %}
-
-{% block contentheader %}
-    <div class="content-header">
-        <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Listado de Datos</h1>
-            </div><!-- /.col -->
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
-                <li class="breadcrumb-item active">Listado de datos</li>
-                </ol>
-            </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+{% extends 'layouts/base.html' %} {% load static %} {% block extrahead %}
+<!-- DataTables -->
+<link
+  rel="stylesheet"
+  href="{% static '3atech/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}"
+/>
+<link
+  rel="stylesheet"
+  href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}"
+/>
+{% endblock extrahead %} {% block title %}Datos Para Contratos{% endblock title
+%} {% block contentheader %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Listado de Datos</h1>
+      </div>
+      <!-- /.col -->
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+          <li class="breadcrumb-item active">Listado de datos</li>
+        </ol>
+      </div>
+      <!-- /.col -->
     </div>
-{% endblock contentheader %} 
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+{% endblock contentheader %} {% block content %}
+<div class="card">
+  <div class="card-header d-flex justify-content-end">
+    <a href="{% url 'dato_create' %}" class="btn btn-primary">
+      <i class="fas fa-solid fa-plus me-1"></i>
+    </a>
+  </div>
+  {% if messages %}
+  <div class="swalDefaultSuccess">
+    {% for message in messages %} {{ message }} {% endfor %}
+  </div>
+  {% endif %}
+  <!-- /.card-header -->
+  <div class="card-body">
+    <table id="example1" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Serial Cliente</th>
+          <th>Sello Dorado</th>
+          <th>Cédula</th>
+          <th>Primer Nombre</th>
+          <th>Segundo Nombre</th>
+          <th>Primer Apellido</th>
+          <th>Segundo Apellido</th>
+          <th>Urbanismo</th>
+          <th>Torre</th>
+          <th>Piso</th>
+          <th>Apartamento</th>
+          <th>Monto Crédito</th>
+          <th>Precio Venta</th>
+          <th>Precio Venta Divisa</th>
+          <th>Inicial</th>
+          <th>% Inicial</th>
+          <th>Identificador</th>
+          <th>Denominará</th>
+          <th>Ciudadano(a)</th>
+          <th>Años</th>
+          <th>Meses</th>
+          <th>Cuotas Mensuales</th>
+          <th>Cuotas Mensuales Divisa</th>
+          <th>Flat</th>
+          <th>Flat Divisa</th>
+          <th>Cuota Financiera</th>
+          <th>Cuota Financiera Divisa</th>
+          <th>Fongar</th>
+          <th>Fongar Divisa</th>
+          <th>Expediente</th>
+          <th>Contrato Nro.</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for registro in registros %}
+        <tr
+          style="cursor: pointer"
+          data-bs-toggle="modal"
+          data-bs-target="#modalRegistro{{ registro.serial_cliente }}"
+        >
+          <td>{{ registro.serial_cliente }}</td>
+          <td>
+            {% if registro.sello_dorado %}
+            <span class="badge bg-success color-palette">Si</span>
+            {% else %}
+            <span class="badge bg-secondary">No</span>
+            {% endif %}
 
-{% block content %}
-    <div class="card">
-        <div class="card-header d-flex justify-content-end">
-            <a href="{% url 'dato_create' %}" class="btn btn-primary">
-                <i class="fas fa-solid fa-plus me-1"></i>
-            </a>
-        </div>
-        {% if messages %}
-          <div class="swalDefaultSuccess">
-            {% for message in messages %}
-              {{ message }}
-            {% endfor %}
-          </div>
-        {% endif %}
-            <!-- /.card-header -->
-            <div class="card-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                  <th>Serial Cliente</th>
-                  <th>Sello Dorado</th>
-                  <th>Cédula</th>
-                  <th>Primer Nombre</th>
-                  <th>Segundo Nombre</th>
-                  <th>Primer Apellido</th>
-                  <th>Segundo Apellido</th>
-                  <th>Urbanismo</th>
-                  <th>Torre</th>
-                  <th>Piso</th>
-                  <th>Apartamento</th>
-                  <th>Monto Crédito</th>
-                  <th>Precio Venta</th>
-                  <th>Precio Venta Divisa</th>
-                  <th>Inicial</th>
-                  <th>% Inicial</th>
-                  <th>Identificador</th>
-                  <th>Denominará</th>
-                  <th>Ciudadano(a)</th>
-                  <th>Años</th>
-                  <th>Meses</th>
-                  <th>Cuotas Mensuales</th>
-                  <th>Cuotas Mensuales Divisa</th>
-                  <th>Flat</th>
-                  <th>Flat Divisa</th>
-                  <th>Cuota Financiera</th>
-                  <th>Cuota Financiera Divisa</th>
-                  <th>Fongar</th>
-                  <th>Fongar Divisa</th>
-                  <th>Expediente</th>
-                  <th>Contrato Nro.</th>
-                </tr>
-                </thead>
-                <tbody>
-                  {% for registro in registros %}
-                    <tr style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modalRegistro{{ registro.serial_cliente }}">
-                      <td>{{ registro.serial_cliente }}</td>
-                      <td>
-                        {% if registro.sello_dorado %}
-                          <span class="badge bg-success color-palette">Si</span>
-                        {% else %}
-                          <span class="badge bg-secondary">No</span>
-                        {% endif %}
-                      </td>
-                      <td>{{ registro.cedula }}</td>
-                      <td>{{ registro.nombre1 }}</td>
-                      <td>{{ registro.nombre2 }}</td>
-                      <td>{{ registro.apellido1 }}</td>
-                      <td>{{ registro.apellido2 }}</td>
-                      <td>{{ registro.urbanismo }}</td>
-                      <td>{{ registro.torre }}</td>
-                      <td>{{ registro.piso }}</td>
-                      <td>{{ registro.apartamento }}</td>
-                      <td>{{ registro.monto_credito }}</td>
-                      <td>{{ registro.precio_venta }}</td>
-                      <td>{{ registro.precio_venta_divisa }}</td>
-                      <td>{{ registro.inicial }}</td>
-                      <td>{{ registro.inicial_porcentaje }}</td>
-                      <td>{{ registro.identificador }}</td>
-                      <td>{{ registro.denominara }}</td>
-                      <td>{{ registro.ciudadano_ciudadana }}</td>
-                      <td>{{ registro.anios }}</td>
-                      <td>{{ registro.meses }}</td>
-                      <td>{{ registro.cuota_mensual }}</td>
-                      <td>{{ registro.cuota_mensual_divisa }}</td>
-                      <td>{{ registro.flat }}</td>
-                      <td>{{ registro.flat_divisa }}</td>
-                      <td>{{ registro.cuota_financiera }}</td>
-                      <td>{{ registro.cuota_financiera_divisa }}</td>
-                      <td>{{ registro.fongar }}</td>
-                      <td>{{ registro.fongar_divisa }}</td>
-                      <td>{{ registro.expediente }}</td>
-                      <td>{{ registro.contrato_nro }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="28" class="text-center">Actualmente no existe registros</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
+            <!-- Modal -->
+            <div
+              class="modal fade"
+              id="modalRegistro{{ registro.serial_cliente }}"
+              tabindex="-1"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                      Detalles del Registro
+                    </h5>
+                    <button
+                      type="button"
+                      class="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+                    >
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>
+                      <strong>Serial Cliente:</strong> {{
+                      registro.serial_cliente }}
+                    </p>
+                    <p>
+                      <strong>Sello Dorado:</strong> {{ registro.sello_dorado }}
+                    </p>
+                    <p><strong>Cédula:</strong> {{ registro.cedula }}</p>
+                    <p><strong>Nombre 1:</strong> {{ registro.nombre1 }}</p>
+                    <p><strong>Nombre 2:</strong> {{ registro.nombre2 }}</p>
+                    <p><strong>Apellido 1:</strong> {{ registro.apellido1 }}</p>
+                    <p><strong>Apellido 2:</strong> {{ registro.apellido2 }}</p>
+                    <p><strong>Urbanismo:</strong> {{ registro.urbanismo }}</p>
+                    <p><strong>Torre:</strong> {{ registro.torre }}</p>
+                    <p><strong>Piso:</strong> {{ registro.piso }}</p>
+                    <p>
+                      <strong>Apartamento:</strong> {{ registro.apartamento }}
+                    </p>
+                    <p>
+                      <strong>Monto Crédito:</strong> {{ registro.monto_credito
+                      }}
+                    </p>
+                    <p>
+                      <strong>Precio Venta:</strong> {{ registro.precio_venta }}
+                    </p>
+                    <p>
+                      <strong>Precio Venta Divisa:</strong> {{
+                      registro.precio_venta_divisa }}
+                    </p>
+                    <p><strong>Inicial:</strong> {{ registro.inicial }}</p>
+                    <p>
+                      <strong>% Inicial:</strong> {{ registro.inicial_porcentaje
+                      }}
+                    </p>
+                    <p>
+                      <strong>Identificador:</strong> {{ registro.identificador
+                      }}
+                    </p>
+                    <p>
+                      <strong>Denominará:</strong> {{ registro.denominara }}
+                    </p>
+                    <p>
+                      <strong>Ciudadano(a):</strong> {{
+                      registro.ciudadano_ciudadana }}
+                    </p>
+                    <p><strong>Años:</strong> {{ registro.anios }}</p>
+                    <p><strong>Meses:</strong> {{ registro.meses }}</p>
+                    <p>
+                      <strong>Cuotas Mensuales:</strong> {{
+                      registro.cuota_mensual }}
+                    </p>
+                    <p>
+                      <strong>Cuotas Mensuales Divisa:</strong> {{
+                      registro.cuota_mensual_divisa }}
+                    </p>
+                    <p><strong>Flat:</strong> {{ registro.flat }}</p>
+                    <p>
+                      <strong>Flat Divisa:</strong> {{ registro.flat_divisa }}
+                    </p>
+                    <p>
+                      <strong>Cuota Financiera:</strong> {{
+                      registro.cuota_financiera }}
+                    </p>
+                    <p>
+                      <strong>Cuota Financiera Divisa:</strong> {{
+                      registro.cuota_financiera_divisa }}
+                    </p>
+                    <p><strong>Fongar:</strong> {{ registro.fongar }}</p>
+                    <p>
+                      <strong>Fongar Divisa:</strong> {{ registro.fongar_divisa
+                      }}
+                    </p>
+                    <p>
+                      <strong>Expediente:</strong> {{ registro.expediente }}
+                    </p>
+                    <p>
+                      <strong>Contrato Nro.:</strong> {{ registro.contrato_nro
+                      }}
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-dismiss="modal"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- /.card-body -->
-          </div>
+          </td>
+          <td>{{ registro.cedula }}</td>
+          <td>{{ registro.nombre1 }}</td>
+          <td>{{ registro.nombre2 }}</td>
+          <td>{{ registro.apellido1 }}</td>
+          <td>{{ registro.apellido2 }}</td>
+          <td>{{ registro.urbanismo }}</td>
+          <td>{{ registro.torre }}</td>
+          <td>{{ registro.piso }}</td>
+          <td>{{ registro.apartamento }}</td>
+          <td>{{ registro.monto_credito }}</td>
+          <td>{{ registro.precio_venta }}</td>
+          <td>{{ registro.precio_venta_divisa }}</td>
+          <td>{{ registro.inicial }}</td>
+          <td>{{ registro.inicial_porcentaje }}</td>
+          <td>{{ registro.identificador }}</td>
+          <td>{{ registro.denominara }}</td>
+          <td>{{ registro.ciudadano_ciudadana }}</td>
+          <td>{{ registro.anios }}</td>
+          <td>{{ registro.meses }}</td>
+          <td>{{ registro.cuota_mensual }}</td>
+          <td>{{ registro.cuota_mensual_divisa }}</td>
+          <td>{{ registro.flat }}</td>
+          <td>{{ registro.flat_divisa }}</td>
+          <td>{{ registro.cuota_financiera }}</td>
+          <td>{{ registro.cuota_financiera_divisa }}</td>
+          <td>{{ registro.fongar }}</td>
+          <td>{{ registro.fongar_divisa }}</td>
+          <td>{{ registro.expediente }}</td>
+          <td>{{ registro.contrato_nro }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="28" class="text-center">
+            Actualmente no existe registros
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- /.card-body -->
+</div>
 
-{% endblock content %}
+{% endblock content %} {% block scripts %}
+<!-- DataTables -->
+<script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
 
-{% block scripts %}
-    <!-- DataTables -->
-    <script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
-    <script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
-    <script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      responsive: true,
+      autoWidth: false,
+      language: {
+        sProcessing: "Procesando...",
+        sLengthMenu: "Mostrar _MENU_ registros",
+        sZeroRecords: "No se encontraron registros",
+        sEmptyTable: "No hay datos disponibles en la tabla",
+        sInfo:
+          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+        sInfoPostFix: "",
+        sSearch: "Buscar:",
+        sUrl: "",
+        sInfoThousands: ",",
+        sLoadingRecords: "Cargando...",
+        oPaginate: {
+          sFirst: "Primero",
+          sLast: "Último",
+          sNext: "Siguiente",
+          sPrevious: "Anterior",
+        },
+        oAria: {
+          sSortAscending:
+            ": Activar para ordenar la columna de manera ascendente",
+          sSortDescending:
+            ": Activar para ordenar la columna de manera descendente",
+        },
+      },
+    });
+    $("#example2").DataTable({
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+    });
+  });
+</script>
 
-    <!-- page script -->
-    <script>
-        $(function () {
-        $("#example1").DataTable({
-            "responsive": true,
-            "autoWidth": false,
-            "language": {
-    "sProcessing": "Procesando...",
-    "sLengthMenu": "Mostrar _MENU_ registros",
-    "sZeroRecords": "No se encontraron registros",
-    "sEmptyTable": "No hay datos disponibles en la tabla",
-    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-    "sInfoPostFix": "",
-    "sSearch": "Buscar:",
-    "sUrl": "",
-    "sInfoThousands": ",",
-    "sLoadingRecords": "Cargando...",
-    "oPaginate": {
-      "sFirst": "Primero",
-      "sLast": "Último",
-      "sNext": "Siguiente",
-      "sPrevious": "Anterior"
-    },
-    "oAria": {
-      "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-    }
-  }
+<script type="text/javascript">
+  $(function () {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+    });
 
-        });
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-        });
-    </script>
-
-    <script type="text/javascript">
-      $(function() {
-        const Toast = Swal.mixin({
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 3000
-        });
-    
-        $('.swalDefaultSuccess').click(function() {
-          Toast.fire({
-            icon: 'success',
-            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.swalDefaultInfo').click(function() {
-          Toast.fire({
-            icon: 'info',
-            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.swalDefaultError').click(function() {
-          Toast.fire({
-            icon: 'error',
-            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.swalDefaultWarning').click(function() {
-          Toast.fire({
-            icon: 'warning',
-            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.swalDefaultQuestion').click(function() {
-          Toast.fire({
-            icon: 'question',
-            title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-    
-        $('.toastrDefaultSuccess').click(function() {
-          toastr.success('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-        });
-        $('.toastrDefaultInfo').click(function() {
-          toastr.info('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-        });
-        $('.toastrDefaultError').click(function() {
-          toastr.error('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-        });
-        $('.toastrDefaultWarning').click(function() {
-          toastr.warning('Lorem ipsum dolor sit amet, consetetur sadipscing elitr.')
-        });
-    
-        $('.toastsDefaultDefault').click(function() {
-          $(document).Toasts('create', {
-            title: 'Toast Title',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultTopLeft').click(function() {
-          $(document).Toasts('create', {
-            title: 'Toast Title',
-            position: 'topLeft',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultBottomRight').click(function() {
-          $(document).Toasts('create', {
-            title: 'Toast Title',
-            position: 'bottomRight',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultBottomLeft').click(function() {
-          $(document).Toasts('create', {
-            title: 'Toast Title',
-            position: 'bottomLeft',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultAutohide').click(function() {
-          $(document).Toasts('create', {
-            title: 'Toast Title',
-            autohide: true,
-            delay: 750,
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultNotFixed').click(function() {
-          $(document).Toasts('create', {
-            title: 'Toast Title',
-            fixed: false,
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultFull').click(function() {
-          $(document).Toasts('create', {
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
-            title: 'Toast Title',
-            subtitle: 'Subtitle',
-            icon: 'fas fa-envelope fa-lg',
-          })
-        });
-        $('.toastsDefaultFullImage').click(function() {
-          $(document).Toasts('create', {
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.',
-            title: 'Toast Title',
-            subtitle: 'Subtitle',
-            image: '../../dist/img/user3-128x128.jpg',
-            imageAlt: 'User Picture',
-          })
-        });
-        $('.toastsDefaultSuccess').click(function() {
-          $(document).Toasts('create', {
-            class: 'bg-success', 
-            title: 'Toast Title',
-            subtitle: 'Subtitle',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultInfo').click(function() {
-          $(document).Toasts('create', {
-            class: 'bg-info', 
-            title: 'Toast Title',
-            subtitle: 'Subtitle',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultWarning').click(function() {
-          $(document).Toasts('create', {
-            class: 'bg-warning', 
-            title: 'Toast Title',
-            subtitle: 'Subtitle',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultDanger').click(function() {
-          $(document).Toasts('create', {
-            class: 'bg-danger', 
-            title: 'Toast Title',
-            subtitle: 'Subtitle',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
-        $('.toastsDefaultMaroon').click(function() {
-          $(document).Toasts('create', {
-            class: 'bg-maroon', 
-            title: 'Toast Title',
-            subtitle: 'Subtitle',
-            body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-          })
-        });
+    $(".swalDefaultSuccess").click(function () {
+      Toast.fire({
+        icon: "success",
+        title: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
       });
-    
-    </script>
+    });
+    $(".swalDefaultInfo").click(function () {
+      Toast.fire({
+        icon: "info",
+        title: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".swalDefaultError").click(function () {
+      Toast.fire({
+        icon: "error",
+        title: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".swalDefaultWarning").click(function () {
+      Toast.fire({
+        icon: "warning",
+        title: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".swalDefaultQuestion").click(function () {
+      Toast.fire({
+        icon: "question",
+        title: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+
+    $(".toastrDefaultSuccess").click(function () {
+      toastr.success(
+        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr."
+      );
+    });
+    $(".toastrDefaultInfo").click(function () {
+      toastr.info("Lorem ipsum dolor sit amet, consetetur sadipscing elitr.");
+    });
+    $(".toastrDefaultError").click(function () {
+      toastr.error("Lorem ipsum dolor sit amet, consetetur sadipscing elitr.");
+    });
+    $(".toastrDefaultWarning").click(function () {
+      toastr.warning(
+        "Lorem ipsum dolor sit amet, consetetur sadipscing elitr."
+      );
+    });
+
+    $(".toastsDefaultDefault").click(function () {
+      $(document).Toasts("create", {
+        title: "Toast Title",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultTopLeft").click(function () {
+      $(document).Toasts("create", {
+        title: "Toast Title",
+        position: "topLeft",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultBottomRight").click(function () {
+      $(document).Toasts("create", {
+        title: "Toast Title",
+        position: "bottomRight",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultBottomLeft").click(function () {
+      $(document).Toasts("create", {
+        title: "Toast Title",
+        position: "bottomLeft",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultAutohide").click(function () {
+      $(document).Toasts("create", {
+        title: "Toast Title",
+        autohide: true,
+        delay: 750,
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultNotFixed").click(function () {
+      $(document).Toasts("create", {
+        title: "Toast Title",
+        fixed: false,
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultFull").click(function () {
+      $(document).Toasts("create", {
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+        title: "Toast Title",
+        subtitle: "Subtitle",
+        icon: "fas fa-envelope fa-lg",
+      });
+    });
+    $(".toastsDefaultFullImage").click(function () {
+      $(document).Toasts("create", {
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+        title: "Toast Title",
+        subtitle: "Subtitle",
+        image: "../../dist/img/user3-128x128.jpg",
+        imageAlt: "User Picture",
+      });
+    });
+    $(".toastsDefaultSuccess").click(function () {
+      $(document).Toasts("create", {
+        class: "bg-success",
+        title: "Toast Title",
+        subtitle: "Subtitle",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultInfo").click(function () {
+      $(document).Toasts("create", {
+        class: "bg-info",
+        title: "Toast Title",
+        subtitle: "Subtitle",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultWarning").click(function () {
+      $(document).Toasts("create", {
+        class: "bg-warning",
+        title: "Toast Title",
+        subtitle: "Subtitle",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultDanger").click(function () {
+      $(document).Toasts("create", {
+        class: "bg-danger",
+        title: "Toast Title",
+        subtitle: "Subtitle",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+    $(".toastsDefaultMaroon").click(function () {
+      $(document).Toasts("create", {
+        class: "bg-maroon",
+        title: "Toast Title",
+        subtitle: "Subtitle",
+        body: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr.",
+      });
+    });
+  });
+</script>
 {% endblock scripts %}
