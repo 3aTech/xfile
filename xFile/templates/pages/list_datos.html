@@ -253,7 +253,7 @@
                       <a class="btn btn-icon btn-outline-primary" href="{% url 'dato_update' registro.serial_cliente %}" title="Editar">
                           <span class="tf-icons bx bx-edit"></span>
                       </a>
-                      <a class="btn btn-icon btn-outline-danger" href="{% url 'dato_delete' registro.serial_cliente %}" title="Eliminar">
+                      <a class="btn btn-icon btn-outline-danger delete-btn" href="{% url 'dato_delete' registro.serial_cliente %}" title="Eliminar">
                           <span class="tf-icons bx bx-trash"></span>
                       </a>
                     </div>
@@ -386,6 +386,45 @@
             });
           }
       {% endfor %}
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $('.delete-btn').on('click', function(e) {
+      e.preventDefault(); // Evitar la acción por defecto del enlace
+
+      const serialCliente = $(this).data('serial-cliente');
+      const url = "{% url 'dato_delete' 'serialClientePlaceholder' %}".replace('serialClientePlaceholder', serialCliente);
+
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+      });
+
+      swalWithBootstrapButtons.fire({
+        title: "¿Estás seguro?",
+        text: "¡No podrás revertir esto!",
+        type: "warning", 
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminarlo!",
+        cancelButtonText: "No, cancelar!",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url; // Redirigir a la URL de eliminación
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelado",
+            text: "El registro está a salvo :)",
+            type: "success" 
+          });
+        }
+      });
+    });
   });
 </script>
 {% endblock scripts %}
