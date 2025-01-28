@@ -447,7 +447,7 @@
               {% if object %}Actualizar Registro{% else %}Guardar{% endif %}
             </button>
             <a href="{% url 'datos_list' %}" class="btn btn-secondary">Cancelar</a>
-            <button type="button" class="btn btn-info swalDefaultSuccess">Info</button>
+            <button type="button" id="btn2" class="btn btn-info">Info</button>
         </form>
       </div>  
     </div>  
@@ -464,143 +464,73 @@
   <!-- Page script -->
   <script>
     $(function () {
-      //Initialize Select2 Elements
-      $('.select2').select2()
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+      });
 
       //Initialize Select2 Elements
       $('.select2bs4').select2({
         theme: 'bootstrap4'
       })
 
-      //Datemask dd/mm/yyyy
-      $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-      //Datemask2 mm/dd/yyyy
-      $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-      //Money Euro
       $('[data-mask]').inputmask()
-
-      //Date range picker
-      $('#reservation').daterangepicker()
-      //Date range picker with time picker
-      $('#reservationtime').daterangepicker({
-        timePicker: true,
-        timePickerIncrement: 30,
-        locale: {
-          format: 'MM/DD/YYYY hh:mm A'
-        }
-      })
-      //Date range as a button
-      $('#daterange-btn').daterangepicker(
-        {
-          ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-          },
-          startDate: moment().subtract(29, 'days'),
-          endDate: moment()
-        },
-        function (start, end) {
-          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-        }
-      )
-
-      //Timepicker
-      $('#timepicker').datetimepicker({
-        format: 'LT'
-      })
-
-      //Bootstrap Duallistbox
-      $('.duallistbox').bootstrapDualListbox()
-
-      //Colorpicker
-      $('.my-colorpicker1').colorpicker()
-      //color picker with addon
-      $('.my-colorpicker2').colorpicker()
-
-      $('.my-colorpicker2').on('colorpickerChange', function (event) {
-        $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-      });
-
+      
       $("input[data-bootstrap-switch]").each(function () {
         $(this).bootstrapSwitch('state', $(this).prop('checked'));
       });
+      // SweetAlert2 example
+      $('#btn4').on('click', function() {
+        Swal.fire({
+          title: "The Internet?",
+          text: "That thing is still around?",
+          icon: "question"
+        });
+        
+      });
+
+      $('#btn3').on('click', function() {
+        Swal.fire({
+          //position: 'top-start', //permite "top-end"
+          type: 'success',
+          title: 'Tú trabajo ha sido grabado',
+          showConfirmButton: false,
+          timer: 2000 //el tiempo que dura el mensaje en ms
+        });    
+      });
+
+      $("#btn2").click(function(){
+        /*Swal.fire({
+            //error
+            type: 'error',
+            title: 'Error',
+            text: '¡Algo salió mal!',        
+        });
+        Swal.fire({        
+            type: 'warning',
+            title: 'Éxito',
+            text: '¡Perfecto!',        
+        });
+        Swal.fire({        
+            type: 'success',
+            title: 'Éxito',
+            text: '¡Perfecto!',        
+        });
+        Swal.fire({        
+            type: 'info',
+            title: 'Éxito',
+            text: '¡Perfecto!',        
+        });
+        */
+        Swal.fire({        
+            type: 'question',
+            title: 'Éxito',
+            text: '¡Perfecto!',        
+        });
+    });	
 
     })
   </script>
-
-  {% for message in messages %}
-      <script type="text/javascript">
-        $(function() {
-          const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-          });
-      
-          $('.swalDefaultSuccess').click(function() {
-            Toast.fire({
-              icon: 'success',
-              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-            })
-          });
-          $('.swalDefaultInfo').click(function() {
-            Toast.fire({
-              icon: 'info',
-              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-            })
-          });
-          $('.swalDefaultError').click(function() {
-            Toast.fire({
-              icon: 'error',
-              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-            })
-          });
-          $('.swalDefaultWarning').click(function() {
-            Toast.fire({
-              icon: 'warning',
-              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-            })
-          });
-          $('.swalDefaultQuestion').click(function() {
-            Toast.fire({
-              icon: 'question',
-              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-            })
-          });
-        });
-
-          $(document).ready(function() {
-              // Verifica el tipo de mensaje y muestra el Toast correspondiente
-              var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje (success, info, error, warning)
-              var messageText = "{{ message }}"; // Obtiene el texto del mensaje
-
-              if (messageType === 'success') {
-                  Toast.fire({
-                      icon: 'success',
-                      title: messageText,
-                  });
-              } else if (messageType === 'info') {
-                  Toast.fire({
-                      icon: 'info',
-                      title: messageText,
-                  });
-              } else if (messageType === 'error') {
-                  Toast.fire({
-                      icon: 'error',
-                      title: messageText,
-                  });
-              } else if (messageType === 'warning') {
-                  Toast.fire({
-                      icon: 'warning',
-                      title: messageText,
-                  });
-              }
-          });
-      </script>
-  {% endfor %}
 {% endblock scripts %}
