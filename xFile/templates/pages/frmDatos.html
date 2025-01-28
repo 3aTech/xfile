@@ -37,6 +37,12 @@
 
 <section class="content">
   <div class="container-fluid">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
     <div class="card card-default card-primary">
       <div class="card-header">
         <h3 class="card-title">Datos para Registrar</h3>
@@ -183,7 +189,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" id="monto_credito" name="monto_credito" 
+                  <input type="number" class="form-control" id="monto_credito" name="monto_credito" 
                   value="{{ object.monto_credito|default:'' }}" required 
                   aria-label="Monto del Crédito" placeholder="Monto del Crédito">
                 </div>
@@ -194,7 +200,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" id="precio_venta" name="precio_venta" 
+                  <input type="number" class="form-control" id="precio_venta" name="precio_venta" 
                   value="{{ object.precio_venta|default:'' }}" required 
                   aria-label="Precio Venta" placeholder="Precio Venta">
                 </div>
@@ -205,7 +211,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" id="precio_venta_divisa" name="precio_venta_divisa" 
+                  <input type="number" class="form-control" id="precio_venta_divisa" name="precio_venta_divisa" 
                   value="{{ object.precio_venta_divisa|default:'' }}" required 
                   aria-label="Precio Venta en Divisa" placeholder="Precio Venta en Divisa">
                 </div>
@@ -216,7 +222,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" id="inicial" name="inicial" 
+                  <input type="number" class="form-control" id="inicial" name="inicial" 
                   value="{{ object.inicial|default:'' }}" required 
                   aria-label="Inicial" placeholder="Inicial">
                 </div>
@@ -224,7 +230,7 @@
               <div class="col-md-2">
                 <label for="inicial_porcentaje" class="form-label">Inicial %</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" id="inicial_porcentaje" name="inicial_porcentaje" 
+                  <input type="number" class="form-control" id="inicial_porcentaje" name="inicial_porcentaje" 
                   value="{{ object.inicial_porcentaje|default:'' }}" required 
                   aria-label="Inicial %" placeholder="Inicial %">
                   <div class="input-group-append">
@@ -240,14 +246,20 @@
                   <label for="identificador" class="form-label">Identificado</label>
                   <select class="form-control select2bs4" style="width: 100%;" 
                   id="identificador" name="identificador" required>
-                  {% if object.identificador %} 
-                    <option value="{{ object.identificador|default:'' }} " selected>
-                      {{ object.identificador }}
-                    </option> 
-                  {% endif %}
-                    <option>El</option>
-                    <option>La</option>
-                    <option>Los</option>
+                    {% if object.identificador %} 
+                      <option value="{{ object.identificador }}" selected>
+                          {{ object.identificador }}
+                      </option> 
+                    {% endif %}
+                    {% if object.identificador != 'El' %}
+                        <option>El</option>
+                    {% endif %}
+                    {% if object.identificador != 'La' %}
+                        <option>La</option>
+                    {% endif %}
+                    {% if object.identificador != 'Los' %}
+                        <option>Los</option>
+                    {% endif %}
                   </select>
                 </div>
               </div>
@@ -261,9 +273,15 @@
                       {{ object.denominara }}
                     </option> 
                   {% endif %}
+                  {% if object.denominara != 'Comprador' %}
                     <option>Comprador</option>
+                  {% endif %}
+                  {% if object.denominara != 'Compradora' %}
                     <option>Compradora</option>
+                  {% endif %}
+                  {% if object.denominara != 'Compradores' %}
                     <option>Compradores</option>
+                  {% endif %}
                   </select>
                 </div>
               </div>
@@ -277,15 +295,19 @@
                       {{ object.ciudadano_ciudadana }}
                     </option> 
                   {% endif %}
+                  {% if object.ciudadano_ciudadana != 'Ciudadano' %}
                     <option>Ciudadano</option>
+                  {% endif %}
+                  {% if object.ciudadano_ciudadana != 'Ciudadana' %}
                     <option>Ciudadana</option>
+                  {% endif %}
                   </select>
                 </div>
               </div>
               <div class="col-md-2">
                 <label for="anios" class="form-label">Años</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" id="anios" name="anios" 
+                  <input type="number" class="form-control" id="anios" name="anios" 
                   value="{{ object.anios|default:'' }}" required 
                   aria-label="Años" placeholder="Años">
                   <div class="input-group-append">
@@ -296,7 +318,7 @@
               <div class="col-md-2">
                 <label for="meses" class="form-label">Meses</label>
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" id="meses" name="meses" 
+                  <input type="number" class="form-control" id="meses" name="meses" 
                   value="{{ object.meses|default:'' }}" required 
                   aria-label="Meses" placeholder="Meses">
                   <div class="input-group-append">
@@ -313,7 +335,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" id="cuota_mensual" name="cuota_mensual" 
+                  <input type="number" class="form-control" id="cuota_mensual" name="cuota_mensual" 
                   value="{{ object.cuota_mensual|default:'' }}" required 
                   aria-label="Cuota Mensual" placeholder="Cuota Mensual">
                 </div>
@@ -324,7 +346,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" id="cuota_mensual_divisa" name="cuota_mensual_divisa" 
+                  <input type="number" class="form-control" id="cuota_mensual_divisa" name="cuota_mensual_divisa" 
                   value="{{ object.cuota_mensual_divisa|default:'' }}" required 
                   aria-label="Cuota en Divisa" placeholder="Cuota en Divisa">
                 </div>
@@ -335,7 +357,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" id="flat" name="flat" 
+                  <input type="number" class="form-control" id="flat" name="flat" 
                   value="{{ object.flat|default:'' }}" required 
                   aria-label="Flat" placeholder="Flat">
                 </div>
@@ -346,7 +368,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" id="flat_divisa" name="flat_divisa" 
+                  <input type="number" class="form-control" id="flat_divisa" name="flat_divisa" 
                   value="{{ object.flat_divisa|default:'' }}" required 
                   aria-label="Flat en Divisa" placeholder="Flat en Divisa">
                 </div>
@@ -357,7 +379,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" id="cuota_financiera" name="cuota_financiera" 
+                  <input type="number" class="form-control" id="cuota_financiera" name="cuota_financiera" 
                   value="{{ object.cuota_financiera|default:'' }}" required 
                   aria-label="Cuota Financiera" placeholder="Cuota Financiera">
                 </div>
@@ -368,7 +390,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" id="cuota_financiera_divisa" name="cuota_financiera_divisa" 
+                  <input type="number" class="form-control" id="cuota_financiera_divisa" name="cuota_financiera_divisa" 
                   value="{{ object.cuota_financiera_divisa|default:'' }}" required 
                   aria-label="Cuota Financiera en Divisa" placeholder="Cuota Financiera en Divisa">
                 </div>
@@ -382,7 +404,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>Bs.</b></span>
                   </div>
-                  <input type="text" class="form-control" id="fongar" name="fongar" 
+                  <input type="number" class="form-control" id="fongar" name="fongar" 
                   value="{{ object.fongar|default:'' }}" required 
                   aria-label="Fongar" placeholder="Fongar">
                 </div>
@@ -393,7 +415,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text"><b>$/€</b></span>
                   </div>
-                  <input type="text" class="form-control" id="fongar_divisa" name="fongar_divisa" 
+                  <input type="number" class="form-control" id="fongar_divisa" name="fongar_divisa" 
                   value="{{ object.fongar_divisa|default:'' }}" required 
                   aria-label="Fongar en Divisa" placeholder="Fongar en Divisa">
                 </div>
@@ -421,10 +443,11 @@
             </div>
 
             <input type="hidden" name="us_in" value="{{ request.user.username }}">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="guardar-btn">
               {% if object %}Actualizar Registro{% else %}Guardar{% endif %}
             </button>
             <a href="{% url 'datos_list' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="button" class="btn btn-info swalDefaultSuccess">Info</button>
         </form>
       </div>  
     </div>  
@@ -433,79 +456,151 @@
 {% endblock content %}
 
 {% block scripts %}
-<!-- Select2 -->
-<script src="{% static '3atech/plugins/select2/js/select2.full.min.js' %}"></script>
-<!-- Bootstrap Switch -->
-<script src="{% static '3atech/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+  <!-- Select2 -->
+  <script src="{% static '3atech/plugins/select2/js/select2.full.min.js' %}"></script>
+  <!-- Bootstrap Switch -->
+  <script src="{% static '3atech/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
 
-<!-- Page script -->
-<script>
-  $(function () {
-    //Initialize Select2 Elements
-    $('.select2').select2()
+  <!-- Page script -->
+  <script>
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2()
 
-    //Initialize Select2 Elements
-    $('.select2bs4').select2({
-      theme: 'bootstrap4'
-    })
+      //Initialize Select2 Elements
+      $('.select2bs4').select2({
+        theme: 'bootstrap4'
+      })
 
-    //Datemask dd/mm/yyyy
-    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-    //Datemask2 mm/dd/yyyy
-    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-    //Money Euro
-    $('[data-mask]').inputmask()
+      //Datemask dd/mm/yyyy
+      $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+      //Datemask2 mm/dd/yyyy
+      $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+      //Money Euro
+      $('[data-mask]').inputmask()
 
-    //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges: {
-          'Today': [moment(), moment()],
-          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month': [moment().startOf('month'), moment().endOf('month')],
-          'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+      //Date range picker
+      $('#reservation').daterangepicker()
+      //Date range picker with time picker
+      $('#reservationtime').daterangepicker({
+        timePicker: true,
+        timePickerIncrement: 30,
+        locale: {
+          format: 'MM/DD/YYYY hh:mm A'
+        }
+      })
+      //Date range as a button
+      $('#daterange-btn').daterangepicker(
+        {
+          ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          startDate: moment().subtract(29, 'days'),
+          endDate: moment()
         },
-        startDate: moment().subtract(29, 'days'),
-        endDate: moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
+        function (start, end) {
+          $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+        }
+      )
 
-    //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
+      //Timepicker
+      $('#timepicker').datetimepicker({
+        format: 'LT'
+      })
+
+      //Bootstrap Duallistbox
+      $('.duallistbox').bootstrapDualListbox()
+
+      //Colorpicker
+      $('.my-colorpicker1').colorpicker()
+      //color picker with addon
+      $('.my-colorpicker2').colorpicker()
+
+      $('.my-colorpicker2').on('colorpickerChange', function (event) {
+        $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+      });
+
+      $("input[data-bootstrap-switch]").each(function () {
+        $(this).bootstrapSwitch('state', $(this).prop('checked'));
+      });
+
     })
+  </script>
 
-    //Bootstrap Duallistbox
-    $('.duallistbox').bootstrapDualListbox()
+  {% for message in messages %}
+      <script type="text/javascript">
+        $(function() {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+          });
+      
+          $('.swalDefaultSuccess').click(function() {
+            Toast.fire({
+              icon: 'success',
+              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+            })
+          });
+          $('.swalDefaultInfo').click(function() {
+            Toast.fire({
+              icon: 'info',
+              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+            })
+          });
+          $('.swalDefaultError').click(function() {
+            Toast.fire({
+              icon: 'error',
+              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+            })
+          });
+          $('.swalDefaultWarning').click(function() {
+            Toast.fire({
+              icon: 'warning',
+              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+            })
+          });
+          $('.swalDefaultQuestion').click(function() {
+            Toast.fire({
+              icon: 'question',
+              title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+            })
+          });
+        });
 
-    //Colorpicker
-    $('.my-colorpicker1').colorpicker()
-    //color picker with addon
-    $('.my-colorpicker2').colorpicker()
+          $(document).ready(function() {
+              // Verifica el tipo de mensaje y muestra el Toast correspondiente
+              var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje (success, info, error, warning)
+              var messageText = "{{ message }}"; // Obtiene el texto del mensaje
 
-    $('.my-colorpicker2').on('colorpickerChange', function (event) {
-      $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-    });
-
-    $("input[data-bootstrap-switch]").each(function () {
-      $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    });
-
-  })
-</script>
+              if (messageType === 'success') {
+                  Toast.fire({
+                      icon: 'success',
+                      title: messageText,
+                  });
+              } else if (messageType === 'info') {
+                  Toast.fire({
+                      icon: 'info',
+                      title: messageText,
+                  });
+              } else if (messageType === 'error') {
+                  Toast.fire({
+                      icon: 'error',
+                      title: messageText,
+                  });
+              } else if (messageType === 'warning') {
+                  Toast.fire({
+                      icon: 'warning',
+                      title: messageText,
+                  });
+              }
+          });
+      </script>
+  {% endfor %}
 {% endblock scripts %}

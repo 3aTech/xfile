@@ -58,14 +58,14 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
 
 class DatosUpdateView(LoginRequiredMixin, UpdateView):
     model = Datos
-    template_name = 'frmDatos.html'
+    template_name = 'pages/frmDatos.html'
     fields = [
         'sello_dorado', 'cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
         'urbanismo', 'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
         'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
-        'contrato_nro', 'us_mo', 'fe_us_mo'
+        'contrato_nro'
     ]
     success_url = reverse_lazy('datos_list')
     
@@ -73,6 +73,12 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.us_mo = self.request.user.username
         messages.success(self.request, 'Datos actualizado exitosamente.')
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        for field, error in form.errors.items():
+            messages.error(self.request, f"{field}: {error}")
+            print( messages.error(self.request, f"{field}: {error}"))
+        return super().form_invalid(form)
 
 class DatosDeleteView(LoginRequiredMixin, DeleteView):
     model = Datos
