@@ -10,15 +10,137 @@ class ModeloAuditoria(models.Model):
     class Meta:
         abstract = True
 
+class Ambiente(ModeloAuditoria):
+    """Modelo para almacenar ambientes"""
+    id = models.AutoField('Código', help_text='Código', primary_key=True)
+    ambiente = models.CharField('Ambiente', help_text='Ambiente', max_length=60)
+
+    def __str__(self) -> str:
+        return f'{self.co_estado} - {self.des_estado}'
+
+    class Meta:
+        verbose_name = 'Ambiente'
+        verbose_name_plural = 'Ambientes'
+        ordering = ['ambiente']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Lindero(ModeloAuditoria):
+    """Modelo para almacenar ambientes"""
+    id = models.AutoField('Código', help_text='Código', primary_key=True)
+    lindero = models.CharField('Lindero', help_text='Lindero', max_length=60)
+
+    def __str__(self) -> str:
+        return f'{self.co_estado} - {self.des_estado}'
+
+    class Meta:
+        verbose_name = 'Linero'
+        verbose_name_plural = 'Linderos'
+        ordering = ['ambiente']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Representante(ModeloAuditoria):
+    """Modelo para almacenar representantes"""
+    cedula = models.CharField('Cédula', help_text='Cédula del representante', max_length=12, primary_key=True)
+    nombre = models.CharField('Nombre y Apellido', help_text='Nombre y apellido del representante', max_length=120)
+    representante = models.CharField('Representante de', help_text='Representante de', max_length=120)
+    condicion = models.CharField('Condición y/o Caracter Representativo', help_text='Condición y/o Caracter Representativo', max_length=120)
+
+    def __str__(self) -> str:
+        return f'{self.cedula} - {self.nombre} {self.apellido}'
+
+    class Meta:
+        verbose_name = 'Representante'
+        verbose_name_plural = 'Representantes'
+        ordering = ['cedula', 'nombre']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Estado(ModeloAuditoria):
+    """Modelo para almacenar estados/provincias"""
+    co_estado = models.CharField('Código', help_text='Código del estado', max_length=6, primary_key=True)
+    des_estado = models.CharField('Nombre', help_text='Nombre del estado', max_length=60)
+
+    def __str__(self) -> str:
+        return f'{self.co_estado} - {self.des_estado}'
+
+    class Meta:
+        verbose_name = 'Estado'
+        verbose_name_plural = 'Estados'
+        ordering = ['des_estado']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Municipio(ModeloAuditoria):
+    """Modelo para almacenar municipios"""
+    co_municipio = models.CharField('Código', help_text='Código del municipio', max_length=6, primary_key=True)
+    des_municipio = models.CharField('Nombre', help_text='Nombre del municipio', max_length=60)
+    estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='municipios')
+
+    def __str__(self) -> str:
+        return f'{self.co_municipio} - {self.des_municipio}'
+
+    class Meta:
+        verbose_name = 'Municipio'
+        verbose_name_plural = 'Municipios'
+        ordering = ['des_municipio']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Parroquia(ModeloAuditoria):
+    """Modelo para almacenar parroquias"""
+    co_parroquia = models.CharField('Código', help_text='Código de la parroquia', max_length=6, primary_key=True)
+    des_parroquia = models.CharField('Nombre', help_text='Nombre de la parroquia', max_length=60)
+    municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT, related_name='parroquias')
+
+    def __str__(self) -> str:
+        return f'{self.co_parroquia} - {self.des_parroquia}'
+
+    class Meta:
+        verbose_name = 'Parroquia'
+        verbose_name_plural = 'Parroquias'
+        ordering = ['des_parroquia']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
 class Datos(ModeloAuditoria):
     """Modelo que representa las monedas."""
     serial_cliente = models.CharField('Serial', help_text='Serial Cliente', max_length=20, primary_key=True, unique=True)
     sello_dorado = models.BooleanField('Sello Dorado', default=False, help_text='Sello Dorado')
+    representante = models.ForeignKey(Representante, on_delete=models.PROTECT, related_name='datos')
     cedula = models.CharField('Cédula', max_length=12, help_text='Cédula')
     nombre1 = models.CharField('Nombre 1', max_length=20, help_text='Nombre 1')
     nombre2 = models.CharField('Nombre 2', max_length=20, help_text='Nombre 2', null=True, blank=True)
     apellido1 = models.CharField('Apellido 1', max_length=20, help_text='Apellido 1')
     apellido2 = models.CharField('Apellido 2', max_length=20, help_text='Apellido 2', null=True, blank=True)
+    estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='datos')
+    municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT, related_name='datos')
+    parroquia = models.ForeignKey(Parroquia, on_delete=models.PROTECT, related_name='datos')
     urbanismo = models.CharField('Urbanismo', max_length=120, help_text='Urbanismo')
     torre = models.CharField('Torre', max_length=10, help_text='Torre')
     piso = models.CharField('Piso', max_length=8, help_text='Piso')
@@ -62,3 +184,43 @@ class Datos(ModeloAuditoria):
         ordering = ['serial_cliente']
         verbose_name = 'Dato'
         verbose_name_plural = 'Datos'
+        
+class Ambiente_Dato(ModeloAuditoria):
+    """Modelo para almacenar ambientes de los datos"""
+    id = models.AutoField('Código', help_text='Código', primary_key=True)
+    id_ambiente = models.ForeignKey(Ambiente, on_delete=models.PROTECT, related_name='Ambiente_Dato')
+    serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='Ambiente_Dato')
+
+    def __str__(self) -> str:
+        return f'{self.co_estado} - {self.des_estado}'
+
+    class Meta:
+        verbose_name = 'Ambiente Dato'
+        verbose_name_plural = 'Ambientes Datos'
+        ordering = ['serial_cliente']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Lindero_Dato(ModeloAuditoria):
+    """Modelo para almacenar lineros de los datos"""
+    id = models.AutoField('Código', help_text='Código', primary_key=True)
+    id_lindero = models.ForeignKey(Lindero, on_delete=models.PROTECT, related_name='Lindero_Dato')
+    serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='Ambiente_Dato')
+
+    def __str__(self) -> str:
+        return f'{self.co_estado} - {self.des_estado}'
+
+    class Meta:
+        verbose_name = 'Lindero Dato'
+        verbose_name_plural = 'Linderos Datos'
+        ordering = ['serial_cliente']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
