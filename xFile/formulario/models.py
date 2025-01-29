@@ -30,17 +30,17 @@ class Ambiente(ModeloAuditoria):
         super().save(*args, **kwargs)
 
 class Lindero(ModeloAuditoria):
-    """Modelo para almacenar ambientes"""
+    """Modelo para almacenar linderos"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
-    lindero = models.CharField('Lindero', help_text='Lindero', max_length=60)
+    lindero = models.CharField('Lindero', max_length=255, help_text='Lindero')
 
     def __str__(self) -> str:
-        return f'{self.co_estado} - {self.des_estado}'
+        return f'{self.id} - {self.descripcion}'
 
     class Meta:
-        verbose_name = 'Linero'
+        verbose_name = 'Lindero'
         verbose_name_plural = 'Linderos'
-        ordering = ['ambiente']
+        ordering = ['descripcion']
 
     def save(self, *args, **kwargs):
         if not self.us_in:
@@ -189,10 +189,10 @@ class Ambiente_Dato(ModeloAuditoria):
     """Modelo para almacenar ambientes de los datos"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
     id_ambiente = models.ForeignKey(Ambiente, on_delete=models.PROTECT, related_name='Ambiente_Dato')
-    serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='Ambiente_Dato')
+    serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='ambiente_datos')
 
     def __str__(self) -> str:
-        return f'{self.co_estado} - {self.des_estado}'
+        return f'{self.id} - {self.serial_cliente}'
 
     class Meta:
         verbose_name = 'Ambiente Dato'
@@ -205,14 +205,15 @@ class Ambiente_Dato(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
+
 class Lindero_Dato(ModeloAuditoria):
     """Modelo para almacenar lineros de los datos"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
     id_lindero = models.ForeignKey(Lindero, on_delete=models.PROTECT, related_name='Lindero_Dato')
-    serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='Ambiente_Dato')
+    serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='lindero_datos')
 
     def __str__(self) -> str:
-        return f'{self.co_estado} - {self.des_estado}'
+        return f'{self.id} - {self.serial_cliente}'
 
     class Meta:
         verbose_name = 'Lindero Dato'
