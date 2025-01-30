@@ -1,0 +1,439 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static '3atech/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}" />
+<link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
+{% endblock extrahead %} 
+
+{% block title %}Gestión de Ambientes{% endblock title %} 
+
+{% block contentheader %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Listado de Ambientes</h1>
+      </div>
+      <!-- /.col -->
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+          <li class="breadcrumb-item">Ambientes</li>
+          <li class="breadcrumb-item active">Gestión de Ambientes</li>
+        </ol>
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+{% endblock contentheader %} 
+
+
+{% block content %}
+
+<div class="card" style="width: 60%; margin: auto;">
+    <div class="card-header d-flex justify-content-end">
+       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
+        <i class="fas fa-solid fa-plus me-1"></i>
+       </button>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ambiente</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ambiente in registros %}
+            <tr>
+                <td>{{ ambiente.id }}</td>
+                <td>{{ ambiente.ambiente }}</td>
+                <td>
+                    <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ ambiente.id }}" data-nombre="{{ ambiente.ambiente }}">
+                        Editar
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ ambiente.id }}" data-nombre="{{ ambiente.ambiente }}">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<!-- Modal para crear un nuevo ambiente -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <form method="post" id="createForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Agregar Ambiente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="ambiente">Nombre del Ambiente</label>
+                        <input type="text" class="form-control" id="ambiente" name="ambiente" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar un ambiente -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <form method="post" id="editForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editar Ambiente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-id" name="id">
+                    <div class="form-group">
+                        <label for="edit-ambiente">Nombre del Ambiente</label>
+                        <input type="text" class="form-control" id="edit-ambiente" name="ambiente" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar un ambiente -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <form method="post" id="deleteForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar Ambiente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar el ambiente "<span id="delete-ambiente-name"></span>"?</p>
+                    <input type="hidden" id="delete-id" name="id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+  <!-- Bootstrap Switch -->
+  <script src="{% static '3atech/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+
+<!-- DataTables -->
+<script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+
+<!-- Page JS -->
+<script src="{% static '3atech/js/ui-modals.js' %}"></script>
+
+<!-- page script -->
+<script>
+  $(function () {
+    $("#example1").DataTable({
+      responsive: true,
+      autoWidth: false,
+      language: {
+        sProcessing: "Procesando...",
+        sLengthMenu: "Mostrar _MENU_ registros",
+        sZeroRecords: "No se encontraron registros",
+        sEmptyTable: "No hay datos disponibles en la tabla",
+        sInfo:
+          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+        sInfoPostFix: "",
+        sSearch: "Buscar:",
+        sUrl: "",
+        sInfoThousands: ",",
+        sLoadingRecords: "Cargando...",
+        oPaginate: {
+          sFirst: "Primero",
+          sLast: "Último",
+          sNext: "Siguiente",
+          sPrevious: "Anterior",
+        },
+        oAria: {
+          sSortAscending:
+            ": Activar para ordenar la columna de manera ascendente",
+          sSortDescending:
+            ": Activar para ordenar la columna de manera descendente",
+        },
+      },
+    });
+    $("#example2").DataTable({
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  $(function () {
+    {% for message in messages %}
+          var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
+          var messageText = "{{ message }}"; // Obtiene el texto del mensaje
+
+          if (messageType === 'success') {
+              Swal.fire({        
+                type: 'success',
+                title: 'Éxito!',
+                text: messageText,   
+                showConfirmButton: false,   
+                timer: 3000,  
+            });
+          }
+      {% endfor %}
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $('.delete-btn').on('click', function(e) {
+      e.preventDefault(); // Evitar la acción por defecto del enlace
+
+      const serialCliente = $(this).data('serial-cliente');
+      const url = "{% url 'dato_delete' 'serialClientePlaceholder' %}".replace('serialClientePlaceholder', serialCliente);
+
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+      });
+
+      swalWithBootstrapButtons.fire({
+        title: "¿Estás seguro?",
+        text: "¡No podrás revertir esto!",
+        type: "warning", 
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminarlo!",
+        cancelButtonText: "No, cancelar!",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = url; // Redirigir a la URL de eliminación
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelado",
+            text: "El registro está a salvo :)",
+            type: "success" 
+          });
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+    // Script para manejar la carga de datos en los modales
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var nombre = button.data('nombre');
+        var modal = $(this);
+        modal.find('#edit-id').val(id);
+        modal.find('#edit-ambiente').val(nombre);
+    });
+
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var nombre = button.data('nombre');
+        var modal = $(this);
+        modal.find('#delete-id').val(id);
+        modal.find('#delete-ambiente-name').text(nombre);
+    });
+
+    // Script para manejar la creación de un nuevo ambiente
+    $('#createForm').on('submit', function (event) {
+        event.preventDefault(); // Evita el envío normal del formulario
+        $.ajax({
+            type: 'POST',
+            url: '/ambientes/crear/', // URL para crear un ambiente
+            data: $(this).serialize(),
+            headers: {
+                'X-CSRFToken': csrftoken // Incluye el token CSRF
+            },
+            success: function (response) {
+                // Manejar la respuesta exitosa
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Ambiente creado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload(); // Recargar la página para ver los cambios
+                });
+            },
+            error: function (xhr) {
+                // Manejar errores
+                let errorMessage = 'Ocurrió un error.';
+
+                // Verifica si el error es por CSRF
+                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                    errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                }
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
+
+    // Script para manejar la actualización de un ambiente
+    $('#editForm').on('submit', function (event) {
+        event.preventDefault(); // Evita el envío normal del formulario
+        var id = $('#edit-id').val(); // Obtener el ID del ambiente
+        $.ajax({
+            type: 'PUT',
+            url: '/ambientes/' + id + '/editar/', // URL para editar un ambiente
+            data: $(this).serialize(),
+            success: function (response) {
+                // Manejar la respuesta exitosa
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Ambiente actualizado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload(); // Recargar la página para ver los cambios
+                });
+            },
+            error: function (xhr) {
+                // Manejar errores
+                let errorMessage = 'Ocurrió un error.';
+
+                // Verifica si el error es por CSRF
+                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                    errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                }
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
+
+    // Script para manejar la eliminación de un ambiente
+    $('#deleteForm').on('submit', function (event) {
+        event.preventDefault(); // Evita el envío normal del formulario
+        var id = $('#delete-id').val(); // Obtener el ID del ambiente
+        $.ajax({
+            type: 'DELETE',
+            url: '/ambientes/' + id + '/eliminar/', // URL para eliminar un ambiente
+            success: function (response) {
+                // Manejar la respuesta exitosa
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Ambiente eliminado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload(); // Recargar la página para ver los cambios
+                });
+            },
+            error: function (xhr) {
+                 // Manejar errores
+                 let errorMessage = 'Ocurrió un error.';
+
+                 // Verifica si el error es por CSRF
+                 if (xhr.responseJSON && xhr.responseJSON.detail) {
+                     errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                 }
+ 
+                 Swal.fire({
+                     title: 'Error!',
+                     text: errorMessage,
+                     type: 'error',
+                     confirmButtonText: 'Aceptar'
+                 });
+            }
+        });
+    });
+
+    <!-- Obtener el token CSRF de la cookie -->
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Verifica si este es el cookie que buscamos
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+// Incluir el token CSRF en los encabezados de la solicitud AJAX
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+            // Si no es una solicitud a otro dominio, agrega el token CSRF
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+</script>
+
+
+{% endblock scripts %}

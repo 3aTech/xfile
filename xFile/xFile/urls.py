@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from usuario.views import home, LoginView, RegisterView, SignOutView
 
+from formulario.views import ambiente_create, ambiente_delete, AmbienteListView, ambiente_update, lindero_create, lindero_delete, LinderoListView, lindero_update
 urlpatterns = [
     path('', home, name='home'),
     
@@ -28,4 +29,16 @@ urlpatterns = [
     path('login', LoginView.as_view(), name='login'),
     path('register', RegisterView.as_view(), name='register'),
     path('logout', SignOutView.as_view(), name='logout'),
+    
+    # URLs para Ambiente
+    path('ambientes/', AmbienteListView.as_view(), name='ambiente_list'),
+    path('ambientes/crear/', ambiente_create, name='ambiente_create'),
+    path('ambientes/<int:pk>/editar/', ambiente_update, name='ambiente_update'),
+    path('ambientes/<int:pk>/eliminar/', ambiente_delete, name='ambiente_delete'),
+    
+    # URLs para Lindero
+    path('linderos/', LinderoListView.as_view(), name='lindero_list'),
+    path('linderos/crear/', lindero_create, name='lindero_create'),
+    path('linderos/<int:pk>/editar/', lindero_update, name='lindero_update'),
+    path('linderos/<int:pk>/eliminar/', lindero_delete, name='lindero_delete'),
 ]

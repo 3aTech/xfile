@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Datos
+from .models import Datos, Ambiente, Lindero
 
 class DatosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,5 +12,15 @@ class DatosSerializer(serializers.ModelSerializer):
             'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
             'contrato_nro', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo'
         ]
+
+class AmbienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ambiente
+        fields = ['id', 'ambiente', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
+
+class LinderoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lindero
+        fields = ['id', 'lindero', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
     
 
