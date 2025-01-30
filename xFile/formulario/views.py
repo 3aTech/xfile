@@ -174,8 +174,8 @@ class LinderoListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         search = self.request.GET.get('search', '')
         if search:
-            queryset = queryset.filter(linderos__icontains=search)
-        return queryset.order_by('linderos')
+            queryset = queryset.filter(lindero__icontains=search)
+        return queryset.order_by('lindero')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
