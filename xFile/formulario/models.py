@@ -55,7 +55,7 @@ class Representante(ModeloAuditoria):
     nombre = models.CharField('Nombre y Apellido', help_text='Nombre y apellido del representante', max_length=120)
     representante = models.CharField('Representante de', help_text='Representante de', max_length=120)
     condicion = models.CharField('Condición y/o Caracter Representativo', help_text='Condición y/o Caracter Representativo', max_length=120)
-    #inactivo = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
+    inactivo = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
     
     def __str__(self) -> str:
         return f'{self.cedula} - {self.nombre} {self.apellido}'

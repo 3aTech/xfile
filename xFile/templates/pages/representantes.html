@@ -85,6 +85,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="inactivo" class="form-label">Activo/Inactivo</label>
+                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch3" name="inactivo"
+                                {% if object.inactivo %} checked {% endif %}>
+                                <label class="custom-control-label" for="customSwitch3" id="switchLabel"> 
+                                    {% if not object.inactivo %} Inactivo {% else %} Activo {% endif %}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
                         <div class="col-md-6">
                             <label for="cedula" class="form-label">Cédula</label>
                             <div class="input-group mb-3">
@@ -497,6 +509,17 @@ $.ajaxSetup({
         }
     }
 });
+</script>
+
+<script>
+    // Cambiar el texto del label según el estado del checkbox
+    $('#customSwitch3').change(function() {
+        if ($(this).is(':checked')) {
+            $('#switchLabel').text('Activo');
+        } else {
+            $('#switchLabel').text('Inactivo');
+        }
+    });
 </script>
 
 {% endblock scripts %} 
