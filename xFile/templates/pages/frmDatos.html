@@ -92,16 +92,33 @@
               </div>
             </div>
             <div class="row mb-3"> 
-              <div class="col-md-3">
-                <label for="sello_dorado_oficio" class="form-label">Sello Dorado u Oficio</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">
-                      <input type="checkbox" id="customSwitch3" name="sello_dorado" {% if object.sello_dorado %} checked {% endif %}>
-                    </span>
-                  </div>
-                  <input type="text" class="form-control" id="sello_dorado_oficio" name="sello_dorado_oficio" 
-                  value="{{ object.sello_dorado_oficio|default:'' }}" aria-label="Nro. Sello Dorado u Oficio" placeholder="Nro. Sello Dorado u Oficio">
+                <div class="col-md-3">
+                    <label for="sello_dorado_oficio" class="form-label">Sello Dorado u Oficio</label>
+                    <div class="form-group clearfix">
+                        <div class="icheck-primary d-inline">
+                            <input type="radio" id="radioPrimary1" name="sello_dorado" {% if object.sello_dorado %} checked {% endif %}>
+                            <label for="radioPrimary1">
+                                Sello Dorado
+                            </label>
+                        </div>
+                        <div class="icheck-primary d-inline">
+                            <input type="radio" id="radioPrimary2" name="sello_dorado" {% if object.sello_dorado == false %} checked {% endif %}>
+                            <label for="radioPrimary2">
+                                Oficio
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="nro_dorado_oficio" class="form-label"></label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text"><b>Nro.</b></span>
+                        </div>
+                        <input type="text" class="form-control" id="nro_dorado_oficio" name="nro_dorado_oficio" 
+                              value="{{ object.nro_dorado_oficio|default:'' }}" required 
+                              aria-label="Sello Dorado u Oficio" placeholder="Sello Dorado u Oficio">
+                    </div>
                 </div>
               </div>
             </div>
