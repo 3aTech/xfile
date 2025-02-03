@@ -96,13 +96,13 @@
                     <label for="sello_dorado_oficio" class="form-label">Sello Dorado u Oficio</label>
                     <div class="form-group clearfix">
                         <div class="icheck-primary d-inline">
-                            <input type="radio" id="radioPrimary1" name="sello_dorado" {% if object.sello_dorado %} checked {% endif %}>
+                            <input type="radio" id="radioPrimary1" name="sello_dorado" value=1 {% if object.sello_dorado %} checked {% endif %}>
                             <label for="radioPrimary1">
                                 Sello Dorado
                             </label>
                         </div>
                         <div class="icheck-primary d-inline">
-                            <input type="radio" id="radioPrimary2" name="sello_dorado" {% if object.sello_dorado == false %} checked {% endif %}>
+                            <input type="radio" id="radioPrimary2" name="sello_dorado" value=0 {% if not object.sello_dorado %} checked {% endif %}>
                             <label for="radioPrimary2">
                                 Oficio
                             </label>
@@ -266,15 +266,17 @@
           <div class="card-body">
               <div class="row mb-3">
                   <div class="col-md-3">
-                      <label for="estado" class="form-label">Estado</label>
-                      <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
-                          </div>
-                          <input type="text" class="form-control" id="estado" name="estado" 
-                              value="{{ object.estado|default:'' }}" required 
-                              aria-label="Estado" placeholder="Estado">
-                      </div>
+                    <label for="pais" class="form-label">Estado</label>
+                    <select class="form-control" id="pais" name="pais" required onchange="cargarEstados()" aria-label="pais">
+                        <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un país</option>
+                        {% for pais in paises %}
+                            <option value="{{ pais.co_pais }}" {% if object.pais.co_pais == pais.co_pais %}selected{% endif %}>
+                                {{ pais.co_pais }} - {{ pais.des_pais }}
+                            </option>
+                        {% empty %}
+                            <option value="">No hay países disponibles</option>
+                        {% endfor %}
+                    </select>
                   </div>
                   <div class="col-md-3">
                       <label for="municipio" class="form-label">Municipio</label>
