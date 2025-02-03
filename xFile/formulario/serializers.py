@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Datos, Ambiente, Lindero
+from .models import Datos, Ambiente, Lindero, Representante
 
 class DatosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,5 +22,10 @@ class LinderoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lindero
         fields = ['id', 'lindero', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
+
+class RepresentanteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Representante
+        fields = ['cedula', 'nacionalidad', 'nombre', 'representante', 'condicion', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
     
 

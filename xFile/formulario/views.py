@@ -2,11 +2,11 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Datos, Ambiente, Lindero
+from .models import Datos, Ambiente, Lindero, Representante
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render
-from .serializers import DatosSerializer, AmbienteSerializer, LinderoSerializer
+from .serializers import DatosSerializer, AmbienteSerializer, LinderoSerializer, RepresentanteSerializer
 from rest_framework import status
 
 # Create your views here.
@@ -236,3 +236,93 @@ def lindero_delete(request, pk):
     lindero = Lindero.objects.get(pk=pk)
     lindero.delete()
     return Response({'message': 'Lindero eliminado exitosamente.'}, status=204)
+
+# Vista para listar y gestionar representantes
+class RepresentanteListView(LoginRequiredMixin, ListView):
+    model = Representante
+    template_name = 'pages/representantes.html'
+    context_object_name = 'registros'
+    paginate_by = 10
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        if search:
+            queryset = queryset.filter(nombre__icontains=search)
+        return queryset.order_by('nombre')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registros'] = self.get_queryset().count()
+        return context
+
+# Vista para crear un nuevo representante
+class RepresentanteCreateView(LoginRequiredMixin, CreateView):
+    model = Representante
+    fields = ['cedula', 'nacionalidad', 'nombre', 'representante', 'condicion']
+    success_url = reverse_lazy('representante_list')
+
+    def form_valid(self, form):
+        form.instance.us_in = self.request.user.username
+        messages.success(self.request, 'Representante creado exitosamente.')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        for field, error in form.errors.items():
+            messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
+# Vista para actualizar un representante existente
+class RepresentanteUpdateView(LoginRequiredMixin, UpdateView):
+    model = Representante
+    fields = ['nacionalidad', 'nombre', 'representante', 'condicion']
+    success_url = reverse_lazy('representante_list')
+
+    def form_valid(self, form):
+        form.instance.us_mo = self.request.user.username
+        messages.success(self.request, 'Representante actualizado exitosamente.')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        for field, error in form.errors.items():
+            messages.error(self.request, f"{field}: {error}")
+        return super().form_invalid(form)
+
+# Vista para eliminar un representante
+class RepresentanteDeleteView(LoginRequiredMixin, DeleteView):
+    model = Representante
+    success_url = reverse_lazy('representante_list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'Representante eliminado exitosamente.')
+        return super().delete(request, *args, **kwargs)
+
+# Vista para manejar las solicitudes AJAX para crear, editar y eliminar
+@api_view(['POST'])
+def representante_create(request):
+    serializer = RepresentanteSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        return Response({'message': 'Representante creado exitosamente.'}, status=201)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def representante_update(request, pk):
+    representante = Representante.objects.get(pk=pk)
+    serializer = RepresentanteSerializer(representante, data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_mo=request.user.username)
+        return Response({'message': 'Representante actualizado exitosamente.'}, status=200)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def representante_delete(request, pk):
+    lindero = Representante.objects.get(pk=pk)
+    lindero.delete()
+    return Response({'message': 'Representante eliminado exitosamente.'}, status=204)

@@ -72,13 +72,19 @@
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <i class='nav-icon bx bx-table'></i>
             <p>
               Tablas Master
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
           <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{% url 'representante_list' %}" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Representante Legal</p>
+              </a>
+            </li>
             <li class="nav-item">
               <a href="{% url 'ambiente_list' %}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
@@ -93,21 +99,38 @@
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Estados</p>
+                <i class='nav-icon bx bx-map-pin'></i>
+                <p>
+                  Ubicación Geográfica
+                  <i class="right fas fa-angle-left"></i>
+                </p>
               </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Municipios</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Parroquias</p>
-              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Estados</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Municipios</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Parroquias</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Sectores</p>
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>

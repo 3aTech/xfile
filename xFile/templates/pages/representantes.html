@@ -7,58 +7,60 @@
 <link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
 {% endblock extrahead %} 
 
-{% block title %}Gestión de Ambientes{% endblock title %} 
+{% block title %}Gestión de Representantes{% endblock title %} 
 
 {% block contentheader %}
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Listado de Ambientes</h1>
+        <h1 class="m-0 text-dark">Listado de Representantes</h1>
       </div>
-      <!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
-          <li class="breadcrumb-item">Ambientes</li>
-          <li class="breadcrumb-item active">Gestión de Ambientes</li>
+          <li class="breadcrumb-item">Representantes</li>
+          <li class="breadcrumb-item active">Gestión de Representantes</li>
         </ol>
       </div>
-      <!-- /.col -->
     </div>
-    <!-- /.row -->
   </div>
-  <!-- /.container-fluid -->
 </div>
 {% endblock contentheader %} 
 
-
 {% block content %}
-
 <div class="card" style="width: 60%; margin: auto;">
     <div class="card-header d-flex justify-content-end">
        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
         <i class="fas fa-solid fa-plus me-1"></i>
        </button>
     </div>
-    <!-- /.card-header -->
     <div class="card-body">
       <table id="example1" class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Ambiente</th>
+                <th>Cédula</th>
+                <th>Nacionalidad</th>
+                <th>Nombre y Apellido</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for ambiente in registros %}
+            {% for representante in registros %}
             <tr>
-                <td>{{ ambiente.ambiente }}</td>
+                <td>{{ representante.cedula }}</td>
+                <td>{{ representante.nacionalidad }}</td>
+                <td>{{ representante.nombre }}</td>
                 <td>
-                    <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ ambiente.id }}" data-nombre="{{ ambiente.ambiente }}">
+                    <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" 
+                    data-cedula="{{ representante.cedula }}" 
+                    data-nombre="{{ representante.nombre }}" 
+                    data-nacionalidad="{{ representante.nacionalidad }}" 
+                    data-representante="{{ representante.representante }}" 
+                    data-condicion="{{ representante.condicion }}">
                         Editar
                     </button>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ ambiente.id }}" data-nombre="{{ ambiente.ambiente }}">
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ representante.cedula }}" data-nombre="{{ representante.nombre }}">
                         Eliminar
                     </button>
                 </td>
@@ -69,22 +71,80 @@
     </div>
 </div>
 
-<!-- Modal para crear un nuevo ambiente -->
+<!-- Modal para crear un nuevo representante -->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <form method="post" id="createForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Agregar Ambiente</h5>
+                    <h5 class="modal-title" id="createModalLabel">Agregar Representante</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="ambiente">Nombre del Ambiente</label>
-                        <input type="text" class="form-control" id="ambiente" name="ambiente" required>
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <label for="cedula" class="form-label">Cédula</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
+                                </div>
+                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
+                                    id="cedula" name="cedula" value="{{ object.cedula|default:'' }}" required aria-label="Cédula">
+                            </div>
+                        </div>             
+                        <div class="col-md-6">
+                            <label for="nacionalidad" class="form-label">Nacionalidad</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-network-chart' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" 
+                                    value="{{ object.nacionalidad|default:'' }}" required 
+                                    aria-label="Nacionalidad" placeholder="Nacionalidad">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="nombre" class="form-label">Nombre y Apellido</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-user-rectangle' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="nombre" name="nombre" 
+                                    value="{{ object.nombre|default:'' }}" required 
+                                    aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="representante" class="form-label">Representante de</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-business' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="representante" name="representante" 
+                                    value="{{ object.representante|default:'' }}" required 
+                                    aria-label="Representante de" placeholder="Empresa">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="condicion" class="form-label">Condición</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="condicion" name="condicion" 
+                                    value="{{ object.condicion|default:'' }}" required 
+                                    aria-label="Condición" placeholder="Cargo">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -96,23 +156,80 @@
     </div>
 </div>
 
-<!-- Modal para editar un ambiente -->
+<!-- Modal para editar un representante -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <form method="post" id="editForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editar Ambiente</h5>
+                    <h5 class="modal-title" id="editModalLabel">Editar Representante</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="edit-id" name="id">
-                    <div class="form-group">
-                        <label for="edit-ambiente">Nombre del Ambiente</label>
-                        <input type="text" class="form-control" id="edit-ambiente" name="ambiente" required>
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <label for="edit-cedula" class="form-label">Cédula</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
+                                </div>
+                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
+                                    id="edit-cedula" name="cedula" value="{{ object.cedula|default:'' }}" readonly required aria-label="Cédula">
+                            </div>
+                        </div>             
+                        <div class="col-md-6">
+                            <label for="edit-nacionalidad" class="form-label">Nacionalidad</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-network-chart' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="edit-nacionalidad" name="nacionalidad" 
+                                    value="{{ object.nacionalidad|default:'' }}" required 
+                                    aria-label="Nacionalidad" placeholder="Nacionalidad">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="edit-nombre" class="form-label">Nombre y Apellido</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-user-rectangle' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="edit-nombre" name="nombre" 
+                                    value="{{ object.nombre|default:'' }}" required 
+                                    aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="edit-representante" class="form-label">Representante de</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-business' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="edit-representante" name="representante" 
+                                    value="{{ object.representante|default:'' }}" required 
+                                    aria-label="Representante de" placeholder="Empresa">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="edit-condicion" class="form-label">Condición</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="edit-condicion" name="condicion" 
+                                    value="{{ object.condicion|default:'' }}" required 
+                                    aria-label="Condición" placeholder="Cargo">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -124,21 +241,21 @@
     </div>
 </div>
 
-<!-- Modal para eliminar un ambiente -->
+<!-- Modal para eliminar un representante -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <form method="post" id="deleteForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Eliminar Ambiente</h5>
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar Representante</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar el ambiente "<span id="delete-ambiente-name"></span>"?</p>
-                    <input type="hidden" id="delete-id" name="id">
+                    <p>¿Estás seguro de que deseas eliminar el representante "<span id="delete-representante-name"></span>"?</p>
+                    <input type="hidden" id="delete-id" name="cedula">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -164,7 +281,6 @@
 <!-- Page JS -->
 <script src="{% static '3atech/js/ui-modals.js' %}"></script>
 
-<!-- page script -->
 <script>
   $(function () {
     $("#example1").DataTable({
@@ -198,73 +314,17 @@
         },
       },
     });
-    $("#example2").DataTable({
-      paging: true,
-      lengthChange: false,
-      searching: false,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      responsive: true,
-    });
-  });
-</script>
-
-<script type="text/javascript">
-  $(function () {
-    {% for message in messages %}
-          var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
-          var messageText = "{{ message }}"; // Obtiene el texto del mensaje
-
-          if (messageType === 'success') {
-              Swal.fire({        
-                type: 'success',
-                title: 'Éxito!',
-                text: messageText,   
-                showConfirmButton: false,   
-                timer: 3000,  
-            });
-          }
-      {% endfor %}
   });
 </script>
 
 <script>
-  $(document).ready(function() {
-    $('.delete-btn').on('click', function(e) {
-      e.preventDefault(); // Evitar la acción por defecto del enlace
+    $(function () {
+      $('[data-mask]').inputmask();
 
-      const serialCliente = $(this).data('serial-cliente');
-      const url = "{% url 'dato_delete' 'serialClientePlaceholder' %}".replace('serialClientePlaceholder', serialCliente);
-
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: "btn btn-success",
-          cancelButton: "btn btn-danger"
-        },
-        buttonsStyling: false
+      $("input[data-bootstrap-switch]").each(function () {
+        $(this).bootstrapSwitch('state', $(this).prop('checked'));
       });
 
-      swalWithBootstrapButtons.fire({
-        title: "¿Estás seguro?",
-        text: "¡No podrás revertir esto!",
-        type: "warning", 
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminarlo!",
-        cancelButtonText: "No, cancelar!",
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = url; // Redirigir a la URL de eliminación
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelado",
-            text: "El registro está a salvo :)",
-            type: "success" 
-          });
-        }
-      });
-    });
   });
 </script>
 
@@ -272,11 +332,17 @@
     // Script para manejar la carga de datos en los modales
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var id = button.data('id');
+        var cedula = button.data('cedula');
+        var nacionalidad = button.data('nacionalidad');
         var nombre = button.data('nombre');
+        var representante = button.data('representante');
+        var condicion = button.data('condicion');
         var modal = $(this);
-        modal.find('#edit-id').val(id);
-        modal.find('#edit-ambiente').val(nombre);
+        modal.find('#edit-cedula').val(cedula); // Cargar cédula
+        modal.find('#edit-nacionalidad').val(nacionalidad); // Cargar nacionalidad
+        modal.find('#edit-nombre').val(nombre); // Cargar nombre
+        modal.find('#edit-representante').val(representante); // Cargar representante
+        modal.find('#edit-condicion').val(condicion); // Cargar condición
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {
@@ -293,7 +359,7 @@
         event.preventDefault(); // Evita el envío normal del formulario
         $.ajax({
             type: 'POST',
-            url: '/ambientes/crear/', // URL para crear un ambiente
+            url: '/representantes/crear/', // URL para crear un ambiente
             data: $(this).serialize(),
             headers: {
                 'X-CSRFToken': csrftoken // Incluye el token CSRF
@@ -302,7 +368,7 @@
                 // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Ambiente creado correctamente.',
+                    text: 'Representante creado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -331,16 +397,16 @@
     // Script para manejar la actualización de un ambiente
     $('#editForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#edit-id').val(); // Obtener el ID del ambiente
+        var cedula = $('#edit-cedula').val(); // Obtener el ID del ambiente
         $.ajax({
             type: 'PUT',
-            url: '/ambientes/' + id + '/editar/', // URL para editar un ambiente
+            url: '/representantes/' + cedula + '/editar/', // URL para editar un ambiente
             data: $(this).serialize(),
             success: function (response) {
                 // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Ambiente actualizado correctamente.',
+                    text: 'Representante actualizado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -433,5 +499,4 @@ $.ajaxSetup({
 });
 </script>
 
-
-{% endblock scripts %}
+{% endblock scripts %} 
