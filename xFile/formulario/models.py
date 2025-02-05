@@ -130,6 +130,26 @@ class Parroquia(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
+class Sector(ModeloAuditoria):
+    """Modelo para almacenar sectores"""
+    co_sector = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
+    des_sector = models.CharField('Nombre', help_text='Nombre del sector', max_length=60)
+    parroquia = models.ForeignKey(Parroquia, on_delete=models.PROTECT, related_name='sectores')
+
+    def __str__(self) -> str:
+        return f'{self.co_sector} - {self.des_sector}'
+
+    class Meta:
+        verbose_name = 'Sector'
+        verbose_name_plural = 'Sectores'
+        ordering = ['des_sector']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
 class Datos(ModeloAuditoria):
     """Modelo que representa las monedas."""
     serial_cliente = models.CharField('Serial', help_text='Serial Cliente', max_length=20, primary_key=True, unique=True)

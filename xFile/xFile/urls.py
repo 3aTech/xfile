@@ -20,7 +20,9 @@ from usuario.views import home, LoginView, RegisterView, SignOutView
 
 from formulario.views import (ambiente_create, ambiente_delete, AmbienteListView, ambiente_update,
                               LinderoListView, lindero_create, lindero_delete, lindero_update,
-                              RepresentanteListView, representante_create, representante_update, representante_delete)
+                              RepresentanteListView, representante_create, representante_update, representante_delete,
+                              EstadoListView, estado_create, estado_delete, estado_update,
+                              MunicipioListView, municipio_create, municipio_delete, municipio_update)
 urlpatterns = [
     path('', home, name='home'),
     
@@ -49,4 +51,16 @@ urlpatterns = [
     path('representantes/crear/', representante_create, name='representante_create'),
     path('representantes/<str:pk>/editar/', representante_update, name='representante_update'),
     path('representantes/<str:pk>/eliminar/', representante_delete, name='representante_delete'),
+    
+    # URLs para Estado
+    path('estados/', EstadoListView.as_view(), name='estado_list'),
+    path('estados/crear/', estado_create, name='estado_create'),
+    path('estados/<str:pk>/editar/', estado_update, name='estado_update'),
+    path('estados/<str:pk>/eliminar/', estado_delete, name='estado_delete'),
+    
+    # URLs para Municipio
+    path('municipios/', MunicipioListView.as_view(), name='municipio_list'),
+    path('municipios/crear/', municipio_create, name='municipio_create'),
+    path('municipios/<str:pk>/editar/', municipio_update, name='municipio_update'),
+    path('municipios/<str:pk>/eliminar/', municipio_delete, name='municipio_delete'),
 ]

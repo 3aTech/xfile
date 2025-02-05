@@ -267,16 +267,21 @@
               <div class="row mb-3">
                   <div class="col-md-3">
                     <label for="pais" class="form-label">Estado</label>
-                    <select class="form-control" id="pais" name="pais" required onchange="cargarEstados()" aria-label="pais">
-                        <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un país</option>
-                        {% for pais in paises %}
-                            <option value="{{ pais.co_pais }}" {% if object.pais.co_pais == pais.co_pais %}selected{% endif %}>
-                                {{ pais.co_pais }} - {{ pais.des_pais }}
-                            </option>
-                        {% empty %}
-                            <option value="">No hay países disponibles</option>
-                        {% endfor %}
-                    </select>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                        </div>
+                        <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
+                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un estado</option>
+                            {% for estado in estados %}
+                                <option value="{{ estado.co_estado }}" {% if object.estado.co_estado == estado.co_estado %}selected{% endif %}>
+                                    {{ estado.co_estado }} - {{ estado.des_estado }}
+                                </option>
+                            {% empty %}
+                                <option value="">No hay estados disponibles</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                   </div>
                   <div class="col-md-3">
                       <label for="municipio" class="form-label">Municipio</label>
@@ -284,7 +289,7 @@
                           <div class="input-group-prepend">
                               <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                           </div>
-                          <input type="text" class="form-control" id="municipio" name="municipio" 
+                          <input type="text" class="form-control select2bs4" id="municipio" name="municipio" 
                               value="{{ object.municipio|default:'' }}" required 
                               aria-label="Municipio" placeholder="Municipio">
                       </div>
@@ -764,6 +769,102 @@
           }
       {% endfor %}
   });
+
+  function cargarMunicipios() {
+    const estadoId = document.getElementById('estado').value;
+    fetch(`/api/municipios/?estado=${estadoId}`)
+        .then(response => response.json())
+        .then(data => {
+            const municipioSelect = document.getElementById('municipio');
+            municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+            data.forEach(municipio => {
+                municipioSelect.innerHTML += `<option value="${municipio.co_municipio}">${municipio.co_municipio} - ${municipio.des_municipio}</option>`;
+            });
+            // Si hay un municipio seleccionado, lo seleccionamos
+            if ("{{ object.municipio.co_municipio }}" !== "") {
+                municipioSelect.value = "{{ object.municipio.co_municipio }}";
+                cargarParroquias(); // Cargar parroquias para el municipio seleccionado
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar los municipios:', error);
+        });
+}
+
+function cargarParroquias() {
+    const municipioId = document.getElementById('municipio').value;
+    fetch(`/api/parroquias?municipio=${municipioId}`)
+        .then(response => response.json())
+        .then(data => {
+            const parroquiaSelect = document.getElementById('parroquia');
+            parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
+            data.forEach(parroquia => {
+                parroquiaSelect.innerHTML += `<option value="${parroquia.co_parroquia}">${parroquia.co_parroquia} - ${parroquia.des_parroquia}</option>`;
+            });
+            // Si hay una parroquia seleccionada, la seleccionamos
+            if ("{{ object.parroquia.co_parroquia }}" !== "") {
+                parroquiaSelect.value = "{{ object.parroquia.co_parroquia }}";
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar las parroquias:', error);
+        });
+}
+
+function cargarSectores() {
+    const codigoPostalId = document.getElementById('codigo_postal').value;
+    fetch(`/api/sector?codigopostal=${codigoPostalId}`)
+        .then(response => response.json())
+        .then(data => {
+            const sectorSelect = document.getElementById('sector');
+            sectorSelect.innerHTML = '<option value="" disabled selected>Seleccione un Sector</option>';
+            data.forEach(sector => {
+                sectorSelect.innerHTML += `<option value="${sector.co_sector}">${sector.co_sector} - ${sector.des_sector}</option>`;
+            });
+            // Si hay un sector seleccionado, lo seleccionamos
+            if ("{{ object.sector.co_sector }}" !== "") {
+                sectorSelect.value = "{{ object.sector.co_sector }}";
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar los sectores:', error);
+        });
+}
+
+    // Cargar municipios y parroquias al cargar la página si estamos editando
+    document.addEventListener('DOMContentLoaded', function() {
+    if ("{{ object }}" !== "") {
+        cargarMunicipios(); // Cargar municipios al cargar la página
+    }
+    });
+
+    $(document).ready(function() {
+        $('#estado').select2bs4({
+            placeholder: "Seleccione un Estado",
+            allowClear: true
+        });
+    });
+
+    $(document).ready(function() {
+        $('#municipio').select2bs4({
+            placeholder: "Seleccione un Municipio",
+            allowClear: true
+        });
+    });
+
+    $(document).ready(function() {
+        $('#parroquia').select2bs4({
+            placeholder: "Seleccione un Parroquia",
+            allowClear: true
+        }); 
+    });
+
+    $(document).ready(function() {
+        $('#sector').select2bs4({
+            placeholder: "Seleccione un Sector",
+            allowClear: true
+        });
+    });
   </script>
 
   {% for message in messages %}

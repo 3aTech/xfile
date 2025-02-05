@@ -2,14 +2,45 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import Datos, Ambiente, Lindero, Representante
+from .models import (Datos, Ambiente, Lindero, Representante, 
+                     Estado, Municipio, Parroquia, Sector)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render
-from .serializers import DatosSerializer, AmbienteSerializer, LinderoSerializer, RepresentanteSerializer
+from .serializers import (DatosSerializer, 
+                          AmbienteSerializer, LinderoSerializer, RepresentanteSerializer,
+                          EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer)
 from rest_framework import status
 
-# Create your views here.
+# Vista para obtener sector según la parroquia
+@api_view(['GET'])
+def get_sector(request):
+    Parroquia_id = request.GET.get('parroquia')
+    if not Parroquia_id:
+        return Response({"error": "La parroquia es requerida."}, status=status.HTTP_400_BAD_REQUEST)
+    sectores = Sector.objects.filter(Parroquia__id=Parroquia_id)
+    serializer = SectorSerializer(sectores, many=True)
+    return Response(serializer.data)
+
+# Vista para obtener parroquias según el municipio
+@api_view(['GET'])
+def get_parroquias(request):
+    municipio_id = request.GET.get('municipio')
+    if not municipio_id:
+        return Response({"error": "El municipio es requerido."}, status=status.HTTP_400_BAD_REQUEST)
+    parroquias = Parroquia.objects.filter(municipio__co_municipio=municipio_id)
+    serializer = ParroquiaSerializer(parroquias, many=True)
+    return Response(serializer.data)
+
+# Vista para obtener municipios según el estado
+@api_view(['GET'])
+def get_municipios(request):
+    estado_id = request.GET.get('estado')
+    if not estado_id:
+        return Response({"error": "El estado es requerido."}, status=status.HTTP_400_BAD_REQUEST)
+    municipios = Municipio.objects.filter(estado__co_estado=estado_id)
+    serializer = MunicipioSerializer(municipios, many=True)
+    return Response(serializer.data)
 
 # Vista para listar los datos
 class DatosListView(LoginRequiredMixin, ListView):
@@ -42,6 +73,15 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
         'contrato_nro'
     ]
     success_url = reverse_lazy('datos_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['estados'] = Estado.objects.all()
+        context['municipios'] = Municipio.objects.all()
+        context['parroquias'] = Parroquia.objects.all()
+        context['sectores'] = Sector.objects.all()
+        
+        return context
     
     def form_valid(self, form):
         print(form.instance)
@@ -326,3 +366,99 @@ def representante_delete(request, pk):
     lindero = Representante.objects.get(pk=pk)
     lindero.delete()
     return Response({'message': 'Representante eliminado exitosamente.'}, status=204)
+
+
+# Vistas para Estado
+class EstadoListView(LoginRequiredMixin, ListView):
+    model = Estado
+    template_name = 'pages/estados.html'
+    context_object_name = 'registros'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        if search:
+            queryset = queryset.filter(des_estado__icontains=search)
+        return queryset.order_by('des_estado')
+
+# Vista para manejar las solicitudes AJAX para crear, editar y eliminar
+@api_view(['POST'])
+def estado_create(request):
+    serializer = EstadoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        return Response({'message': 'Estado creado exitosamente.'}, status=201)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def estado_update(request, pk):
+    estado = Estado.objects.get(pk=pk)
+    serializer = EstadoSerializer(estado, data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_mo=request.user.username)
+        return Response({'message': 'Estado actualizado exitosamente.'}, status=200)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def estado_delete(request, pk):
+    estado = Estado.objects.get(pk=pk)
+    estado.delete()
+    return Response({'message': 'Estado eliminado exitosamente.'}, status=204)
+
+
+# Vistas para Municipio
+class MunicipioListView(LoginRequiredMixin, ListView):
+    model = Municipio
+    template_name = 'pages/municipios.html'
+    context_object_name = 'registros'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        estado = self.request.GET.get('estado', '')
+        
+        if search:
+            queryset = queryset.filter(des_municipio__icontains=search)
+        if estado:
+            queryset = queryset.filter(estado__co_estado=estado)
+
+        return queryset.select_related('estado').order_by('des_municipio')
+
+
+# Vista para manejar las solicitudes AJAX para crear, editar y eliminar
+@api_view(['POST'])
+def municipio_create(request):
+    serializer = MunicipioSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        return Response({'message': 'Municipio creado exitosamente.'}, status=201)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def municipio_update(request, pk):
+    municipio = Estado.objects.get(pk=pk)
+    serializer = MunicipioSerializer(municipio, data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_mo=request.user.username)
+        return Response({'message': 'Municipio actualizado exitosamente.'}, status=200)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['DELETE'])
+def municipio_delete(request, pk):
+    municipio = Municipio.objects.get(pk=pk)
+    municipio.delete()
+    return Response({'message': 'Municipio eliminado exitosamente.'}, status=204)
