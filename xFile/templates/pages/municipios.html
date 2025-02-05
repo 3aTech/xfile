@@ -47,17 +47,17 @@
         <thead>
             <tr>
                 <th>Código</th>
-                <th>Estado</th>
                 <th>Municipio</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for municipio in registros %}
             <tr>
-                <td>{{ municipio.estado }}</td>
                 <td>{{ municipio.co_municipio }}</td>
                 <td>{{ municipio.des_municipio }}</td>
+                <td>{{ municipio.estado }}</td>
                 <td>
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
@@ -101,7 +101,7 @@
                         <input type="text" class="form-control" id="des_municipio" name="des_municipio" required>
                     </div>
                     <div class="form-group">
-                        <label for="pais" class="form-label">Estado</label>
+                        <label for="estado" class="form-label">Estado</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
@@ -142,13 +142,29 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <div class="form-group">
-                            <label for="edit-code">Código</label>
-                            <input type="text" class="form-control" id="edit-code" name="co_municipio" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit-nombre">Nombre</label>
-                            <input type="text" class="form-control" id="edit-nombre" name="des_municipio" required>
+                        <label for="edit-code">Código</label>
+                        <input type="text" class="form-control" id="edit-code" name="co_municipio" required readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-nombre">Nombre</label>
+                        <input type="text" class="form-control" id="edit-nombre" name="des_municipio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-estado" class="form-label">Estado</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                            </div>
+                            <select class="form-control select2bs4" id="edit-estado" name="estado" required aria-label="estado">
+                                <option value="" disabled>Seleccione un estado</option>
+                                {% for estado in estados %}
+                                    <option value="{{ estado.co_estado }}" {% if estado.co_estado == object.estado.co_estado %}selected{% endif %}>
+                                        {{ estado.co_estado }} - {{ estado.des_estado }}
+                                    </option>
+                                {% empty %}
+                                    <option value="">No hay estados disponibles</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -311,10 +327,12 @@
         var button = $(event.relatedTarget);
         var co_municipio = button.data('coMunicipio');
         var des_municipio = button.data('desMunicipio');
+        var estado = button.data('estado');
 
         var modal = $(this);
         modal.find('#edit-code').val(co_municipio);
         modal.find('#edit-nombre').val(des_municipio);
+        modal.find('#edit-estado').val(estado);
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {

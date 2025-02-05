@@ -430,7 +430,12 @@ class MunicipioListView(LoginRequiredMixin, ListView):
         if estado:
             queryset = queryset.filter(estado__co_estado=estado)
 
-        return queryset.select_related('estado').order_by('des_municipio')
+        return queryset.select_related('estado').order_by('des_municipio') or Municipio.objects.none()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['estados'] = Estado.objects.all()  # Agregar la lista de estados
+        return context
 
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
