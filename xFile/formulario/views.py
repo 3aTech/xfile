@@ -430,7 +430,7 @@ class MunicipioListView(LoginRequiredMixin, ListView):
         if estado:
             queryset = queryset.filter(estado__co_estado=estado)
 
-        return queryset.select_related('estado').order_by('des_municipio') or Municipio.objects.none()
+        return queryset.select_related('estado').order_by('des_municipio')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -452,18 +452,96 @@ def municipio_create(request):
 
 @api_view(['PUT'])
 def municipio_update(request, pk):
-    municipio = Estado.objects.get(pk=pk)
-    serializer = MunicipioSerializer(municipio, data=request.data)
-    if serializer.is_valid():
-        serializer.save(us_mo=request.user.username)
-        return Response({'message': 'Municipio actualizado exitosamente.'}, status=200)
-    else:
-        for field, error in serializer.errors.items():
-            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
-    return Response(serializer.errors, status=400)
+    try:
+        municipio = Municipio.objects.get(co_municipio=pk)
+        estado = Estado.objects.get(co_estado=request.data.get('estado'))
+        
+        serializer = MunicipioSerializer(municipio, data={
+            'co_municipio': request.data.get('co_municipio'),
+            'des_municipio': request.data.get('des_municipio'),
+            'estado': estado.co_estado
+        })
+        
+        if serializer.is_valid():
+            serializer.save(us_mo=request.user.username)
+            return Response({'message': 'Municipio actualizado exitosamente.'}, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+    except Municipio.DoesNotExist:
+        return Response({'error': 'Municipio no encontrado.'}, status=404)
+    except Estado.DoesNotExist:
+        return Response({'error': 'Estado no encontrado.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
 def municipio_delete(request, pk):
     municipio = Municipio.objects.get(pk=pk)
     municipio.delete()
     return Response({'message': 'Municipio eliminado exitosamente.'}, status=204)
+
+# Vistas para Parroquia
+class ParroquiaListView(LoginRequiredMixin, ListView):
+    model = Parroquia
+    template_name = 'pages/parroquias.html'
+    context_object_name = 'registros'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        municipio = self.request.GET.get('municipio', '')
+        
+        if search:
+            queryset = queryset.filter(des_parroquia__icontains=search)
+        if municipio:
+            queryset = queryset.filter(municipio__co_municipio=municipio)
+
+        return queryset.select_related('municipio').order_by('des_parroquia')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['municipios'] = Municipio.objects.all()  # Agregar la lista de municipio
+        return context
+
+# Vista para manejar las solicitudes AJAX para crear, editar y eliminar
+@api_view(['POST'])
+def parroquia_create(request):
+    serializer = ParroquiaSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        return Response({'message': 'Parroquia creado exitosamente.'}, status=201)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def parroquia_update(request, pk):
+    try:
+        parroquia = Parroquia.objects.get(co_parroquia=pk)
+        municipio = Municipio.objects.get(co_municipio=request.data.get('municipio'))
+        
+        serializer = ParroquiaSerializer(parroquia, data={
+            'co_parroquia': request.data.get('co_parroquia'),
+            'des_parroquia': request.data.get('des_parroquia'),
+            'municipio': municipio.co_municipio
+        })
+        
+        if serializer.is_valid():
+            serializer.save(us_mo=request.user.username)
+            return Response({'message': 'Parroquia actualizada exitosamente.'}, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+    except Parroquia.DoesNotExist:
+        return Response({'error': 'Parroquia no encontrada.'}, status=404)
+    except Municipio.DoesNotExist:
+        return Response({'error': 'Parroquia no encontrada.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['DELETE'])
+def parroquia_delete(request, pk):
+    parroquia = Parroquia.objects.get(pk=pk)
+    parroquia.delete()
+    return Response({'message': 'Parroquia eliminado exitosamente.'}, status=204)

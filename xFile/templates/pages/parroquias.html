@@ -7,21 +7,21 @@
 <link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
 {% endblock extrahead %} 
 
-{% block title %}Gestión de Municipios{% endblock title %} 
+{% block title %}Gestión de Parroquias{% endblock title %} 
 
 {% block contentheader %}
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0 text-dark">Listado de Municipios</h1>
+        <h1 class="m-0 text-dark">Listado de Parroquias</h1>
       </div>
       <!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
-          <li class="breadcrumb-item">Municipios</li>
-          <li class="breadcrumb-item active">Gestión de Municipios</li>
+          <li class="breadcrumb-item">Parroquias</li>
+          <li class="breadcrumb-item active">Gestión de Parroquias</li>
         </ol>
       </div>
       <!-- /.col -->
@@ -47,29 +47,29 @@
         <thead>
             <tr>
                 <th>Código</th>
+                <th>Parroquia</th>
                 <th>Municipio</th>
-                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for municipio in registros %}
+            {% for parroquia in registros %}
             <tr>
-                <td>{{ municipio.co_municipio }}</td>
-                <td>{{ municipio.des_municipio }}</td>
-                <td>{{ municipio.estado }}</td>
+                <td>{{ parroquia.co_parroquia }}</td>
+                <td>{{ parroquia.des_parroquia }}</td>
+                <td>{{ parroquia.municipio }}</td>
                 <td>
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
-                            data-co-municipio="{{ municipio.co_municipio }}"
-                            data-des-municipio="{{ municipio.des_municipio }}"
-                            data-estado="{{ municipio.estado.co_estado }}">
+                            data-co-parroquia="{{ parroquia.co_parroquia }}"
+                            data-des-parroquia="{{ parroquia.des_parroquia }}"
+                            data-municipio="{{ parroquia.municipio.co_municipio }}">
                         Editar
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ municipio.co_municipio }}" 
-                            data-nombre="{{ municipio.des_municipio }}">
+                            data-codigo="{{ parroquia.co_parroquia }}" 
+                            data-nombre="{{ parroquia.des_parroquia }}">
                         Eliminar
                     </button>
                 </td>
@@ -80,41 +80,41 @@
     </div>
 </div>
 
-<!-- Modal para crear un nuevo municipio -->
+<!-- Modal para crear un nuevo parroquia -->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <form method="post" id="createForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Agregar Municipio</h5>
+                    <h5 class="modal-title" id="createModalLabel">Agregar Parroquia</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="co_municipio">Código</label>
-                        <input type="text" class="form-control" id="co_municipio" name="co_municipio" required>
+                        <label for="co_parroquia">Código</label>
+                        <input type="text" class="form-control" id="co_parroquia" name="co_parroquia" required>
                     </div>
                     <div class="form-group">
-                        <label for="des_municipio">Nombre</label>
-                        <input type="text" class="form-control" id="des_municipio" name="des_municipio" required>
+                        <label for="des_parroquia">Nombre</label>
+                        <input type="text" class="form-control" id="des_parroquia" name="des_parroquia" required>
                     </div>
                     <div class="form-group">
-                        <label for="estado" class="form-label">Estado</label>
+                        <label for="municipio" class="form-label">Municipio</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
-                            <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
-                                <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un estado</option>
-                                {% for estado in estados %}
-                                    <option value="{{ estado.co_estado }}" {% if object.estado.co_estado == estado.co_estado %}selected{% endif %}>
-                                        {{ estado.co_estado }} - {{ estado.des_estado }}
+                            <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                                <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un municipio</option>
+                                {% for municipio in municipios %}
+                                    <option value="{{ municipio.co_municipio }}" {% if object.municipio.co_municipio == municipio.co_municipio %}selected{% endif %}>
+                                        {{ municipio.co_municipio }} - {{ municipio.des_municipio }}
                                     </option>
                                 {% empty %}
-                                    <option value="">No hay estados disponibles</option>
+                                    <option value="">No hay municipios disponibles</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -129,14 +129,14 @@
     </div>
 </div>
 
-<!-- Modal para editar un municipio -->
+<!-- Modal para editar un parroquia -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <form method="post" id="editForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editar Municipio</h5>
+                    <h5 class="modal-title" id="editModalLabel">Editar Parroquia</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -144,26 +144,26 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="edit-code">Código</label>
-                        <input type="text" class="form-control" id="edit-code" name="co_municipio" required readonly>
+                        <input type="text" class="form-control" id="edit-code" name="co_parroquia" required readonly>
                     </div>
                     <div class="form-group">
                         <label for="edit-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="edit-nombre" name="des_municipio" required>
+                        <input type="text" class="form-control" id="edit-nombre" name="des_parroquia" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit-estado" class="form-label">Estado</label>
+                        <label for="edit-municipio" class="form-label">Municipio</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
-                            <select class="form-control select2bs4" id="edit-estado" name="estado" required aria-label="estado">
-                                <option value="" disabled>Seleccione un estado</option>
-                                {% for estado in estados %}
-                                    <option value="{{ estado.co_estado }}" {% if estado.co_estado == object.estado.co_estado %}selected{% endif %}>
-                                        {{ estado.co_estado }} - {{ estado.des_estado }}
+                            <select class="form-control select2bs4" id="edit-municipio" name="municipio" required aria-label="municipio">
+                                <option value="" disabled>Seleccione un municipio</option>
+                                {% for municipio in municipios %}
+                                    <option value="{{ municipio.co_municipio }}" {% if municipio.co_municipio == object.municipio.co_municipio %}selected{% endif %}>
+                                        {{ municipio.co_municipio }} - {{ municipio.des_municipio }}
                                     </option>
                                 {% empty %}
-                                    <option value="">No hay estados disponibles</option>
+                                    <option value="">No hay municipios disponibles</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -178,21 +178,21 @@
     </div>
 </div>
 
-<!-- Modal para eliminar un municipio -->
+<!-- Modal para eliminar un parroquia -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <form method="post" id="deleteForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Eliminar Municipio</h5>
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar Parroquia</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar el municipio "<span id="delete-des_municipio"></span>"?</p>
-                    <input type="hidden" id="delete-co_municipio" name="co_municipio">
+                    <p>¿Estás seguro de que deseas eliminar el parroquia "<span id="delete-des_parroquia"></span>"?</p>
+                    <input type="hidden" id="delete-co_parroquia" name="co_parroquia">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -326,14 +326,14 @@
     // Script para manejar la carga de datos en los modales
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var co_municipio = button.data('coMunicipio');
-        var des_municipio = button.data('desMunicipio');
-        var estado = button.data('estado');
+        var co_parroquia = button.data('coParroquia');
+        var des_parroquia = button.data('desParroquia');
+        var municipio = button.data('municipio');
 
         var modal = $(this);
-        modal.find('#edit-code').val(co_municipio);
-        modal.find('#edit-nombre').val(des_municipio);
-        modal.find('#edit-estado').val(estado).trigger('change');
+        modal.find('#edit-code').val(co_parroquia);
+        modal.find('#edit-nombre').val(des_parroquia);
+        modal.find('#edit-municipio').val(municipio).trigger('change');
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {
@@ -345,16 +345,16 @@
         console.log('nombre:', nombre); // Para depuración
         
         var modal = $(this);
-        modal.find('#delete-co_municipio').val(codigo);
-        modal.find('#delete-des_municipio').text(nombre);
+        modal.find('#delete-co_parroquia').val(codigo);
+        modal.find('#delete-des_parroquia').text(nombre);
     });
 
-    // Script para manejar la creación de un nuevo municipio
+    // Script para manejar la creación de un nuevo parroquia
     $('#createForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
         $.ajax({
             type: 'POST',
-            url: '/municipios/crear/', // URL para crear un municipio
+            url: '/parroquias/crear/', // URL para crear un parroquia
             data: $(this).serialize(),
             headers: {
                 'X-CSRFToken': csrftoken // Incluye el token CSRF
@@ -363,7 +363,7 @@
                 // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Municipio creado correctamente.',
+                    text: 'Parroquia creado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -389,25 +389,27 @@
         });
     });
 
-    // Script para manejar la actualización de un municipio
+    // Script para manejar la actualización de un parroquia
     $('#editForm').on('submit', function (event) {
         event.preventDefault();
-        var codigo = $('#edit-code').val(); // Usar el código del municipio
+        var codigo = $('#edit-code').val();
+        
         $.ajax({
             type: 'PUT',
-            url: '/municipios/' + codigo + '/editar/',
-            data: {
-                co_municipio: $('#edit-code').val(),
-                des_municipio: $('#edit-nombre').val(),
-                estado: $('#edit-estado').val()
-            },
+            url: '/parroquias/' + codigo + '/editar/',  // Ajusta esta URL según tu configuración
+            data: JSON.stringify({
+                'co_parroquia': $('#edit-code').val(),
+                'des_parroquia': $('#edit-nombre').val(),
+                'municipio': $('#edit-municipio').val()
+            }),
+            contentType: 'application/json',
             headers: {
                 'X-CSRFToken': csrftoken
             },
             success: function (response) {
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Municipio actualizado correctamente.',
+                    text: 'Parroquia actualizado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -415,9 +417,9 @@
                 });
             },
             error: function (xhr) {
-                let errorMessage = 'Ocurrió un error.';
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail;
+                let errorMessage = 'Ocurrió un error al actualizar la parroquia.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.error;
                 }
                 Swal.fire({
                     title: 'Error!',
@@ -429,18 +431,18 @@
         });
     });
 
-    // Script para manejar la eliminación de un municipio
+    // Script para manejar la eliminación de un parroquia
     $('#deleteForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_municipio').val(); // Obtener el ID del municipio
+        var id = $('#delete-co_parroquia').val(); // Obtener el ID del parroquia
         $.ajax({
             type: 'DELETE',
-            url: '/municipios/' + id + '/eliminar/', // URL para eliminar un municipio
+            url: '/parroquias/' + id + '/eliminar/', // URL para eliminar un parroquia
             success: function (response) {
                 // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Municipio eliminado correctamente.',
+                    text: 'Parroquia eliminado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -496,8 +498,8 @@ $.ajaxSetup({
 });
 
 $(document).ready(function() {
-    $('#estado').select2bs4({
-        placeholder: "Seleccione un Estado",
+    $('#municipio').select2bs4({
+        placeholder: "Seleccione un Municipio",
         allowClear: true
     });
 });
