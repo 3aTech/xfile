@@ -23,7 +23,9 @@ from formulario.views import (ambiente_create, ambiente_delete, AmbienteListView
                               RepresentanteListView, representante_create, representante_update, representante_delete,
                               EstadoListView, estado_create, estado_delete, estado_update,
                               MunicipioListView, municipio_create, municipio_delete, municipio_update,
-                              ParroquiaListView, parroquia_create, parroquia_delete, parroquia_update)
+                              ParroquiaListView, parroquia_create, parroquia_delete, parroquia_update,
+                              SectorListView, sector_create, sector_delete, sector_update,
+                              )
 urlpatterns = [
     path('', home, name='home'),
     
@@ -70,4 +72,10 @@ urlpatterns = [
     path('parroquias/crear/', parroquia_create, name='parroquia_create'),
     path('parroquias/<str:pk>/editar/', parroquia_update, name='parroquia_update'),
     path('parroquias/<str:pk>/eliminar/', parroquia_delete, name='municipio_delete'),
+    
+    # URLs para Sector
+    path('sectores/', SectorListView.as_view(), name='sector_list'),
+    path('sectores/crear/', sector_create, name='sector_create'),
+    path('sectores/<str:pk>/editar/', sector_update, name='sector_update'),
+    path('sectores/<str:pk>/eliminar/', sector_delete, name='municipio_delete'),
 ]

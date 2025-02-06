@@ -545,3 +545,69 @@ def parroquia_delete(request, pk):
     parroquia = Parroquia.objects.get(pk=pk)
     parroquia.delete()
     return Response({'message': 'Parroquia eliminado exitosamente.'}, status=204)
+
+# Vistas para Sector
+class SectorListView(LoginRequiredMixin, ListView):
+    model = Sector
+    template_name = 'pages/sectores.html'
+    context_object_name = 'registros'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        parroquia = self.request.GET.get('parroquia', '')
+        
+        if search:
+            queryset = queryset.filter(des_sector__icontains=search)
+        if parroquia:
+            queryset = queryset.filter(parroquia__co_parroquia=parroquia)
+
+        return queryset.select_related('parroquia').order_by('des_sector')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parroquias'] = Parroquia.objects.all()  # Asegúrate de que esto esté presente
+        return context
+
+# Vista para manejar las solicitudes AJAX para crear, editar y eliminar
+@api_view(['POST'])
+def sector_create(request):
+    serializer = SectorSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        return Response({'message': 'Sector creada exitosamente.'}, status=201)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def sector_update(request, pk):
+    try:
+        sector = Sector.objects.get(co_sector=pk)
+        parroquia = Parroquia.objects.get(co_parroquia=request.data.get('parroquia'))
+        
+        serializer = SectorSerializer(sector, data={
+            'co_sector': request.data.get('co_sector'),
+            'des_sector': request.data.get('des_sector'),
+            'parroquia': parroquia.co_parroquia
+        })
+        
+        if serializer.is_valid():
+            serializer.save(us_mo=request.user.username)
+            return Response({'message': 'Sector actualizado exitosamente.'}, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+    except Sector.DoesNotExist:
+        return Response({'error': 'Sector no encontrado.'}, status=404)
+    except Parroquia.DoesNotExist:
+        return Response({'error': 'Parroquia no encontrada.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['DELETE'])
+def sector_delete(request, pk):
+    sector = Sector.objects.get(pk=pk)
+    sector.delete()
+    return Response({'message': 'Sector eliminado exitosamente.'}, status=204)
