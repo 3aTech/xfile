@@ -80,14 +80,21 @@
                 </div>
               </div>
               <div class="col-md-3">
-                <label for="representante" class="form-label">Representante Inmobiliaria</label>
+                <label for="representante" class="form-label">Representante</label>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <span class="input-group-text"><b>N1</b></span>
+                    <span class="input-group-text"><i class='bx bx-briefcase'></i></span>
                   </div>
-                  <input type="text" class="form-control" id="representante" name="representante" 
-                        value="{{ object.representante|default:'' }}" required 
-                        aria-label="Representante Inmobiliaria" placeholder="Representante Inmobiliaria">
+                  <select class="form-control select2bs4" id="representante" name="representante" required aria-label="representante">
+                    <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un representante</option>
+                    {% for representante in representantes %}
+                        <option value="{{ representante.cedula }}" {% if object.representante.cedula == representante.cedula %}selected{% endif %}>
+                            {{ representante.nombre }}
+                        </option>
+                    {% empty %}
+                        <option value="">No hay representantes disponibles</option>
+                    {% endfor %}
+                  </select>
                 </div>             
               </div>
             </div>
@@ -266,7 +273,7 @@
           <div class="card-body">
               <div class="row mb-3">
                   <div class="col-md-3">
-                    <label for="pais" class="form-label">Estado</label>
+                    <label for="estado" class="form-label">Estado</label>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
@@ -280,7 +287,7 @@
                             {% empty %}
                                 <option value="">No hay estados disponibles</option>
                             {% endfor %}
-                        </select>
+                          </select>
                     </div>
                   </div>
                   <div class="col-md-3">
@@ -289,9 +296,16 @@
                           <div class="input-group-prepend">
                               <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                           </div>
-                          <input type="text" class="form-control select2bs4" id="municipio" name="municipio" 
-                              value="{{ object.municipio|default:'' }}" required 
-                              aria-label="Municipio" placeholder="Municipio">
+                          <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un municipio</option>
+                            {% for municipio in municipios %}
+                                <option value="{{ municipio.co_municipio }}" {% if object.municipio.co_municipio == municipio.co_municipio %}selected{% endif %}>
+                                    {{ municipio.co_municipio }} - {{ municipio.des_municipio }}
+                                </option>
+                            {% empty %}
+                                <option value="">No hay municipios disponibles</option>
+                            {% endfor %}
+                          </select>
                       </div>
                   </div>
                   <div class="col-md-3">
@@ -300,24 +314,49 @@
                           <div class="input-group-prepend">
                               <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                           </div>
-                          <input type="text" class="form-control" id="parroquia" name="parroquia" 
-                              value="{{ object.parroquia|default:'' }}" required 
-                              aria-label="Parroquia" placeholder="Parroquia">
+                          <select class="form-control select2bs4" id="parroquia" name="parroquia" required onchange="cargarSectores()" aria-label="parroquia">
+                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione una parroquia</option>
+                            {% for parroquia in parroquias %}
+                                <option value="{{ parroquia.co_parroquia }}" {% if object.parroquia.co_parroquia == parroquia.co_parroquia %}selected{% endif %}>
+                                    {{ parroquia.co_parroquia }} - {{ parroquia.des_parroquia }}
+                                </option>
+                            {% empty %}
+                                <option value="">No hay parroquias disponibles</option>
+                            {% endfor %}
+                          </select>
                       </div>
                   </div>
                   <div class="col-md-3">
-                      <label for="urbanismo" class="form-label">Urbanismo</label>
-                      <div class="input-group mb-3">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
-                          </div>
-                          <input type="text" class="form-control" id="urbanismo" name="urbanismo" 
-                              value="{{ object.urbanismo|default:'' }}" required 
-                              aria-label="Urbanismo" placeholder="Urbanismo">
-                      </div>
+                    <label for="sector" class="form-label">Sector</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                        </div>
+                        <select class="form-control select2bs4" id="sector" name="sector" required aria-label="sector">
+                          <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un sector</option>
+                          {% for sector in sectores %}
+                              <option value="{{ sector.co_sector }}" {% if object.sector.co_sector == sector.co_sector %}selected{% endif %}>
+                                  {{ sector.co_sector }} - {{ sector.des_sector }}
+                              </option>
+                          {% empty %}
+                              <option value="">No hay sectores disponibles</option>
+                          {% endfor %}
+                        </select>
+                    </div>
                   </div>
               </div>
               <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="urbanismo" class="form-label">Urbanismo</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                            </div>
+                            <input type="text" class="form-control" id="urbanismo" name="urbanismo" 
+                                value="{{ object.urbanismo|default:'' }}" required 
+                                aria-label="Urbanismo" placeholder="Urbanismo">
+                        </div>
+                    </div>
                   <div class="col-md-3">
                       <label for="torre" class="form-label">Torre</label>
                       <div class="input-group mb-3">
@@ -836,6 +875,13 @@ function cargarSectores() {
     if ("{{ object }}" !== "") {
         cargarMunicipios(); // Cargar municipios al cargar la página
     }
+    });
+
+    $(document).ready(function() {
+        $('#representante').select2bs4({
+            placeholder: "Seleccione un ff",
+            allowClear: true
+        });
     });
 
     $(document).ready(function() {

@@ -6,7 +6,7 @@ class DatosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Datos
         fields = [
-            'serial_cliente', 'sello_dorado', 'cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
+            'serial_cliente', 'sello_dorado', 'nro_dorado_oficio','cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
             'urbanismo', 'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
             'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
             'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',

@@ -58,7 +58,7 @@ class Representante(ModeloAuditoria):
     inactivo = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
     
     def __str__(self) -> str:
-        return f'{self.cedula} - {self.nombre} {self.apellido}'
+        return f'{self.cedula} - {self.nombre}'
 
     class Meta:
         verbose_name = 'Representante'
@@ -156,26 +156,39 @@ class Datos(ModeloAuditoria):
     sello_dorado = models.BooleanField('Sello Dorado', default=False, help_text='Sello Dorado')
     nro_dorado_oficio = models.CharField('Número Sello Dorado u Oficio', max_length=20, help_text='Número Sello Dorado u Oficio', null=True, blank=True)
     representante = models.ForeignKey(Representante, on_delete=models.PROTECT, related_name='datos')
+    
     cedula = models.CharField('Cédula', max_length=12, help_text='Cédula')
+    identificador = models.CharField('Identificado', max_length=3, help_text='Identificado')
+    denominara = models.CharField('Denominara', max_length=20, help_text='Denominara')
+    ciudadano_ciudadana = models.CharField('Ciudadano/Ciudadana', max_length=20, help_text='Ciudadano/Ciudadana')
     nombre1 = models.CharField('Nombre 1', max_length=20, help_text='Nombre 1')
     nombre2 = models.CharField('Nombre 2', max_length=20, help_text='Nombre 2', null=True, blank=True)
     apellido1 = models.CharField('Apellido 1', max_length=20, help_text='Apellido 1')
     apellido2 = models.CharField('Apellido 2', max_length=20, help_text='Apellido 2', null=True, blank=True)
+    
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='datos')
     municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT, related_name='datos')
     parroquia = models.ForeignKey(Parroquia, on_delete=models.PROTECT, related_name='datos')
+    sector = models.ForeignKey(Sector, on_delete=models.PROTECT, related_name='datos')
     urbanismo = models.CharField('Urbanismo', max_length=120, help_text='Urbanismo')
     torre = models.CharField('Torre', max_length=10, help_text='Torre')
     piso = models.CharField('Piso', max_length=8, help_text='Piso')
     apartamento = models.CharField('Apartamento', max_length=8, help_text='Apartamento')
+    
+    metros_cuadrados = models.CharField('Mt2', max_length=200, help_text='Mt2', null=True, blank=True)
+    
+    ambientes = models.CharField('Ambientes', max_length=200, help_text='Ambientes', null=True, blank=True)
+    lindero_norte = models.CharField('Lindero Norte', max_length=20, help_text='Lindero Norte', null=True, blank=True)
+    lindero_sur = models.CharField('Lindero Sur', max_length=20, help_text='Lindero Sur', null=True, blank=True)
+    lindero_este = models.CharField('Lindero Este', max_length=20, help_text='Lindero Este', null=True, blank=True)
+    lindero_oeste = models.CharField('Lindero Oeste', max_length=20, help_text='Lindero Oeste', null=True, blank=True)
+    
     monto_credito = models.DecimalField('Monto Crédito', max_digits=18, decimal_places=8, help_text='Monto Crédito Hipotecario a Otorgar')
     precio_venta = models.DecimalField('Precio Venta', max_digits=18, decimal_places=8, help_text='Precio de Venta')
     precio_venta_divisa = models.DecimalField('Precio Venta Divisa', max_digits=18, decimal_places=8, help_text='Precio de Venta en Divisa')
     inicial = models.DecimalField('Inicial', max_digits=18, decimal_places=8, help_text='Inicial')
     inicial_porcentaje = models.DecimalField('% Inicial', max_digits=18, decimal_places=8, help_text='% Inicial')
-    identificador = models.CharField('Identificado', max_length=3, help_text='Identificado')
-    denominara = models.CharField('Denominara', max_length=20, help_text='Denominara')
-    ciudadano_ciudadana = models.CharField('Ciudadano/Ciudadana', max_length=20, help_text='Ciudadano/Ciudadana')
+    
     anios = models.CharField('Años', max_length=4, help_text='Años')
     meses = models.CharField('Meses', max_length=3, help_text='Meses')
     cuota_mensual = models.DecimalField('Cuota Mensual', max_digits=18, decimal_places=8, help_text='Cuota Mensual')

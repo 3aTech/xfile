@@ -15,10 +15,10 @@ from rest_framework import status
 # Vista para obtener sector según la parroquia
 @api_view(['GET'])
 def get_sector(request):
-    Parroquia_id = request.GET.get('parroquia')
-    if not Parroquia_id:
+    parroquia_id = request.GET.get('parroquia')
+    if not parroquia_id:
         return Response({"error": "La parroquia es requerida."}, status=status.HTTP_400_BAD_REQUEST)
-    sectores = Sector.objects.filter(Parroquia__id=Parroquia_id)
+    sectores = Sector.objects.filter(parroquia=parroquia_id)
     serializer = SectorSerializer(sectores, many=True)
     return Response(serializer.data)
 
@@ -58,6 +58,11 @@ class DatosListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['representantes'] = Representante.objects.all()
+        context['estados'] = Estado.objects.all()
+        context['municipios'] = Municipio.objects.all()
+        context['parroquias'] = Parroquia.objects.all()
+        context['sectores'] = Sector.objects.all()
         context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
         return context
 
@@ -65,9 +70,11 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
     model = Datos
     template_name = 'pages/frmDatos.html'
     fields = [
-        'serial_cliente', 'sello_dorado', 'cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
-        'urbanismo', 'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
-        'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
+        'serial_cliente', 'sello_dorado', 'nro_dorado_oficio', 'representante', 
+        'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
+        'estado', 'municipio', 'parroquia', 'urbanismo', 'torre', 'piso', 'apartamento', 
+        'metros_cuadrados', 'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
+        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_porcentaje',  
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
         'contrato_nro'
@@ -76,6 +83,8 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['representantes'] = Representante.objects.all()
+        print(context['representantes'])
         context['estados'] = Estado.objects.all()
         context['municipios'] = Municipio.objects.all()
         context['parroquias'] = Parroquia.objects.all()

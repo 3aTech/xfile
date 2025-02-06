@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from usuario.views import home, LoginView, RegisterView, SignOutView
 
-from formulario.views import (ambiente_create, ambiente_delete, AmbienteListView, ambiente_update,
+from formulario.views import (get_municipios, get_parroquias, get_sector,
+                              ambiente_create, ambiente_delete, AmbienteListView, ambiente_update,
                               LinderoListView, lindero_create, lindero_delete, lindero_update,
                               RepresentanteListView, representante_create, representante_update, representante_delete,
                               EstadoListView, estado_create, estado_delete, estado_update,
@@ -28,6 +29,11 @@ from formulario.views import (ambiente_create, ambiente_delete, AmbienteListView
                               )
 urlpatterns = [
     path('', home, name='home'),
+    
+    # path('api/urbanismos/', get_urbanismo, name='obtener_urbanismo_por_sector'),
+    path('api/sector/', get_sector, name='obtener_sector_por_parroquias'), # /api/sector/?parroquia=1
+    path('api/parroquias/', get_parroquias, name='obtener_parroquias_por_municipio'), # /api/parroquias/?municipio=VAR
+    path('api/municipios/', get_municipios, name='obtener_municipios_por_estado'), # /api/municipios/?estado=LGR
     
     path('admin/', admin.site.urls),
     
