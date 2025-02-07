@@ -6,12 +6,14 @@ class DatosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Datos
         fields = [
-            'serial_cliente', 'sello_dorado', 'nro_dorado_oficio','cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
-            'urbanismo', 'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
-            'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
-            'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
-            'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
-            'contrato_nro', 'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo'
+                    'serial_cliente', 'expediente', 'contrato_nro', 'representante', 'sello_dorado', 'nro_dorado_oficio',  
+        'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
+        'estado', 'municipio', 'parroquia', 'sector', 'urbanismo', 'torre', 'piso', 'apartamento', 'metros_cuadrados',
+        'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
+        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_porcentaje',  
+        'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
+        'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa',
+        'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo'
         ]
 
 class AmbienteSerializer(serializers.ModelSerializer):

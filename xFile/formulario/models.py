@@ -153,9 +153,11 @@ class Sector(ModeloAuditoria):
 class Datos(ModeloAuditoria):
     """Modelo que representa las monedas."""
     serial_cliente = models.CharField('Serial', help_text='Serial Cliente', max_length=20, primary_key=True, unique=True)
+    expediente = models.CharField('Expediente', max_length=50, help_text='Expediente', null=True, blank=True)
+    contrato_nro = models.CharField('Nro. Contrato', max_length=50, help_text='Nro. Contrato', null=True, blank=True) 
+    representante = models.ForeignKey(Representante, on_delete=models.PROTECT, related_name='datos')
     sello_dorado = models.BooleanField('Sello Dorado', default=False, help_text='Sello Dorado')
     nro_dorado_oficio = models.CharField('Número Sello Dorado u Oficio', max_length=20, help_text='Número Sello Dorado u Oficio', null=True, blank=True)
-    representante = models.ForeignKey(Representante, on_delete=models.PROTECT, related_name='datos')
     
     cedula = models.CharField('Cédula', max_length=12, help_text='Cédula')
     identificador = models.CharField('Identificado', max_length=3, help_text='Identificado')
@@ -174,21 +176,19 @@ class Datos(ModeloAuditoria):
     torre = models.CharField('Torre', max_length=10, help_text='Torre')
     piso = models.CharField('Piso', max_length=8, help_text='Piso')
     apartamento = models.CharField('Apartamento', max_length=8, help_text='Apartamento')
+    metros_cuadrados = models.DecimalField('Mtrs2', max_digits=18, decimal_places=2, help_text='Mtrs2')
     
-    metros_cuadrados = models.CharField('Mt2', max_length=200, help_text='Mt2', null=True, blank=True)
-    
-    ambientes = models.CharField('Datos de Ambientes', max_length=300, help_text='Datos de Ambientes', null=True, blank=True)
     lindero_norte = models.CharField('Lindero Norte', max_length=20, help_text='Lindero Norte', null=True, blank=True)
     lindero_sur = models.CharField('Lindero Sur', max_length=20, help_text='Lindero Sur', null=True, blank=True)
     lindero_este = models.CharField('Lindero Este', max_length=20, help_text='Lindero Este', null=True, blank=True)
     lindero_oeste = models.CharField('Lindero Oeste', max_length=20, help_text='Lindero Oeste', null=True, blank=True)
+    ambientes = models.CharField('Datos de Ambientes', max_length=300, help_text='Datos de Ambientes', null=True, blank=True)
     
     monto_credito = models.DecimalField('Monto Crédito', max_digits=18, decimal_places=8, help_text='Monto Crédito Hipotecario a Otorgar')
     precio_venta = models.DecimalField('Precio Venta', max_digits=18, decimal_places=8, help_text='Precio de Venta')
     precio_venta_divisa = models.DecimalField('Precio Venta Divisa', max_digits=18, decimal_places=8, help_text='Precio de Venta en Divisa')
     inicial = models.DecimalField('Inicial', max_digits=18, decimal_places=8, help_text='Inicial')
     inicial_porcentaje = models.DecimalField('% Inicial', max_digits=18, decimal_places=8, help_text='% Inicial')
-    
     anios = models.CharField('Años', max_length=4, help_text='Años')
     meses = models.CharField('Meses', max_length=3, help_text='Meses')
     cuota_mensual = models.DecimalField('Cuota Mensual', max_digits=18, decimal_places=8, help_text='Cuota Mensual')
@@ -199,8 +199,7 @@ class Datos(ModeloAuditoria):
     cuota_financiera_divisa = models.DecimalField('Cuota Financiera Divisa', max_digits=18, decimal_places=8, help_text='Cuota Financiera Divisa')
     fongar = models.DecimalField('Fongar', max_digits=18, decimal_places=8, help_text='Fongar')
     fongar_divisa = models.DecimalField('Fongar Divisa', max_digits=18, decimal_places=8, help_text='Fongar Divisa')
-    expediente = models.CharField('Expediente', max_length=50, help_text='Expediente', null=True, blank=True)
-    contrato_nro = models.CharField('Nro. Contrato', max_length=50, help_text='Nro. Contrato', null=True, blank=True) 
+    
     
     def __str__(self) -> str:
         return f'{self.expediente} ({self.nombre1}) ({self.apellido1})'

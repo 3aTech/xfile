@@ -70,14 +70,14 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
     model = Datos
     template_name = 'pages/frmDatos.html'
     fields = [
-        'serial_cliente', 'sello_dorado', 'nro_dorado_oficio', 'representante', 
+        'serial_cliente', 'expediente', 'contrato_nro', 'representante', 'sello_dorado', 'nro_dorado_oficio',  
         'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
-        'estado', 'municipio', 'parroquia', 'urbanismo', 'torre', 'piso', 'apartamento', 
-        'metros_cuadrados', 'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
+        'estado', 'municipio', 'parroquia', 'sector', 'urbanismo', 'torre', 'piso', 'apartamento', 'metros_cuadrados',
+        'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
         'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_porcentaje',  
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
-        'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
-        'contrato_nro'
+        'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa'
+        
     ]
     success_url = reverse_lazy('datos_list')
     
@@ -109,12 +109,13 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
     model = Datos
     template_name = 'pages/frmDatos.html'
     fields = [
-        'sello_dorado', 'cedula', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
-        'urbanismo', 'torre', 'piso', 'apartamento', 'monto_credito', 'precio_venta', 'precio_venta_divisa',
-        'inicial', 'inicial_porcentaje', 'identificador', 'denominara', 'ciudadano_ciudadana',
+        'expediente', 'contrato_nro', 'representante', 'sello_dorado', 'nro_dorado_oficio',  
+        'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
+        'estado', 'municipio', 'parroquia', 'sector', 'urbanismo', 'torre', 'piso', 'apartamento', 'metros_cuadrados',
+        'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
+        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_porcentaje',  
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
-        'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa', 'expediente',
-        'contrato_nro'
+        'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa'
     ]
     success_url = reverse_lazy('datos_list')
     

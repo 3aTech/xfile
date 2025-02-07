@@ -123,7 +123,7 @@
                     <div class="form-group">
                         <div class="form-group">
                             <label for="edit-code">Código</label>
-                            <input type="text" class="form-control" id="edit-code" name="co_estado" required>
+                            <input type="text" class="form-control" id="edit-code" name="co_estado" required readonly>
                         </div>
                         <div class="form-group">
                             <label for="edit-nombre">Nombre</label>
@@ -352,10 +352,10 @@
     // Script para manejar la actualización de un estado
     $('#editForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#edit-id').val(); // Obtener el ID del estado
+        var codigo = $('#edit-code').val(); // Obtener el ID del estado
         $.ajax({
             type: 'PUT',
-            url: '/estados/' + id + '/editar/', // URL para editar un estado
+            url: '/estados/' + codigo + '/editar/', // URL para editar un estado
             data: $(this).serialize(),
             success: function (response) {
                 // Manejar la respuesta exitosa

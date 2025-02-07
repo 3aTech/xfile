@@ -45,273 +45,54 @@
   <div class="card-body">
     <table id="example1" class="table table-bordered table-striped">
       <thead>
-        <tr>
-          <th>Serial Cliente</th>
-          <th>Sello Dorado</th>
-          <th>Cédula</th>
-          <th>Primer Nombre</th>
-          <th>Segundo Nombre</th>
-          <th>Primer Apellido</th>
-          <th>Segundo Apellido</th>
-          <th>Urbanismo</th>
-          <th>Torre</th>
-          <th>Piso</th>
-          <th>Apartamento</th>
-          <th>Monto Crédito</th>
-          <th>Precio Venta</th>
-          <th>Precio Venta Divisa</th>
-          <th>Inicial</th>
-          <th>% Inicial</th>
-          <th>Identificador</th>
-          <th>Denominará</th>
-          <th>Ciudadano(a)</th>
-          <th>Años</th>
-          <th>Meses</th>
-          <th>Cuotas Mensuales</th>
-          <th>Cuotas Mensuales Divisa</th>
-          <th>Flat</th>
-          <th>Flat Divisa</th>
-          <th>Cuota Financiera</th>
-          <th>Cuota Financiera Divisa</th>
-          <th>Fongar</th>
-          <th>Fongar Divisa</th>
-          <th>Expediente</th>
-          <th>Contrato Nro.</th>
-        </tr>
+          <tr>
+            <th>Serial Cliente</th>
+            <th>Sello Dorado</th>
+            <th>Cédula</th>
+            <th>Primer Nombre</th>
+            <th>Primer Apellido</th>
+            <th>Estado</th>
+            <th>Urbanismo</th>
+            <th>Expediente</th>
+            <th>Contrato Nro.</th>
+            <th>Acciones</th>
+          </tr>
       </thead>
       <tbody>
-        {% for registro in registros %}
-        <tr style="cursor: pointer" data-toggle="modal" data-target="#modalRegistro{{ registro.serial_cliente }}">
-          <td>{{ registro.serial_cliente }}
-              <!-- Modal -->
-              <div class="modal fade" id="modalRegistro{{ registro.serial_cliente }}" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="ModalLabel">Detalles del Registro</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                            <label class="form-label"><b>Serial Cliente</b></label>
-                            <p class="form-control-static">{{ registro.serial_cliente }}</p>
-                        </div>
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Expediente</b></label>
-                          <p class="form-control-static">{{ registro.expediente }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Contrato Nro.</b></label>
-                          <p class="form-control-static">{{ registro.contrato_nro }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Sello Dorado</b></label>
-                            <p class="form-control-static">
-                                {% if registro.sello_dorado %}
-                                    <span class="badge bg-success">Si, Emitido</span>
-                                {% else %}
-                                    <span class="badge bg-danger">Oficio</span>
-                                {% endif %}
-                            </p>
-                        </div> 
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                            <label class="form-label"><b>Cédula</b></label>
-                            <p class="form-control-static">{{ registro.cedula }}</p>
-                        </div>
-                      </div>    
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                            <label class="form-label"><b>Nombre 1</b></label>
-                            <p class="form-control-static">{{ registro.nombre1 }}</p>
-                        </div>
-                        <div class="col-sm-3 mb-1">
-                            <label class="form-label"><b>Nombre 2</b></label>
-                            <p class="form-control-static">{{ registro.nombre2 }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Apellido 1</b></label>
-                          <p class="form-control-static">{{ registro.apellido1 }}</p>
-                        </div>
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Apellido 2</b></label>
-                          <p class="form-control-static">{{ registro.apellido2 }}</p>
-                        </div>    
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                            <label class="form-label"><b>Urbanismo</b></label>
-                            <p class="form-control-static">{{ registro.urbanismo }}</p>
-                        </div>
-                        <div class="col-sm-1 mb-1">
-                            <label class="form-label"><b>Torre</b></label>
-                            <p class="form-control-static">{{ registro.torre }}</p>
-                        </div>  
-                        <div class="col-sm-2 mb-1">
-                          <label class="form-label"><b>Piso</b></label>
-                          <p class="form-control-static">{{ registro.piso }}</p>
-                        </div>  
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Apartamento</b></label>
-                          <p class="form-control-static">{{ registro.apartamento }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Monto Crédito</b></label>
-                          <p class="form-control-static">{{ registro.monto_credito }}</p>
-                        </div>
-                      </div>                                                 
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                            <label class="form-label"><b>Precio Venta</b></label>
-                            <p class="form-control-static">{{ registro.precio_venta }}</p>
-                        </div>  
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Precio Venta Divisa</b></label>
-                          <p class="form-control-static">{{ registro.precio_venta_divisa }}</p>
-                        </div>  
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Inicial</b></label>
-                          <p class="form-control-static">{{ registro.inicial }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                            <label class="form-label"><b>% Inicial</b></label>
-                            <p class="form-control-static">{{ registro.inicial_porcentaje }}</p>
-                        </div>  
-                      </div>
-
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Identificador</b></label>
-                          <p class="form-control-static">{{ registro.identificador }}</p>
-                        </div>  
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Denominará</b></label>
-                          <p class="form-control-static">{{ registro.denominara }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Ciudadano(a)</b></label>
-                          <p class="form-control-static">{{ registro.ciudadano_ciudadana }}</p>
-                        </div>  
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Años</b></label>
-                          <p class="form-control-static">{{ registro.anios }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Meses</b></label>
-                          <p class="form-control-static">{{ registro.meses }}</p>
-                        </div>  
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Cuotas Mensuales</b></label>
-                          <p class="form-control-static">{{ registro.cuota_mensual }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Cuotas Mensuales Divisa</b></label>
-                          <p class="form-control-static">{{ registro.cuota_mensual_divisa }}</p>
-                        </div>  
-                      </div>
-
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Flat</b></label>
-                          <p class="form-control-static">{{ registro.flat }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Flat Divisa</b></label>
-                          <p class="form-control-static">{{ registro.flat_divisa }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Cuota Financiera</b></label>
-                          <p class="form-control-static">{{ registro.cuota_financiera }}</p>
-                        </div> 
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Cuota Financiera Divisa</b></label>
-                          <p class="form-control-static">{{ registro.cuota_financiera_divisa }}</p>
-                        </div>   
-                      </div>
-
-                      <div class="row">
-                        <div class="col-sm-3 mb-1">
-                          <label class="form-label"><b>Fongar</b></label>
-                          <p class="form-control-static">{{ registro.fongar }}</p>
-                        </div> 
-                        <div class="col-sm-6 mb-1">
-                          <label class="form-label"><b>Fongar Divisa</b></label>
-                          <p class="form-control-static">{{ registro.fongar_divisa }}</p>
-                        </div>  
-                      </div>
-
-                    </div>
-                    <div class="modal-footer d-flex justify-content-center gap-2">
-                      <button type="button" class="btn btn-icon btn-outline-secondary" data-bs-dismiss="modal">
-                          <span class="tf-icons bx bx-exit">
-                      </button>
-                      <a class="btn btn-icon btn-outline-primary" href="{% url 'dato_update' registro.serial_cliente %}" title="Editar">
-                          <span class="tf-icons bx bx-edit"></span>
-                      </a>
-                      <a class="btn btn-icon btn-outline-danger delete-btn" href="{% url 'dato_delete' registro.serial_cliente %}" title="Eliminar">
-                          <span class="tf-icons bx bx-trash"></span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-          </td>
-          <td>
-            {% if registro.sello_dorado %}
-            <span class="badge bg-success color-palette">Si</span>
-            {% else %}
-            <span class="badge bg-secondary">No</span>
-            {% endif %}
-          </td>
-          <td>{{ registro.cedula }}</td>
-          <td>{{ registro.nombre1 }}</td>
-          <td>{{ registro.nombre2 }}</td>
-          <td>{{ registro.apellido1 }}</td>
-          <td>{{ registro.apellido2 }}</td>
-          <td>{{ registro.urbanismo }}</td>
-          <td>{{ registro.torre }}</td>
-          <td>{{ registro.piso }}</td>
-          <td>{{ registro.apartamento }}</td>
-          <td>{{ registro.monto_credito }}</td>
-          <td>{{ registro.precio_venta }}</td>
-          <td>{{ registro.precio_venta_divisa }}</td>
-          <td>{{ registro.inicial }}</td>
-          <td>{{ registro.inicial_porcentaje }}</td>
-          <td>{{ registro.identificador }}</td>
-          <td>{{ registro.denominara }}</td>
-          <td>{{ registro.ciudadano_ciudadana }}</td>
-          <td>{{ registro.anios }}</td>
-          <td>{{ registro.meses }}</td>
-          <td>{{ registro.cuota_mensual }}</td>
-          <td>{{ registro.cuota_mensual_divisa }}</td>
-          <td>{{ registro.flat }}</td>
-          <td>{{ registro.flat_divisa }}</td>
-          <td>{{ registro.cuota_financiera }}</td>
-          <td>{{ registro.cuota_financiera_divisa }}</td>
-          <td>{{ registro.fongar }}</td>
-          <td>{{ registro.fongar_divisa }}</td>
-          <td>{{ registro.expediente }}</td>
-          <td>{{ registro.contrato_nro }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="28" class="text-center">
-            Actualmente no existe registros
-          </td>
-        </tr>
-        {% endfor %}
+          {% for registro in registros %}
+          <tr>
+            <td>{{ registro.serial_cliente }}</td>
+            <td class="text-center">
+              {% if registro.sello_dorado %}
+              <span class="badge bg-success color-palette">Si</span>
+              {% else %}
+              <span class="badge bg-secondary">No</span>
+              {% endif %}
+            </td>
+            <td>{{ registro.cedula }}</td>
+            <td>{{ registro.nombre1 }}</td>
+            <td>{{ registro.apellido1 }}</td>
+            <td>{{ registro.estado }}</td>
+            <td>{{ registro.urbanismo }}</td>
+            <td>{{ registro.expediente }}</td>
+            <td>{{ registro.contrato_nro }}</td>
+              <td>
+                  <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ registro.serial_cliente }}" data-nombre="{{ registro.nombre1 }}">
+                    <i class='bx bx-edit' ></i>
+                  </button>
+                  <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ registro.serial_cliente }}" data-nombre="{{ registro.nombre1 }}">
+                    <i class='bx bx-trash' ></i>
+                  </button>
+              </td>
+          </tr>
+          {% endfor %}
       </tbody>
     </table>
   </div>
   <!-- /.card-body -->
 </div>
+
+
 
 {% endblock content %} 
 
