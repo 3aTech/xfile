@@ -177,7 +177,7 @@ class Datos(ModeloAuditoria):
     
     metros_cuadrados = models.CharField('Mt2', max_length=200, help_text='Mt2', null=True, blank=True)
     
-    ambientes = models.CharField('Ambientes', max_length=200, help_text='Ambientes', null=True, blank=True)
+    ambientes = models.CharField('Datos de Ambientes', max_length=300, help_text='Datos de Ambientes', null=True, blank=True)
     lindero_norte = models.CharField('Lindero Norte', max_length=20, help_text='Lindero Norte', null=True, blank=True)
     lindero_sur = models.CharField('Lindero Sur', max_length=20, help_text='Lindero Sur', null=True, blank=True)
     lindero_este = models.CharField('Lindero Este', max_length=20, help_text='Lindero Este', null=True, blank=True)

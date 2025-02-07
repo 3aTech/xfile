@@ -86,7 +86,7 @@
                     <span class="input-group-text"><i class='bx bx-briefcase'></i></span>
                   </div>
                   <select class="form-control select2bs4" id="representante" name="representante" required aria-label="representante">
-                    <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un representante</option>
+                    <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Representante</option>
                     {% for representante in representantes %}
                         <option value="{{ representante.cedula }}" {% if object.representante.cedula == representante.cedula %}selected{% endif %}>
                             {{ representante.nombre }}
@@ -279,7 +279,7 @@
                             <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                         </div>
                         <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
-                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un estado</option>
+                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Estado</option>
                             {% for estado in estados %}
                                 <option value="{{ estado.co_estado }}" {% if object.estado.co_estado == estado.co_estado %}selected{% endif %}>
                                     {{ estado.co_estado }} - {{ estado.des_estado }}
@@ -297,7 +297,7 @@
                               <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                           </div>
                           <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
-                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un municipio</option>
+                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
                             {% for municipio in municipios %}
                                 <option value="{{ municipio.co_municipio }}" {% if object.municipio.co_municipio == municipio.co_municipio %}selected{% endif %}>
                                     {{ municipio.co_municipio }} - {{ municipio.des_municipio }}
@@ -315,7 +315,7 @@
                               <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                           </div>
                           <select class="form-control select2bs4" id="parroquia" name="parroquia" required onchange="cargarSectores()" aria-label="parroquia">
-                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione una parroquia</option>
+                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione una Parroquia</option>
                             {% for parroquia in parroquias %}
                                 <option value="{{ parroquia.co_parroquia }}" {% if object.parroquia.co_parroquia == parroquia.co_parroquia %}selected{% endif %}>
                                     {{ parroquia.co_parroquia }} - {{ parroquia.des_parroquia }}
@@ -333,7 +333,7 @@
                             <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                         </div>
                         <select class="form-control select2bs4" id="sector" name="sector" required aria-label="sector">
-                          <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un sector</option>
+                          <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Sector</option>
                           {% for sector in sectores %}
                               <option value="{{ sector.co_sector }}" {% if object.sector.co_sector == sector.co_sector %}selected{% endif %}>
                                   {{ sector.co_sector }} - {{ sector.des_sector }}
@@ -391,6 +391,19 @@
                       </div>
                   </div>
               </div>
+              <div class="row mb-3">
+                <div class="col-md-3">
+                    <label for="metros_cuadrados" class="form-label">Mt2</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class='bx bx-ruler' ></i></span>
+                        </div>
+                        <input type="number" class="form-control" id="metros_cuadrados" name="metros_cuadrados" 
+                            value="{{ object.metros_cuadrados|default:'' }}" required 
+                            aria-label="metros_cuadrados" placeholder="Mt2">
+                    </div>
+                </div>
+              </div>
               <fieldset class="border p-2 rounded-3 mb-3">
                   <legend class="w-auto">Linderos:</legend>
                   <div class="row mb-3">
@@ -440,77 +453,19 @@
                       </div>
                   </div>
               </fieldset>
-              <fieldset class="border p-2 rounded-3 mb-3">
-                  <legend class="w-auto">Ambientes:</legend>
-                  <div class="row mb-3">
-                      <div class="col-md-3">
-                          <label for="cocina" class="form-label">Cocina</label>
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class="fas fa-light fa-city"></i></span>
-                              </div>
-                              <input type="text" class="form-control" id="cocina" name="cocina" 
-                                  value="{{ object.cocina|default:'' }}" required 
-                                  aria-label="Cocina" placeholder="Cocina">
-                          </div>
-                      </div>
-                      <div class="col-md-3">
-                          <label for="dormitorio" class="form-label">Dormitorio</label>
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
-                              </div>
-                              <input type="text" class="form-control" id="dormitorio" name="dormitorio" 
-                                  value="{{ object.dormitorio|default:'' }}" required 
-                                  aria-label="Dormitorio" placeholder="Dormitorio">
-                          </div>
-                      </div>
-                      <div class="col-md-3">
-                          <label for="baño" class="form-label">Baño</label>
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class='bx bxs-building-house'></i></span>
-                              </div>
-                              <input type="text" class="form-control" id="baño" name="baño" 
-                                  value="{{ object.baño|default:'' }}" required aria-label="Baño" 
-                                  placeholder="Baño">
-                          </div>
-                      </div>
-                      <div class="col-md-3">
-                          <label for="sala" class="form-label">Sala</label>
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class='bx bxs-building-house'></i></span>
-                              </div>
-                              <input type="text" class="form-control" id="sala" name="sala" 
-                                  value="{{ object.sala|default:'' }}" required aria-label="Sala" 
-                                  placeholder="Sala">
-                          </div>
-                      </div>
-                      <div class="col-md-3">
-                          <label for="comedor" class="form-label">Comedor</label>
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class='bx bxs-building-house'></i></span>
-                              </div>
-                              <input type="text" class="form-control" id="comedor" name="comedor" 
-                                  value="{{ object.comedor|default:'' }}" required aria-label="Comedor" 
-                                  placeholder="Comedor">
-                          </div>
-                      </div>
-                      <div class="col-md-3">
-                          <label for="lavadero" class="form-label">Lavadero</label>
-                          <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                  <span class="input-group-text"><i class='bx bxs-building-house'></i></span>
-                              </div>
-                              <input type="text" class="form-control" id="lavadero" name="lavadero" 
-                                  value="{{ object.lavadero|default:'' }}" required aria-label="Lavadero" 
-                                  placeholder="Lavadero">
-                          </div>
-                      </div>
-                  </div>
-              </fieldset>
+              <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="ambientes" class="form-label">Datos de Ambientes</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class='bx bx-home'></i></span>
+                        </div>
+                        <textarea class="form-control" rows="3" id="ambientes" name="ambientes" 
+                            value="{{ object.ambientes|default:'' }}" required aria-label="ambientes" placeholder="Ambientes...">
+                        </textarea>                  
+                    </div>
+                </div>
+              </div>
           </div>
         </div>
 
@@ -851,8 +806,8 @@ function cargarParroquias() {
 }
 
 function cargarSectores() {
-    const codigoPostalId = document.getElementById('codigo_postal').value;
-    fetch(`/api/sector?codigopostal=${codigoPostalId}`)
+    const parroquiasId = document.getElementById('parroquia').value;
+    fetch(`/api/sector/?parroquia=${parroquiasId}`)
         .then(response => response.json())
         .then(data => {
             const sectorSelect = document.getElementById('sector');
@@ -879,7 +834,7 @@ function cargarSectores() {
 
     $(document).ready(function() {
         $('#representante').select2bs4({
-            placeholder: "Seleccione un ff",
+            placeholder: "Seleccione un Representante",
             allowClear: true
         });
     });
