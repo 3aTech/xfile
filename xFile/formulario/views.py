@@ -74,7 +74,7 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
         'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
         'estado', 'municipio', 'parroquia', 'sector', 'urbanismo', 'torre', 'piso', 'apartamento', 'metros_cuadrados',
         'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
-        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_porcentaje',  
+        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_divisa', 'inicial_porcentaje',  
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa'
         
@@ -102,22 +102,22 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
         for field, error in form.errors.items():
             messages.error(self.request, f"{field}: {error}")
         return super().form_invalid(form)
-
-
+    
 class DatosUpdateView(LoginRequiredMixin, UpdateView):
     model = Datos
     template_name = 'pages/frmDatos.html'
     fields = [
-        'expediente', 'contrato_nro', 'representante', 'sello_dorado', 'nro_dorado_oficio',  
-        'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
-        'estado', 'municipio', 'parroquia', 'sector', 'urbanismo', 'torre', 'piso', 'apartamento', 'metros_cuadrados',
+        'serial_cliente', 'expediente', 'contrato_nro', 'representante', 'sello_dorado', 
+        'nro_dorado_oficio', 'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 
+        'nombre1', 'nombre2', 'apellido1', 'apellido2', 'estado', 'municipio', 'parroquia', 
+        'sector', 'urbanismo', 'torre', 'piso', 'apartamento', 'metros_cuadrados', 
         'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
-        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_porcentaje',  
+        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_divisa', 'inicial_porcentaje',  
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa'
     ]
     success_url = reverse_lazy('datos_list')
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['representantes'] = Representante.objects.all()
@@ -125,6 +125,7 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
         context['municipios'] = Municipio.objects.all()
         context['parroquias'] = Parroquia.objects.all()
         context['sectores'] = Sector.objects.all()
+        return context
     
     def form_valid(self, form):
         form.instance.us_mo = self.request.user.username
@@ -134,17 +135,16 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
     def form_invalid(self, form):
         for field, error in form.errors.items():
             messages.error(self.request, f"{field}: {error}")
-            print( messages.error(self.request, f"{field}: {error}"))
         return super().form_invalid(form)
-
-class DatosDeleteView(LoginRequiredMixin, DeleteView):
-    model = Datos
-    template_name = 'ubicacion/del_pais.html'
-    success_url = reverse_lazy('datos_list')
-    
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, 'Datos eliminado exitosamente.')
-        return super().delete(request, *args, **kwargs)
+ 
+@api_view(['DELETE'])
+def datos_delete(request, pk):
+    try:
+        dato = Datos.objects.get(pk=pk)
+        dato.delete()
+        return Response({'message': 'Registro eliminado exitosamente.'}, status=204)
+    except Datos.DoesNotExist:
+        return Response({'error': 'Registro no encontrado.'}, status=404)
 
 # Vista para listar y gestionar ambientes
 class AmbienteListView(LoginRequiredMixin, ListView):

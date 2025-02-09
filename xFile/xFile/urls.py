@@ -46,14 +46,14 @@ urlpatterns = [
     # URLs para Ambiente
     path('ambientes/', AmbienteListView.as_view(), name='ambiente_list'),
     path('ambientes/crear/', ambiente_create, name='ambiente_create'),
-    path('ambientes/<int:pk>/editar/', ambiente_update, name='ambiente_update'),
-    path('ambientes/<int:pk>/eliminar/', ambiente_delete, name='ambiente_delete'),
+    path('ambientes/<str:pk>/editar/', ambiente_update, name='ambiente_update'),
+    path('ambientes/<str:pk>/eliminar/', ambiente_delete, name='ambiente_delete'),
     
     # URLs para Lindero
     path('linderos/', LinderoListView.as_view(), name='lindero_list'),
     path('linderos/crear/', lindero_create, name='lindero_create'),
-    path('linderos/<int:pk>/editar/', lindero_update, name='lindero_update'),
-    path('linderos/<int:pk>/eliminar/', lindero_delete, name='lindero_delete'),
+    path('linderos/<str:pk>/editar/', lindero_update, name='lindero_update'),
+    path('linderos/<str:pk>/eliminar/', lindero_delete, name='lindero_delete'),
     
     # URLs para Representante
     path('representantes/', RepresentanteListView.as_view(), name='representante_list'),

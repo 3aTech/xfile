@@ -10,7 +10,7 @@ class DatosSerializer(serializers.ModelSerializer):
         'cedula', 'identificador', 'denominara', 'ciudadano_ciudadana', 'nombre1', 'nombre2', 'apellido1', 'apellido2',
         'estado', 'municipio', 'parroquia', 'sector', 'urbanismo', 'torre', 'piso', 'apartamento', 'metros_cuadrados',
         'lindero_norte', 'lindero_sur', 'lindero_este', 'lindero_oeste', 'ambientes',
-        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_porcentaje',  
+        'monto_credito', 'precio_venta', 'precio_venta_divisa', 'inicial', 'inicial_divisa','inicial_porcentaje',  
         'anios', 'meses', 'cuota_mensual', 'cuota_mensual_divisa', 'flat', 'flat_divisa',
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa',
         'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo'

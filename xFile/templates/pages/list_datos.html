@@ -38,7 +38,11 @@
 <div class="card">
   <div class="card-header d-flex justify-content-end">
     <a href="{% url 'dato_create' %}" class="btn btn-primary">
-      <i class="fas fa-solid fa-plus me-1"></i>
+      <i class="fas fa-solid fa-plus"></i>
+    </a>
+
+    <a href="{% url 'exportar_xlsx' %}" class="btn btn-success">
+      <i class="fas fa-regular fa-file-excel"></i> .xlsx 
     </a>
   </div>
   <!-- /.card-header -->
@@ -76,12 +80,18 @@
             <td>{{ registro.urbanismo }}</td>
             <td>{{ registro.expediente }}</td>
             <td>{{ registro.contrato_nro }}</td>
-              <td>
+              <td class="text-center">
                   <a class="btn btn-primary" href="{% url 'dato_update' registro.serial_cliente %}" title="Editar">
+                    <i class='bx bx-file' ></i>
+                  </a>
+                  <a class="btn btn-warning" href="{% url 'dato_update' registro.serial_cliente %}" title="Editar">
                     <span class="tf-icons bx bx-edit"></span>
                   </a>
-                  <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ registro.serial_cliente }}" data-nombre="{{ registro.nombre1 }}">
-                    <i class='bx bx-trash' ></i>
+                  <button class="btn btn-danger" data-toggle="modal" 
+                    data-target="#deleteModal" 
+                    data-id="{{ registro.serial_cliente }}" 
+                    data-nombre="{{ registro.nombre1 }}">
+                    <i class='bx bx-trash'></i>
                   </button>
               </td>
           </tr>
@@ -92,7 +102,30 @@
   <!-- /.card-body -->
 </div>
 
-
+<!-- Modal para eliminar un registro -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <form method="post" id="deleteForm">
+              {% csrf_token %}
+              <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">Eliminar Registro</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <p>¿Estás seguro de que deseas eliminar el registro "<span id="delete-record-name"></span>"?</p>
+                  <input type="hidden" id="delete-serial_cliente" name="serial_cliente">
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
 
 {% endblock content %} 
 
@@ -172,41 +205,72 @@
 </script>
 
 <script>
-  $(document).ready(function() {
-    $('.delete-btn').on('click', function(e) {
-      e.preventDefault(); // Evitar la acción por defecto del enlace
 
-      const serialCliente = $(this).data('serial-cliente');
-      const url = "{% url 'dato_delete' 'serialClientePlaceholder' %}".replace('serialClientePlaceholder', serialCliente);
-
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: "btn btn-success",
-          cancelButton: "btn btn-danger"
-        },
-        buttonsStyling: false
-      });
-
-      swalWithBootstrapButtons.fire({
-        title: "¿Estás seguro?",
-        text: "¡No podrás revertir esto!",
-        type: "warning", 
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminarlo!",
-        cancelButtonText: "No, cancelar!",
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = url; // Redirigir a la URL de eliminación
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelado",
-            text: "El registro está a salvo :)",
-            type: "success" 
-          });
-        }
-      });
-    });
+  $('#deleteModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      var nombre = button.data('nombre');
+      
+      var modal = $(this);
+      modal.find('#delete-record-name').text(nombre);
+      modal.find('#delete-serial_cliente').val(id);
   });
+
+  // Script para manejar la eliminación de un municipio
+  $('#deleteForm').on('submit', function (event) {
+      event.preventDefault();
+      var serial_cliente = $('#delete-serial_cliente').val();
+      
+      $.ajax({
+          type: 'DELETE',
+          url: "/formulario/" + serial_cliente + "/eliminar/",  // Asegúrate de que esta URL sea correcta
+          headers: {
+              'X-CSRFToken': csrftoken  // Asegúrate de que csrftoken esté definido
+          },
+          success: function (response) {
+              Swal.fire({
+                  title: 'Éxito!',
+                  text: 'Registro eliminado correctamente.',
+                  type: 'success',
+                  confirmButtonText: 'Aceptar'
+              }).then(() => {
+                  location.reload(); // Recargar la página para ver los cambios
+              });
+          },
+          error: function (xhr) {
+              let errorMessage = 'Ocurrió un error al eliminar el registro.';
+              if (xhr.responseJSON && xhr.responseJSON.error) {
+                  errorMessage = xhr.responseJSON.error;
+              }
+              Swal.fire({
+                  title: 'Error!',
+                  text: errorMessage,
+                  type: 'error',
+                  confirmButtonText: 'Aceptar'
+              });
+          }
+      });
+  });
+
+</script>
+
+<script type="text/javascript">
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Si este cookie string comienza con el nombre que estamos buscando
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
 </script>
 {% endblock scripts %}

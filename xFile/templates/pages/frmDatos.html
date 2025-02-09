@@ -408,46 +408,46 @@
                   <legend class="w-auto">Linderos:</legend>
                   <div class="row mb-3">
                       <div class="col-md-3">
-                          <label for="norte" class="form-label">Norte</label>
+                          <label for="lindero_norte" class="form-label">Norte</label>
                           <div class="input-group mb-3">
                               <div class="input-group-prepend">
                                   <span class="input-group-text"><i class="fas fa-light fa-city"></i></span>
                               </div>
-                              <input type="text" class="form-control" id="norte" name="norte" 
-                                  value="{{ object.norte|default:'' }}" required 
-                                  aria-label="Norte" placeholder="Norte">
+                              <input type="text" class="form-control" id="lindero_norte" name="lindero_norte" 
+                                  value="{{ object.lindero_norte|default:'' }}" required 
+                                  aria-label="lindero_norte" placeholder="Norte">
                           </div>
                       </div>
                       <div class="col-md-3">
-                          <label for="sur" class="form-label">Sur</label>
+                          <label for="lindero_sur" class="form-label">Sur</label>
                           <div class="input-group mb-3">
                               <div class="input-group-prepend">
                                   <span class="input-group-text"><i class="fas fa-light fa-building"></i></span>
                               </div>
-                              <input type="text" class="form-control" id="sur" name="sur" 
-                                  value="{{ object.sur|default:'' }}" required 
-                                  aria-label="Sur" placeholder="Sur">
+                              <input type="text" class="form-control" id="lindero_sur" name="lindero_sur" 
+                                  value="{{ object.lindero_sur|default:'' }}" required 
+                                  aria-label="lindero_sur" placeholder="Sur">
                           </div>
                       </div>
                       <div class="col-md-3">
-                          <label for="este" class="form-label">Este</label>
+                          <label for="lindero_este" class="form-label">Este</label>
                           <div class="input-group mb-3">
                               <div class="input-group-prepend">
                                   <span class="input-group-text"><i class='bx bxs-building-house'></i></span>
                               </div>
-                              <input type="text" class="form-control" id="este" name="este" 
-                                  value="{{ object.este|default:'' }}" required aria-label="Este" 
+                              <input type="text" class="form-control" id="lindero_este" name="lindero_este" 
+                                  value="{{ object.lindero_este|default:'' }}" required aria-label="lindero_este" 
                                   placeholder="Este">
                           </div>
                       </div>
                       <div class="col-md-3">
-                          <label for="oeste" class="form-label">Oeste</label>
+                          <label for="lindero_oeste" class="form-label">Oeste</label>
                           <div class="input-group mb-3">
                               <div class="input-group-prepend">
                                   <span class="input-group-text"><i class='bx bxs-building-house'></i></span>
                               </div>
-                              <input type="text" class="form-control" id="oeste" name="oeste" 
-                                  value="{{ object.oeste|default:'' }}" required aria-label="Oeste" 
+                              <input type="text" class="form-control" id="lindero_oeste" name="lindero_oeste" 
+                                  value="{{ object.lindero_oeste|default:'' }}" required aria-label="lindero_oeste" 
                                   placeholder="Oeste">
                           </div>
                       </div>
@@ -520,13 +520,24 @@
                       <label for="inicial" class="form-label">Inicial</label>
                       <div class="input-group mb-3">
                           <div class="input-group-prepend">
-                              <span class="input-group-text"><b>$/€</b></span>
+                              <span class="input-group-text"><b>Bs.</b></span>
                           </div>
                           <input type="number" class="form-control" id="inicial" name="inicial" 
                               value="{{ object.inicial|default:'' }}" required 
                               aria-label="Inicial" placeholder="Inicial" step="0.01" min="0">
                       </div>
                   </div>
+                  <div class="col-md-2">
+                    <label for="inicial_divisa" class="form-label">Inicial en Divisa</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>$/€</b></span>
+                        </div>
+                        <input type="number" class="form-control" id="inicial_divisa" name="inicial_divisa" 
+                            value="{{ object.inicial|default:'' }}" required 
+                            aria-label="inicial_divisa" placeholder="Inicial en Divisa" step="0.01" min="0">
+                    </div>
+                </div>
                   <div class="col-md-2">
                       <label for="inicial_porcentaje" class="form-label">Inicial %</label>
                       <div class="input-group mb-3">
@@ -538,7 +549,9 @@
                           </div>
                       </div>
                   </div>
-                  <div class="col-md-2">
+              </div>
+              <div class="row mb-3">    
+                <div class="col-md-2">
                     <label for="anios" class="form-label">Años</label>
                     <div class="input-group mb-3">
                         <input type="number" class="form-control" id="anios" name="anios" 
@@ -548,9 +561,7 @@
                             <span class="input-group-text"><b>Año(s)</b></span>
                         </div>
                     </div>
-                  </div>
-              </div>
-              <div class="row mb-3">                                
+                  </div>                            
                   <div class="col-md-2">
                       <label for="meses" class="form-label">Meses</label>
                       <div class="input-group mb-3">
@@ -606,19 +617,19 @@
                           aria-label="Flat en Divisa" placeholder="Flat en Divisa" step="0.01" min="0">
                   </div>
                 </div>
-                <div class="col-md-2">
-                  <label for="cuota_financiera" class="form-label">Cuota Financiera Requerida</label>
-                  <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text"><b>Bs.</b></span>
-                      </div>
-                      <input type="number" class="form-control" id="cuota_financiera" name="cuota_financiera" 
-                          value="{{ object.cuota_financiera|default:'' }}" required 
-                          aria-label="Cuota Financiera" placeholder="Cuota Financiera" step="0.01" min="0">
-                  </div>
-                </div>
               </div>
               <div class="row mb-3">  
+                <div class="col-md-2">
+                    <label for="cuota_financiera" class="form-label">Cuota Financiera Requerida</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><b>Bs.</b></span>
+                        </div>
+                        <input type="number" class="form-control" id="cuota_financiera" name="cuota_financiera" 
+                            value="{{ object.cuota_financiera|default:'' }}" required 
+                            aria-label="Cuota Financiera" placeholder="Cuota Financiera" step="0.01" min="0">
+                    </div>
+                  </div>
                   <div class="col-md-2">
                       <label for="cuota_financiera_divisa" class="form-label">Cuota Financiera Requerida en Divisa</label>
                       <div class="input-group mb-3">

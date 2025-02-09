@@ -284,45 +284,6 @@
 </script>
 
 <script>
-  $(document).ready(function() {
-    $('.delete-btn').on('click', function(e) {
-      e.preventDefault(); // Evitar la acción por defecto del enlace
-
-      const serialCliente = $(this).data('serial-cliente');
-      const url = "{% url 'dato_delete' 'serialClientePlaceholder' %}".replace('serialClientePlaceholder', serialCliente);
-
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: "btn btn-success",
-          cancelButton: "btn btn-danger"
-        },
-        buttonsStyling: false
-      });
-
-      swalWithBootstrapButtons.fire({
-        title: "¿Estás seguro?",
-        text: "¡No podrás revertir esto!",
-        type: "warning", 
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminarlo!",
-        cancelButtonText: "No, cancelar!",
-        reverseButtons: true
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = url; // Redirigir a la URL de eliminación
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelado",
-            text: "El registro está a salvo :)",
-            type: "success" 
-          });
-        }
-      });
-    });
-  });
-</script>
-
-<script>
     // Script para manejar la carga de datos en los modales
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
@@ -340,10 +301,7 @@
         var button = $(event.relatedTarget);
         var codigo = button.data('codigo');
         var nombre = button.data('nombre');
-        
-        console.log('codigo:', codigo); // Para depuración
-        console.log('nombre:', nombre); // Para depuración
-        
+                
         var modal = $(this);
         modal.find('#delete-co_municipio').val(codigo);
         modal.find('#delete-des_municipio').text(nombre);

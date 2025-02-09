@@ -188,6 +188,7 @@ class Datos(ModeloAuditoria):
     precio_venta = models.DecimalField('Precio Venta', max_digits=18, decimal_places=8, help_text='Precio de Venta')
     precio_venta_divisa = models.DecimalField('Precio Venta Divisa', max_digits=18, decimal_places=8, help_text='Precio de Venta en Divisa')
     inicial = models.DecimalField('Inicial', max_digits=18, decimal_places=8, help_text='Inicial')
+    inicial_divisa = models.DecimalField('Inicial Divisa', max_digits=18, decimal_places=8, help_text='Inicial Divisa')
     inicial_porcentaje = models.DecimalField('% Inicial', max_digits=18, decimal_places=8, help_text='% Inicial')
     anios = models.CharField('Años', max_length=4, help_text='Años')
     meses = models.CharField('Meses', max_length=3, help_text='Meses')
