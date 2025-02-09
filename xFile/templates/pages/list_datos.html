@@ -77,9 +77,9 @@
             <td>{{ registro.expediente }}</td>
             <td>{{ registro.contrato_nro }}</td>
               <td>
-                  <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" data-id="{{ registro.serial_cliente }}" data-nombre="{{ registro.nombre1 }}">
-                    <i class='bx bx-edit' ></i>
-                  </button>
+                  <a class="btn btn-primary" href="{% url 'dato_update' registro.serial_cliente %}" title="Editar">
+                    <span class="tf-icons bx bx-edit"></span>
+                  </a>
                   <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ registro.serial_cliente }}" data-nombre="{{ registro.nombre1 }}">
                     <i class='bx bx-trash' ></i>
                   </button>

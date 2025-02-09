@@ -84,7 +84,6 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['representantes'] = Representante.objects.all()
-        print(context['representantes'])
         context['estados'] = Estado.objects.all()
         context['municipios'] = Municipio.objects.all()
         context['parroquias'] = Parroquia.objects.all()
@@ -118,6 +117,14 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
         'cuota_financiera', 'cuota_financiera_divisa', 'fongar', 'fongar_divisa'
     ]
     success_url = reverse_lazy('datos_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['representantes'] = Representante.objects.all()
+        context['estados'] = Estado.objects.all()
+        context['municipios'] = Municipio.objects.all()
+        context['parroquias'] = Parroquia.objects.all()
+        context['sectores'] = Sector.objects.all()
     
     def form_valid(self, form):
         form.instance.us_mo = self.request.user.username
