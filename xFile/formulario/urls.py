@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, view_export
+from . import views, view_export, view_gen_contratos
 from rest_framework.routers import DefaultRouter
 
 # app_name = '_monedas'
@@ -13,4 +13,5 @@ urlpatterns = [
     path('<str:pk>/editar/', views.DatosUpdateView.as_view(), name='dato_update'),
     path('<str:pk>/eliminar/', views.datos_delete, name='datos_delete'),
     path('exportar/', view_export.exportar_datos_xlsx, name='exportar_xlsx'),
+    path('generar/', view_gen_contratos.genContratosTotales, name='genContratosTotales')
 ]

@@ -24,7 +24,7 @@ def exportar_datos_xlsx(request):
     title = "Reporte de Registros"
     sheet.append([])
     sheet.append([title])  # Agregar el título en la primera fila
-    sheet.merge_cells('A2:AW2')  # Fusionar celdas para el título
+    sheet.merge_cells('A2:AV2')  # Fusionar celdas para el título
     sheet['A2'].font = Font(bold=True, size=14)  # Aplicar negrita y tamaño de fuente al título
     sheet.append([])
     # Escribir los encabezados
@@ -51,21 +51,29 @@ def exportar_datos_xlsx(request):
         if registro.sello_dorado:
             selloDorado = 'Sí'  
             
+        representante_nombre = str(registro.representante) if registro.representante else 'Sin representante'
+        estado_nombre = str(registro.estado) if registro.estado else 'Sin estado'  
+        municipio_nombre = str(registro.municipio) if registro.municipio else 'Sin municipio'  
+        parroquia_nombre = str(registro.parroquia) if registro.parroquia else 'Sin parroquia'  
+        sector_nombre = str(registro.sector) if registro.sector else 'Sin sector'  
+        fecha_creacion = registro.fe_us_in.replace(tzinfo=None) if registro.fe_us_in else None
+        fecha_modificacion = registro.fe_us_mo.replace(tzinfo=None) if registro.fe_us_mo else None
+
         sheet.append([registro.serial_cliente, registro.expediente, registro.contrato_nro, 
-                      registro.representante, selloDorado, registro.nro_dorado_oficio, 
+                      representante_nombre, selloDorado, registro.nro_dorado_oficio, 
                       registro.cedula, registro.identificador, registro.denominara, registro.ciudadano_ciudadana,
                       registro.nombre1, registro.nombre2, registro.apellido1, registro.apellido2, 
-                      registro.estado, registro.municipio, registro.parroquia, registro.sector, registro.urbanismo,
+                      estado_nombre, municipio_nombre, parroquia_nombre, sector_nombre, registro.urbanismo,
                       registro.torre, registro.piso, registro.apartamento, registro.metros_cuadrados,
                       registro.lindero_norte, registro.lindero_sur, registro.lindero_este, registro.lindero_oeste, registro.ambientes,
-                      registro.monto_credito, registro.precio_venta, registro.precio_venta_divisa, registro.inicial, registro.inicial_porcentaje,
+                      registro.monto_credito, registro.precio_venta, registro.precio_venta_divisa, registro.inicial, registro.inicial_divisa, registro.inicial_porcentaje,
                       registro.anios, registro.meses, registro.cuota_mensual, registro.cuota_mensual_divisa, registro.flat, registro.flat_divisa,
                       registro.cuota_financiera, registro.cuota_financiera_divisa, registro.fongar, registro.fongar_divisa,
-                      registro.us_in, registro.fe_us_in, registro.us_mo, registro.fe_us_mo
+                      registro.us_in, fecha_creacion, registro.us_mo, fecha_modificacion
                       ])  # Actualizado con los campos del modelo Datos
 
     # Crear una tabla
-    tab = Table(displayName="TablaRegistros", ref=f"A4:AW{len(registros) + 4}")  # Ajustar el rango para incluir el título
+    tab = Table(displayName="TablaRegistros", ref=f"A4:AV{len(registros) + 4}")  # Ajustar el rango para incluir el título
 
     # Estilo de la tabla
     style = TableStyleInfo(name="TableStyleMedium9", showFirstColumn=False, showRowStripes=True, showColumnStripes=True)

@@ -100,19 +100,16 @@
             </div>
             <div class="row mb-3"> 
                 <div class="col-md-3">
-                    <label for="sello_dorado_oficio" class="form-label">Sello Dorado u Oficio</label>
-                    <div class="form-group clearfix">
-                        <div class="icheck-primary d-inline">
-                            <input type="radio" id="radioPrimary1" name="sello_dorado" value=1 {% if object.sello_dorado %} checked {% endif %}>
-                            <label for="radioPrimary1">
-                                Sello Dorado
-                            </label>
+                    <label for="sello_dorado" class="form-label">Sello Dorado u Oficio</label>
+                    <div class="form-group">
+                        <div class="custom-control custom-switch">                          
+                          <input type="checkbox" class="custom-control-input" id="customSwitch1" name="sello_dorado"
+                          {% if object.sello_dorado %} checked {% endif %} onchange="toggleCheckboxes(this)">
+                          <label class="custom-control-label" for="customSwitch1">Sello Dorado</label>
                         </div>
-                        <div class="icheck-primary d-inline">
-                            <input type="radio" id="radioPrimary2" name="sello_dorado" value=0 {% if not object.sello_dorado %} checked {% endif %}>
-                            <label for="radioPrimary2">
-                                Oficio
-                            </label>
+                        <div class="custom-control custom-switch">                          
+                            <input type="checkbox" class="custom-control-input" id="customSwitch2" name="oficio" onchange="toggleCheckboxes(this)">
+                            <label class="custom-control-label" for="customSwitch2">Oficio</label>
                         </div>
                     </div>
                 </div>
@@ -160,14 +157,14 @@
                                       {{ object.identificador }}
                                   </option> 
                               {% endif %}
-                              {% if object.identificador != 'El' %}
-                                  <option>El</option>
+                              {% if object.identificador != 'EL' %}
+                                  <option>EL</option>
                               {% endif %}
-                              {% if object.identificador != 'La' %}
-                                  <option>La</option>
+                              {% if object.identificador != 'LA' %}
+                                  <option>LA</option>
                               {% endif %}
-                              {% if object.identificador != 'Los' %}
-                                  <option>Los</option>
+                              {% if object.identificador != 'LOS' %}
+                                  <option>LOS</option>
                               {% endif %}
                           </select>
                       </div>
@@ -182,14 +179,14 @@
                                       {{ object.denominara }}
                                   </option> 
                               {% endif %}
-                              {% if object.denominara != 'Comprador' %}
-                                  <option>Comprador</option>
+                              {% if object.denominara != 'COMPRADOR' %}
+                                  <option>COMPRADOR</option>
                               {% endif %}
-                              {% if object.denominara != 'Compradora' %}
-                                  <option>Compradora</option>
+                              {% if object.denominara != 'COMPRADORA' %}
+                                  <option>COMPRADORA</option>
                               {% endif %}
                               {% if object.denominara != 'Compradores' %}
-                                  <option>Compradores</option>
+                                  <option>COMPRADORES</option>
                               {% endif %}
                           </select>
                       </div>
@@ -204,11 +201,11 @@
                                       {{ object.ciudadano_ciudadana }}
                                   </option> 
                               {% endif %}
-                              {% if object.ciudadano_ciudadana != 'Ciudadano' %}
-                                  <option>Ciudadano</option>
+                              {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
+                                  <option>CIUDADANO</option>
                               {% endif %}
-                              {% if object.ciudadano_ciudadana != 'Ciudadana' %}
-                                  <option>Ciudadana</option>
+                              {% if object.ciudadano_ciudadana != 'CIUDADANA' %}
+                                  <option>CIUDADANA</option>
                               {% endif %}
                           </select>
                       </div>
@@ -888,6 +885,26 @@ function cargarSectores() {
             allowClear: true
         });
     });
+
+    $(document).ready(function() {
+        // Cambiar el texto del label según el estado del checkbox
+        $('#customSwitch3').change(function() {
+            if ($(this).is(':checked')) {
+                $('#switchLabel').text('Activo');
+            } else {
+                $('#switchLabel').text('Inactivo');
+            }
+        });
+    });
+
+    function toggleCheckboxes(checkbox) {
+        if (checkbox.id === 'customSwitch1') {
+            document.getElementById('customSwitch2').checked = false; // Desmarcar 'Oficio' si 'Sello Dorado' está seleccionado
+        } else {
+            document.getElementById('customSwitch1').checked = false; // Desmarcar 'Sello Dorado' si 'Oficio' está seleccionado
+        }
+    }
   </script>
+
 
 {% endblock scripts %}

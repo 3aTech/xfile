@@ -16,7 +16,7 @@ class Ambiente(ModeloAuditoria):
     ambiente = models.CharField('Ambiente', help_text='Ambiente', max_length=60)
 
     def __str__(self) -> str:
-        return f'{self.co_estado} - {self.des_estado}'
+        return f'{self.des_estado}'
 
     class Meta:
         verbose_name = 'Ambiente'
@@ -35,7 +35,7 @@ class Lindero(ModeloAuditoria):
     lindero = models.CharField('Lindero', max_length=255, help_text='Lindero')
 
     def __str__(self) -> str:
-        return f'{self.id} - {self.descripcion}'
+        return f'{self.descripcion}'
 
     class Meta:
         verbose_name = 'Lindero'
@@ -58,7 +58,7 @@ class Representante(ModeloAuditoria):
     inactivo = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
     
     def __str__(self) -> str:
-        return f'{self.cedula} - {self.nombre}'
+        return f'{self.nombre}'
 
     class Meta:
         verbose_name = 'Representante'
@@ -77,7 +77,7 @@ class Estado(ModeloAuditoria):
     des_estado = models.CharField('Nombre', help_text='Nombre del estado', max_length=60)
 
     def __str__(self) -> str:
-        return f'{self.co_estado} - {self.des_estado}'
+        return f'{self.des_estado}'
 
     class Meta:
         verbose_name = 'Estado'
@@ -97,7 +97,7 @@ class Municipio(ModeloAuditoria):
     estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='municipios')
 
     def __str__(self) -> str:
-        return f'{self.co_municipio} - {self.des_municipio}'
+        return f'{self.des_municipio}'
 
     class Meta:
         verbose_name = 'Municipio'
@@ -117,7 +117,7 @@ class Parroquia(ModeloAuditoria):
     municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT, related_name='parroquias')
 
     def __str__(self) -> str:
-        return f'{self.co_parroquia} - {self.des_parroquia}'
+        return f'{self.des_parroquia}'
 
     class Meta:
         verbose_name = 'Parroquia'
@@ -137,7 +137,7 @@ class Sector(ModeloAuditoria):
     parroquia = models.ForeignKey(Parroquia, on_delete=models.PROTECT, related_name='sectores')
 
     def __str__(self) -> str:
-        return f'{self.co_sector} - {self.des_sector}'
+        return f'{self.des_sector}'
 
     class Meta:
         verbose_name = 'Sector'
@@ -228,11 +228,36 @@ class Ambiente_Dato(ModeloAuditoria):
     serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='ambiente_datos')
 
     def __str__(self) -> str:
-        return f'{self.id} - {self.serial_cliente}'
+        return f'{self.serial_cliente}'
 
     class Meta:
         verbose_name = 'Ambiente Dato'
         verbose_name_plural = 'Ambientes Datos'
+        ordering = ['serial_cliente']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Contratos(ModeloAuditoria):
+    """Modelo para almacenar contratos"""
+    id = models.AutoField('ID', help_text='ID', primary_key=True)
+    serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='contatos')
+    url_contrato = models.URLField(
+        'URL del Contrato', 
+        help_text='Ingrese la URL donde se encuentra el contrato.', 
+        blank=True,  # Permitir que el campo esté vacío
+        null=True    # Permitir que el campo sea nulo en la base de datos
+    )
+
+    def __str__(self) -> str:
+        return f'{self.serial_cliente}'
+
+    class Meta:
+        verbose_name = 'Contrato'
+        verbose_name_plural = 'Contratos'
         ordering = ['serial_cliente']
 
     def save(self, *args, **kwargs):
@@ -249,7 +274,7 @@ class Lindero_Dato(ModeloAuditoria):
     serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='lindero_datos')
 
     def __str__(self) -> str:
-        return f'{self.id} - {self.serial_cliente}'
+        return f'{self.serial_cliente}'
 
     class Meta:
         verbose_name = 'Lindero Dato'
