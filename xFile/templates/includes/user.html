@@ -1,12 +1,19 @@
 {% load static %}  
 
 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-  <div class="image">
-    <img src="{% static '3atech/media/profile_default.png' %}" class="img-circle elevation-2" alt="User Image">
-  </div>
-  <div class="info">
-    <a href="#" class="d-block">Alexis Pestano</a>
-  </div>
+  {% if user.is_authenticated %}
+    <div class="image">
+      {% if user.profile.avatar %}
+        <img src="{{ user.profile.avatar.url }}" class="img-circle elevation-2" alt="User Image">
+      {% else %}
+        <img src="{% static '3atech/media/profile_default.png' %}" class="img-circle elevation-2" alt="User Image">
+    </div>
+    <div class="info">
+      <a href="#" class="d-block">{{ user.get_full_name }}</a>
+      <small class="text-muted">{{ user.groups.first.name }}</small>
+    </div>
+    {% endif %}
+  {% endif %}
 </div>
 <!--
 {% if user.is_authenticated %}
