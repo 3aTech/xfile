@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from usuario.views import home, LoginView, RegisterView, SignOutView
+from django.conf import settings
+from django.conf.urls.static import static
 
 from formulario.views import (get_municipios, get_parroquias, get_sector,
                               ambiente_create, ambiente_delete, AmbienteListView, ambiente_update,
@@ -27,6 +29,8 @@ from formulario.views import (get_municipios, get_parroquias, get_sector,
                               ParroquiaListView, parroquia_create, parroquia_delete, parroquia_update,
                               SectorListView, sector_create, sector_delete, sector_update,
                               )
+from formulario.view_export import exportar_datos_xlsx
+from formulario.view_gen_contratos import genContratosTotales, genContratosUnico
 urlpatterns = [
     path('', home, name='home'),
     
@@ -84,4 +88,11 @@ urlpatterns = [
     path('sectores/crear/', sector_create, name='sector_create'),
     path('sectores/<str:pk>/editar/', sector_update, name='sector_update'),
     path('sectores/<str:pk>/eliminar/', sector_delete, name='municipio_delete'),
+    
+    path('exportar/', exportar_datos_xlsx, name='exportar_xlsx'),
+    path('generar-contatos/', genContratosTotales, name='genContratosTotales'),
+    path('generar-contatos/<str:pk>', genContratosUnico, name='genContratosUnico')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

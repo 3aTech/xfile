@@ -53,11 +53,15 @@
                 <td>{{ representante.nombre }}</td>
                 <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" 
-                    data-cedula="{{ representante.cedula }}" 
-                    data-nombre="{{ representante.nombre }}" 
-                    data-nacionalidad="{{ representante.nacionalidad }}" 
-                    data-representante="{{ representante.representante }}" 
-                    data-condicion="{{ representante.condicion }}">
+                        data-cedula="{{ representante.cedula }}" 
+                        data-nombre="{{ representante.nombre }}" 
+                        data-nacionalidad="{{ representante.nacionalidad }}" 
+                        data-ciudadanoCiudadana="{{ representante.ciudadano_ciudadana }}" 
+                        data-representante="{{ representante.representante }}" 
+                        data-denominara="{{ representante.denominara }}" 
+                        data-condicion="{{ representante.condicion }}" 
+                        data-region="{{ representante.region }}" 
+                        data-inactivo="{{ representante.inactivo }}">
                         <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ representante.cedula }}" data-nombre="{{ representante.nombre }}">
@@ -97,7 +101,7 @@
                         </div>
                     </div>
                     <div class="row mb-3"> 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="cedula" class="form-label">Cédula</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -107,7 +111,7 @@
                                     id="cedula" name="cedula" value="{{ object.cedula|default:'' }}" required aria-label="Cédula">
                             </div>
                         </div>             
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="nacionalidad" class="form-label">Nacionalidad</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -116,6 +120,25 @@
                                 <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" 
                                     value="{{ object.nacionalidad|default:'' }}" required 
                                     aria-label="Nacionalidad" placeholder="Nacionalidad">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
+                                <select class="form-control select2bs4" style="width: 100%;"
+                                    id="ciudadano_ciudadana" name="ciudadano_ciudadana" required>
+                                    {% if object.ciudadano_ciudadana %} 
+                                        <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
+                                            {{ object.ciudadano_ciudadana }}
+                                        </option> 
+                                    {% endif %}
+                                    {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
+                                        <option>CIUDADANO</option>
+                                    {% endif %}
+                                    {% if object.ciudadano_ciudadana != 'CIUDADANA' %}
+                                        <option>CIUDADANA</option>
+                                    {% endif %}
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -147,6 +170,19 @@
                     </div>
                     <div class="row mb-3"> 
                         <div class="col-md-12">
+                            <label for="denominara" class="form-label">Denominacion de la Empresa</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-business' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="denominara" name="denominara" 
+                                    value="{{ object.denominara|default:'' }}" required 
+                                    aria-label="Denominara como..." placeholder="Denominara">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
                             <label for="condicion" class="form-label">Condición</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -155,6 +191,19 @@
                                 <input type="text" class="form-control" id="condicion" name="condicion" 
                                     value="{{ object.condicion|default:'' }}" required 
                                     aria-label="Condición" placeholder="Cargo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="region" class="form-label">Región</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="region" name="region" 
+                                    value="{{ object.region|default:'' }}" required 
+                                    aria-label="Región" placeholder="Región">
                             </div>
                         </div>
                     </div>
@@ -194,7 +243,7 @@
                         </div>
                     </div>
                     <div class="row mb-3"> 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="edit-cedula" class="form-label">Cédula</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -204,7 +253,7 @@
                                     id="edit-cedula" name="cedula" value="{{ object.cedula|default:'' }}" readonly required aria-label="Cédula">
                             </div>
                         </div>             
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="edit-nacionalidad" class="form-label">Nacionalidad</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -213,6 +262,25 @@
                                 <input type="text" class="form-control" id="edit-nacionalidad" name="nacionalidad" 
                                     value="{{ object.nacionalidad|default:'' }}" required 
                                     aria-label="Nacionalidad" placeholder="Nacionalidad">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="edit-ciudadanoCiudadana" class="form-label">Ciudadano/Ciudadana</label>
+                                <select class="form-control select2bs4" style="width: 100%;"
+                                    id="edit-ciudadanoCiudadana" name="ciudadano_ciudadana" required>
+                                    {% if object.ciudadano_ciudadana %} 
+                                        <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
+                                            {{ object.ciudadano_ciudadana }}
+                                        </option> 
+                                    {% endif %}
+                                    {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
+                                        <option>CIUDADANO</option>
+                                    {% endif %}
+                                    {% if object.ciudadano_ciudadana != 'CIUDADANA' %}
+                                        <option>CIUDADANA</option>
+                                    {% endif %}
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -244,6 +312,19 @@
                     </div>
                     <div class="row mb-3"> 
                         <div class="col-md-12">
+                            <label for="edit-denominara" class="form-label">Denominación de la Empresa</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-business'></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="edit-denominara" name="denominara" 
+                                    value="{{ object.denominara|default:'' }}" required 
+                                    aria-label="Denominara como..." placeholder="Denominara">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
                             <label for="edit-condicion" class="form-label">Condición</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -252,6 +333,19 @@
                                 <input type="text" class="form-control" id="edit-condicion" name="condicion" 
                                     value="{{ object.condicion|default:'' }}" required 
                                     aria-label="Condición" placeholder="Cargo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="edit-region" class="form-label">Región</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="edit-region" name="region" 
+                                    value="{{ object.region|default:'' }}" required 
+                                    aria-label="Región" placeholder="Región">
                             </div>
                         </div>
                     </div>
@@ -356,19 +450,25 @@
     // Script para manejar la carga de datos en los modales
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var inactivo = button.data('inactivo');
-        var cedula = button.data('cedula');
+        var cedula = button.data('cedula'); 
+        var ciudadanoCiudadana = button.data('ciudadano_ciudadana');
         var nacionalidad = button.data('nacionalidad');
         var nombre = button.data('nombre');
         var representante = button.data('representante');
+        var denominara = button.data('denominara');
         var condicion = button.data('condicion');
+        var region = button.data('region');
+        var inactivo = button.data('inactivo');
         var modal = $(this);
         modal.find('#edit-inactivo').val(inactivo); // Cargar inactivo
-        modal.find('#edit-cedula').val(cedula); // Cargar cédula
+        modal.find('#edit-cedula').val(cedula); // Cargar cédula        
         modal.find('#edit-nacionalidad').val(nacionalidad); // Cargar nacionalidad
+        modal.find('#edit-ciudadanoCiudadana').val(ciudadanoCiudadana);
         modal.find('#edit-nombre').val(nombre); // Cargar nombre
         modal.find('#edit-representante').val(representante); // Cargar representante
+        modal.find('#edit-denominara').val(denominara); 
         modal.find('#edit-condicion').val(condicion); // Cargar condición
+        modal.find('#edit-region').val(region); 
 
         // Cargar estado del campo inactivo
         if (inactivo) {

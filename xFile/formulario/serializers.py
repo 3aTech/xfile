@@ -31,7 +31,8 @@ class LinderoSerializer(serializers.ModelSerializer):
 class RepresentanteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Representante
-        fields = ['cedula', 'nacionalidad', 'nombre', 'representante', 'condicion', 
+        fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 'nombre', 
+                  'representante', 'denominara', 'condicion', 'region',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class EstadoSerializer(serializers.ModelSerializer):

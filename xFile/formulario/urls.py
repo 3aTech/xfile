@@ -12,6 +12,4 @@ urlpatterns = [
     path('crear/', views.DatosCreateView.as_view(), name='dato_create'),
     path('<str:pk>/editar/', views.DatosUpdateView.as_view(), name='dato_update'),
     path('<str:pk>/eliminar/', views.datos_delete, name='datos_delete'),
-    path('exportar/', view_export.exportar_datos_xlsx, name='exportar_xlsx'),
-    path('generar/', view_gen_contratos.genContratosTotales, name='genContratosTotales')
 ]

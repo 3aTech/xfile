@@ -52,9 +52,12 @@ class Representante(ModeloAuditoria):
     """Modelo para almacenar representantes"""
     cedula = models.CharField('Cédula', help_text='Cédula del representante', max_length=12, primary_key=True)
     nacionalidad = models.CharField('Nacionalidad', help_text='Nacionalidad', max_length=120)
+    ciudadano_ciudadana = models.CharField('Ciudadano/Ciudadana', max_length=20, help_text='Ciudadano/Ciudadana')
     nombre = models.CharField('Nombre y Apellido', help_text='Nombre y apellido del representante', max_length=120)
     representante = models.CharField('Representante de', help_text='Representante de', max_length=120)
+    denominara = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
     condicion = models.CharField('Condición y/o Caracter Representativo', help_text='Condición y/o Caracter Representativo', max_length=120)
+    region = models.CharField('Región', help_text='Región', max_length=120)
     inactivo = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
     
     def __str__(self) -> str:
@@ -254,6 +257,9 @@ class Contratos(ModeloAuditoria):
 
     def __str__(self) -> str:
         return f'{self.serial_cliente}'
+    
+    def get_full_name(self):
+        return f'{self.id} - {self.serial_cliente}'
 
     class Meta:
         verbose_name = 'Contrato'

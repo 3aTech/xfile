@@ -316,7 +316,8 @@ class RepresentanteListView(LoginRequiredMixin, ListView):
 # Vista para crear un nuevo representante
 class RepresentanteCreateView(LoginRequiredMixin, CreateView):
     model = Representante
-    fields = ['cedula', 'nacionalidad', 'nombre', 'representante', 'condicion']
+    fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 
+              'nombre', 'representante', 'denominara', 'condicion', 'region']
     success_url = reverse_lazy('representante_list')
 
     def form_valid(self, form):
@@ -332,7 +333,8 @@ class RepresentanteCreateView(LoginRequiredMixin, CreateView):
 # Vista para actualizar un representante existente
 class RepresentanteUpdateView(LoginRequiredMixin, UpdateView):
     model = Representante
-    fields = ['nacionalidad', 'nombre', 'representante', 'condicion']
+    fields = ['nacionalidad', 'ciudadano_ciudadana', 
+              'nombre', 'representante', 'denominara', 'condicion', 'region']
     success_url = reverse_lazy('representante_list')
 
     def form_valid(self, form):
