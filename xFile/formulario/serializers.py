@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import (Datos, Ambiente, Lindero, Representante, 
-                     Estado, Municipio, Parroquia, Sector)
+from .models import (Datos, Ambientes, Linderos, Representantes, 
+                     Estados, Municipios, Parroquias, Sectores, Representado)
 
 class DatosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,45 +18,52 @@ class DatosSerializer(serializers.ModelSerializer):
 
 class AmbienteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Ambiente
-        fields = ['id', 'ambiente', 
+        model = Ambientes
+        fields = ['id', 'ambiente', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class LinderoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Lindero
-        fields = ['id', 'lindero', 
+        model = Linderos
+        fields = ['id', 'lindero', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class RepresentanteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Representante
+        model = Representantes
         fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 'nombre', 
-                  'representante', 'denominara', 'condicion', 'region',
+                  'representante', 'denominara', 'condicion', 'region', 'inactivo',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class EstadoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Estado
-        fields = ['co_estado', 'des_estado', 
+        model = Estados
+        fields = ['co_estado', 'des_estado', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class MunicipioSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Municipio
-        fields = ['co_municipio', 'des_municipio', 'estado', 
+        model = Municipios
+        fields = ['co_municipio', 'des_municipio', 'estado', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class ParroquiaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Parroquia
-        fields = ['co_parroquia', 'des_parroquia', 'municipio', 
+        model = Parroquias
+        fields = ['co_parroquia', 'des_parroquia', 'municipio', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class SectorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Sector
-        fields = ['co_sector', 'des_sector', 'parroquia', 
+        model = Sectores
+        fields = ['co_sector', 'des_sector', 'parroquia', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
-    
+
+class RepresentadoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Representado
+        fields = ['id', 'rif', 'nombre', 'denominara', 'status',
+                  'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
+
+
 

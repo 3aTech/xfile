@@ -28,6 +28,7 @@ from formulario.views import (get_municipios, get_parroquias, get_sector,
                               MunicipioListView, municipio_create, municipio_delete, municipio_update,
                               ParroquiaListView, parroquia_create, parroquia_delete, parroquia_update,
                               SectorListView, sector_create, sector_delete, sector_update,
+                              RepresentadoListView, representado_create, RepresentadoDetailView, representado_update, representado_delete
                               )
 from formulario.view_export import exportar_datos_xlsx
 from formulario.view_gen_contratos import genContratosTotales, genContratosUnico
@@ -88,6 +89,13 @@ urlpatterns = [
     path('sectores/crear/', sector_create, name='sector_create'),
     path('sectores/<str:pk>/editar/', sector_update, name='sector_update'),
     path('sectores/<str:pk>/eliminar/', sector_delete, name='municipio_delete'),
+    
+    # URLs para Representado
+    path('representados/', RepresentadoListView.as_view(), name='representado_list'),
+    path('representados/crear/', representado_create, name='representado_create'),
+    path('representados/<int:pk>/', RepresentadoDetailView.as_view(), name='representado_detail'),
+    path('representados/<int:pk>/editar/', representado_update, name='representado_update'),
+    path('representados/<int:pk>/eliminar/', representado_delete, name='representado_delete'),
     
     path('exportar/', exportar_datos_xlsx, name='exportar_xlsx'),
     path('generar-contatos/', genContratosTotales, name='genContratosTotales'),

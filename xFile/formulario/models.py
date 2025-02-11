@@ -10,10 +10,11 @@ class ModeloAuditoria(models.Model):
     class Meta:
         abstract = True
 
-class Ambiente(ModeloAuditoria):
+class Ambientes(ModeloAuditoria):
     """Modelo para almacenar ambientes"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
     ambiente = models.CharField('Ambiente', help_text='Ambiente', max_length=60)
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
         return f'{self.des_estado}'
@@ -29,10 +30,11 @@ class Ambiente(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
-class Lindero(ModeloAuditoria):
+class Linderos(ModeloAuditoria):
     """Modelo para almacenar linderos"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
     lindero = models.CharField('Lindero', max_length=255, help_text='Lindero')
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
         return f'{self.descripcion}'
@@ -48,17 +50,39 @@ class Lindero(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
-class Representante(ModeloAuditoria):
+class Representado(ModeloAuditoria):
+    """Modelo para almacenar representados"""
+    id = models.AutoField('Código', help_text='Código', primary_key=True)
+    rif = models.CharField('R.I.F.', help_text='R.I.F.', max_length=12, unique=True)
+    nombre = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
+    denominara = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
+    
+    def __str__(self) -> str:
+        return f'{self.nombre}'
+
+    class Meta:
+        verbose_name = 'Representado'
+        verbose_name_plural = 'Representados'
+        ordering = ['rif', 'nombre']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Representantes(ModeloAuditoria):
     """Modelo para almacenar representantes"""
     cedula = models.CharField('Cédula', help_text='Cédula del representante', max_length=12, primary_key=True)
     nacionalidad = models.CharField('Nacionalidad', help_text='Nacionalidad', max_length=120)
     ciudadano_ciudadana = models.CharField('Ciudadano/Ciudadana', max_length=20, help_text='Ciudadano/Ciudadana')
     nombre = models.CharField('Nombre y Apellido', help_text='Nombre y apellido del representante', max_length=120)
-    representante = models.CharField('Representante de', help_text='Representante de', max_length=120)
+    representado_id = models.ForeignKey(Representado, on_delete=models.PROTECT, related_name='representante')
     denominara = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
     condicion = models.CharField('Condición y/o Caracter Representativo', help_text='Condición y/o Caracter Representativo', max_length=120)
     region = models.CharField('Región', help_text='Región', max_length=120)
-    inactivo = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
     
     def __str__(self) -> str:
         return f'{self.nombre}'
@@ -74,10 +98,11 @@ class Representante(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
-class Estado(ModeloAuditoria):
+class Estados(ModeloAuditoria):
     """Modelo para almacenar estados/provincias"""
     co_estado = models.CharField('Código', help_text='Código del estado', max_length=6, primary_key=True)
     des_estado = models.CharField('Nombre', help_text='Nombre del estado', max_length=60)
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
         return f'{self.des_estado}'
@@ -93,11 +118,12 @@ class Estado(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
-class Municipio(ModeloAuditoria):
+class Municipios(ModeloAuditoria):
     """Modelo para almacenar municipios"""
     co_municipio = models.CharField('Código', help_text='Código del municipio', max_length=6, primary_key=True)
     des_municipio = models.CharField('Nombre', help_text='Nombre del municipio', max_length=60)
-    estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='municipios')
+    estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='municipios')
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
         return f'{self.des_municipio}'
@@ -113,11 +139,12 @@ class Municipio(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
-class Parroquia(ModeloAuditoria):
+class Parroquias(ModeloAuditoria):
     """Modelo para almacenar parroquias"""
     co_parroquia = models.CharField('Código', help_text='Código de la parroquia', max_length=6, primary_key=True)
     des_parroquia = models.CharField('Nombre', help_text='Nombre de la parroquia', max_length=60)
-    municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT, related_name='parroquias')
+    municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='parroquias')
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
         return f'{self.des_parroquia}'
@@ -133,11 +160,12 @@ class Parroquia(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
-class Sector(ModeloAuditoria):
+class Sectores(ModeloAuditoria):
     """Modelo para almacenar sectores"""
     co_sector = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
     des_sector = models.CharField('Nombre', help_text='Nombre del sector', max_length=60)
-    parroquia = models.ForeignKey(Parroquia, on_delete=models.PROTECT, related_name='sectores')
+    parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='sectores')
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
         return f'{self.des_sector}'
@@ -158,7 +186,7 @@ class Datos(ModeloAuditoria):
     serial_cliente = models.CharField('Serial', help_text='Serial Cliente', max_length=20, primary_key=True, unique=True)
     expediente = models.CharField('Expediente', max_length=50, help_text='Expediente', null=True, blank=True)
     contrato_nro = models.CharField('Nro. Contrato', max_length=50, help_text='Nro. Contrato', null=True, blank=True) 
-    representante = models.ForeignKey(Representante, on_delete=models.PROTECT, related_name='datos')
+    representante = models.ForeignKey(Representantes, on_delete=models.PROTECT, related_name='datos')
     sello_dorado = models.BooleanField('Sello Dorado', default=False, help_text='Sello Dorado')
     nro_dorado_oficio = models.CharField('Número Sello Dorado u Oficio', max_length=20, help_text='Número Sello Dorado u Oficio', null=True, blank=True)
     
@@ -171,10 +199,10 @@ class Datos(ModeloAuditoria):
     apellido1 = models.CharField('Apellido 1', max_length=20, help_text='Apellido 1')
     apellido2 = models.CharField('Apellido 2', max_length=20, help_text='Apellido 2', null=True, blank=True)
     
-    estado = models.ForeignKey(Estado, on_delete=models.PROTECT, related_name='datos')
-    municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT, related_name='datos')
-    parroquia = models.ForeignKey(Parroquia, on_delete=models.PROTECT, related_name='datos')
-    sector = models.ForeignKey(Sector, on_delete=models.PROTECT, related_name='datos')
+    estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='datos')
+    municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='datos')
+    parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='datos')
+    sector = models.ForeignKey(Sectores, on_delete=models.PROTECT, related_name='datos')
     urbanismo = models.CharField('Urbanismo', max_length=120, help_text='Urbanismo')
     torre = models.CharField('Torre', max_length=10, help_text='Torre')
     piso = models.CharField('Piso', max_length=8, help_text='Piso')
@@ -227,7 +255,7 @@ class Datos(ModeloAuditoria):
 class Ambiente_Dato(ModeloAuditoria):
     """Modelo para almacenar ambientes de los datos"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
-    id_ambiente = models.ForeignKey(Ambiente, on_delete=models.PROTECT, related_name='Ambiente_Dato')
+    id_ambiente = models.ForeignKey(Ambientes, on_delete=models.PROTECT, related_name='Ambiente_Dato')
     serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='ambiente_datos')
 
     def __str__(self) -> str:
@@ -248,9 +276,10 @@ class Contratos(ModeloAuditoria):
     """Modelo para almacenar contratos"""
     id = models.AutoField('ID', help_text='ID', primary_key=True)
     serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='contatos')
-    url_contrato = models.URLField(
-        'URL del Contrato', 
-        help_text='Ingrese la URL donde se encuentra el contrato.', 
+    file_contrato = models.CharField(
+        'Archivo', 
+        max_length=30,
+        help_text='Ingrese el nombre del contrato.', 
         blank=True,  # Permitir que el campo esté vacío
         null=True    # Permitir que el campo sea nulo en la base de datos
     )
@@ -276,7 +305,7 @@ class Contratos(ModeloAuditoria):
 class Lindero_Dato(ModeloAuditoria):
     """Modelo para almacenar lineros de los datos"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
-    id_lindero = models.ForeignKey(Lindero, on_delete=models.PROTECT, related_name='Lindero_Dato')
+    id_lindero = models.ForeignKey(Linderos, on_delete=models.PROTECT, related_name='Lindero_Dato')
     serial_cliente = models.ForeignKey(Datos, on_delete=models.PROTECT, related_name='lindero_datos')
 
     def __str__(self) -> str:

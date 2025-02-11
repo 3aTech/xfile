@@ -16,6 +16,7 @@
       <div class="col-sm-6">
         <h1 class="m-0 text-dark">Listado de Representantes</h1>
       </div>
+      <!-- /.col -->
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
@@ -23,18 +24,24 @@
           <li class="breadcrumb-item active">Gestión de Representantes</li>
         </ol>
       </div>
+      <!-- /.col -->
     </div>
+    <!-- /.row -->
   </div>
+  <!-- /.container-fluid -->
 </div>
 {% endblock contentheader %} 
 
+
 {% block content %}
+
 <div class="card" style="width: 60%; margin: auto;">
     <div class="card-header d-flex justify-content-end">
        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
         <i class="fas fa-solid fa-plus me-1"></i>
        </button>
     </div>
+    <!-- /.card-header -->
     <div class="card-body">
       <table id="example1" class="table table-bordered table-striped">
         <thead>
@@ -49,23 +56,21 @@
             {% for representante in registros %}
             <tr>
                 <td>{{ representante.cedula }}</td>
-                <td>{{ representante.nacionalidad }}</td>
+                <td>{{ representante.nacionalidad }}
                 <td>{{ representante.nombre }}</td>
                 <td class="text-center">
-                    <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" 
-                        data-cedula="{{ representante.cedula }}" 
-                        data-nombre="{{ representante.nombre }}" 
-                        data-nacionalidad="{{ representante.nacionalidad }}" 
-                        data-ciudadanoCiudadana="{{ representante.ciudadano_ciudadana }}" 
-                        data-representante="{{ representante.representante }}" 
-                        data-denominara="{{ representante.denominara }}" 
-                        data-condicion="{{ representante.condicion }}" 
-                        data-region="{{ representante.region }}" 
-                        data-inactivo="{{ representante.inactivo }}">
-                        <i class='bx bx-edit' ></i>
+                    <button class="btn btn-warning" data-toggle="modal" 
+                            data-target="#editModal" 
+                            data-cedula="{{ representante.cedula }}"
+                            data-nacionalidad="{{ representante.nacionalidad }}"
+                            data-nombre="{{ representante.nombre }}">
+                            <i class='bx bx-edit' ></i>
                     </button>
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-id="{{ representante.cedula }}" data-nombre="{{ representante.nombre }}">
-                        <i class='bx bx-trash' ></i>
+                    <button class="btn btn-danger" data-toggle="modal" 
+                            data-target="#deleteModal" 
+                            data-cedula="{{ representante.cedula }}" 
+                            data-nombre="{{ representante.nombre }}">
+                            <i class='bx bx-trash' ></i>
                     </button>
                 </td>
             </tr>
@@ -77,7 +82,7 @@
 
 <!-- Modal para crear un nuevo representante -->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <form method="post" id="createForm">
                 {% csrf_token %}
@@ -89,16 +94,15 @@
                 </div>
                 <div class="modal-body">
                     <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="inactivo" class="form-label">Activo/Inactivo</label>
-                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input" id="customSwitch3" name="inactivo"
-                                {% if object.inactivo %} checked {% endif %}>
-                                <label class="custom-control-label" for="customSwitch3" id="switchLabel"> 
-                                    {% if not object.inactivo %} Inactivo {% else %} Activo {% endif %}
-                                </label>
+                        <div class="col-md-6">
+                            <div class="form-group">                                
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="inactivo" >
+                                    <label class="custom-control-label" for="customSwitch1">Activo</label>
+                                </div>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="row mb-3"> 
                         <div class="col-md-4">
@@ -107,19 +111,14 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
                                 </div>
-                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
+                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V|J|G]-99.999.999"' data-mask
                                     id="cedula" name="cedula" value="{{ object.cedula|default:'' }}" required aria-label="Cédula">
                             </div>
-                        </div>             
+                        </div>
                         <div class="col-md-4">
-                            <label for="nacionalidad" class="form-label">Nacionalidad</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-network-chart' ></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" 
-                                    value="{{ object.nacionalidad|default:'' }}" required 
-                                    aria-label="Nacionalidad" placeholder="Nacionalidad">
+                            <div class="form-group">
+                                <label for="nacionalidad">Nacionalidad</label>
+                                <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" required>
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -143,67 +142,53 @@
                         </div>
                     </div>
                     <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="nombre" class="form-label">Nombre y Apellido</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-user-rectangle' ></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="nombre" name="nombre" 
-                                    value="{{ object.nombre|default:'' }}" required 
-                                    aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="condicion">Cargo</label>
+                                <input type="text" class="form-control" id="condicion" name="condicion" required>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="condicion">Region</label>
+                                <input type="text" class="form-control" id="region" name="region" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="denominara">Se Denominará</label>
+                                <input type="text" class="form-control" id="denominara" name="denominara" required>
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="representante" class="form-label">Representante de</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-business' ></i></span>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                <label for="estado" class="form-label">Representante de</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                    </div>
+                                    <select class="form-control select2bs4" id="representado_id" name="representado_id" required aria-label="representado_id">
+                                        <option value="" disabled {% if not object %}selected{% endif %}>Seleccione Empresa o Persona</option>
+                                        {% for representado in representados %}
+                                            <option value="{{ representado.co_estado }}" {% if object.representado.id == representado.id %}selected{% endif %}>
+                                                {{ representado.id }} - {{ representado.nombre }}
+                                            </option>
+                                        {% empty %}
+                                            <option value="">No hay empresa o persona disponibles</option>
+                                        {% endfor %}
+                                      </select>
                                 </div>
-                                <input type="text" class="form-control" id="representante" name="representante" 
-                                    value="{{ object.representante|default:'' }}" required 
-                                    aria-label="Representante de" placeholder="Empresa">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="denominara" class="form-label">Denominacion de la Empresa</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-business' ></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="denominara" name="denominara" 
-                                    value="{{ object.denominara|default:'' }}" required 
-                                    aria-label="Denominara como..." placeholder="Denominara">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="condicion" class="form-label">Condición</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="condicion" name="condicion" 
-                                    value="{{ object.condicion|default:'' }}" required 
-                                    aria-label="Condición" placeholder="Cargo">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="region" class="form-label">Región</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="region" name="region" 
-                                    value="{{ object.region|default:'' }}" required 
-                                    aria-label="Región" placeholder="Región">
                             </div>
                         </div>
                     </div>
@@ -221,138 +206,64 @@
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
-            <form method="post" id="editForm">
+            <form method="post" id="createForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editar Representante</h5>
+                    <h5 class="modal-title" id="createModalLabel">Editar Representante</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="edit-customSwitch3" class="form-label">Activo/Inactivo</label>
-                            <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                <input type="checkbox" class="custom-control-input" id="edit-customSwitch3" name="inactivo"
-                                {% if object.inactivo %} checked {% endif %}>
-                                <label class="custom-control-label" for="edit-customSwitch3" id="switchLabel"> 
-                                    {% if not object.inactivo %} Activo {% else %} Inactivo {% endif %}
-                                </label>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="edit-cedula">Código</label>
+                        <input type="text" class="form-control" id="edit-cedula" name="cedula" required>
                     </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-4">
-                            <label for="edit-cedula" class="form-label">Cédula</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
-                                </div>
-                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
-                                    id="edit-cedula" name="cedula" value="{{ object.cedula|default:'' }}" readonly required aria-label="Cédula">
-                            </div>
-                        </div>             
-                        <div class="col-md-4">
-                            <label for="edit-nacionalidad" class="form-label">Nacionalidad</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-network-chart' ></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="edit-nacionalidad" name="nacionalidad" 
-                                    value="{{ object.nacionalidad|default:'' }}" required 
-                                    aria-label="Nacionalidad" placeholder="Nacionalidad">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="edit-ciudadanoCiudadana" class="form-label">Ciudadano/Ciudadana</label>
-                                <select class="form-control select2bs4" style="width: 100%;"
-                                    id="edit-ciudadanoCiudadana" name="ciudadano_ciudadana" required>
-                                    {% if object.ciudadano_ciudadana %} 
-                                        <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
-                                            {{ object.ciudadano_ciudadana }}
-                                        </option> 
-                                    {% endif %}
-                                    {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
-                                        <option>CIUDADANO</option>
-                                    {% endif %}
-                                    {% if object.ciudadano_ciudadana != 'CIUDADANA' %}
-                                        <option>CIUDADANA</option>
-                                    {% endif %}
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="edit-nacionalidad">Nacionalidad</label>
+                        <input type="text" class="form-control" id="edit-nacionalidad" name="nacionalidad" required>
                     </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="edit-nombre" class="form-label">Nombre y Apellido</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-user-rectangle' ></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="edit-nombre" name="nombre" 
-                                    value="{{ object.nombre|default:'' }}" required 
-                                    aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="edit-ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
+                        <select class="form-control select2bs4" style="width: 100%;"
+                            id="edit-ciudadano_ciudadana" name="ciudadano_ciudadana" required>
+                            {% if object.ciudadano_ciudadana %} 
+                                <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
+                                    {{ object.ciudadano_ciudadana }}
+                                </option> 
+                            {% endif %}
+                            {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
+                                <option>CIUDADANO</option>
+                            {% endif %}
+                            {% if object.ciudadano_ciudadana != 'CIUDADANA' %}
+                                <option>CIUDADANA</option>
+                            {% endif %}
+                        </select>
                     </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="edit-representante" class="form-label">Representante de</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-business' ></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="edit-representante" name="representante" 
-                                    value="{{ object.representante|default:'' }}" required 
-                                    aria-label="Representante de" placeholder="Empresa">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="edit-nombre">Nombre</label>
+                        <input type="text" class="form-control" id="edit-nombre" name="nombre" required>
                     </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="edit-denominara" class="form-label">Denominación de la Empresa</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-business'></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="edit-denominara" name="denominara" 
-                                    value="{{ object.denominara|default:'' }}" required 
-                                    aria-label="Denominara como..." placeholder="Denominara">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="edit-representante">Representante de</label>
+                        <input type="text" class="form-control" id="edit-representante" name="representante" required>
                     </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="edit-condicion" class="form-label">Condición</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="edit-condicion" name="condicion" 
-                                    value="{{ object.condicion|default:'' }}" required 
-                                    aria-label="Condición" placeholder="Cargo">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="edit-denominara">Denominara</label>
+                        <input type="text" class="form-control" id="edit-denominara" name="denominara" required>
                     </div>
-                    <div class="row mb-3"> 
-                        <div class="col-md-12">
-                            <label for="edit-region" class="form-label">Región</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class='bx bxs-briefcase'></i></span>
-                                </div>
-                                <input type="text" class="form-control" id="edit-region" name="region" 
-                                    value="{{ object.region|default:'' }}" required 
-                                    aria-label="Región" placeholder="Región">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="edit-condicion">Cargo</label>
+                        <input type="text" class="form-control" id="edit-condicion" name="condicion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-region">Region</label>
+                        <input type="text" class="form-control" id="edit-region" name="region" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
                 </div>
             </form>
         </div>
@@ -372,8 +283,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar el representante "<span id="delete-representante-name"></span>"?</p>
-                    <input type="hidden" id="delete-id" name="cedula">
+                    <p>¿Estás seguro de que deseas eliminar el representante "<span id="delete-nombre"></span>"?</p>
+                    <input type="hidden" id="delete-cedula" name="nombre">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -399,8 +310,12 @@
 <!-- Page JS -->
 <script src="{% static '3atech/js/ui-modals.js' %}"></script>
 
+<!-- page script -->
 <script>
   $(function () {
+
+    $('[data-mask]').inputmask()
+
     $("#example1").DataTable({
       responsive: true,
       autoWidth: false,
@@ -432,67 +347,71 @@
         },
       },
     });
+    $("#example2").DataTable({
+      paging: true,
+      lengthChange: false,
+      searching: false,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  $(function () {
+    {% for message in messages %}
+          var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
+          var messageText = "{{ message }}"; // Obtiene el texto del mensaje
+
+          if (messageType === 'success') {
+              Swal.fire({        
+                type: 'success',
+                title: 'Éxito!',
+                text: messageText,   
+                showConfirmButton: false,   
+                timer: 3000,  
+            });
+          }
+      {% endfor %}
   });
 </script>
 
 <script>
-    $(function () {
-      $('[data-mask]').inputmask();
 
-      $("input[data-bootstrap-switch]").each(function () {
-        $(this).bootstrapSwitch('state', $(this).prop('checked'));
-      });
-
-  });
-</script>
-
-<script>
     // Script para manejar la carga de datos en los modales
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var cedula = button.data('cedula'); 
-        var ciudadanoCiudadana = button.data('ciudadano_ciudadana');
-        var nacionalidad = button.data('nacionalidad');
-        var nombre = button.data('nombre');
-        var representante = button.data('representante');
-        var denominara = button.data('denominara');
-        var condicion = button.data('condicion');
-        var region = button.data('region');
-        var inactivo = button.data('inactivo');
-        var modal = $(this);
-        modal.find('#edit-inactivo').val(inactivo); // Cargar inactivo
-        modal.find('#edit-cedula').val(cedula); // Cargar cédula        
-        modal.find('#edit-nacionalidad').val(nacionalidad); // Cargar nacionalidad
-        modal.find('#edit-ciudadanoCiudadana').val(ciudadanoCiudadana);
-        modal.find('#edit-nombre').val(nombre); // Cargar nombre
-        modal.find('#edit-representante').val(representante); // Cargar representante
-        modal.find('#edit-denominara').val(denominara); 
-        modal.find('#edit-condicion').val(condicion); // Cargar condición
-        modal.find('#edit-region').val(region); 
+        var co_parroquia = button.data('coParroquia');
+        var des_parroquia = button.data('desParroquia');
+        var municipio = button.data('municipio');
 
-        // Cargar estado del campo inactivo
-        if (inactivo) {
-            modal.find('#edit-inactivo').prop('checked', true);
-        } else {
-            modal.find('#edit-inactivo').prop('checked', false);
-        }
+        var modal = $(this);
+        modal.find('#edit-code').val(co_parroquia);
+        modal.find('#edit-nombre').val(des_parroquia);
+        modal.find('#edit-municipio').val(municipio).trigger('change');
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var id = button.data('id');
+        var codigo = button.data('codigo');
         var nombre = button.data('nombre');
+        
+        console.log('codigo:', codigo); // Para depuración
+        console.log('nombre:', nombre); // Para depuración
+        
         var modal = $(this);
-        modal.find('#delete-id').val(id);
-        modal.find('#delete-ambiente-name').text(nombre);
+        modal.find('#delete-co_parroquia').val(codigo);
+        modal.find('#delete-des_parroquia').text(nombre);
     });
 
-    // Script para manejar la creación de un nuevo ambiente
+    // Script para manejar la creación de un nuevo parroquia
     $('#createForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
         $.ajax({
             type: 'POST',
-            url: '/representantes/crear/', // URL para crear un ambiente
+            url: '/parroquias/crear/', // URL para crear un parroquia
             data: $(this).serialize(),
             headers: {
                 'X-CSRFToken': csrftoken // Incluye el token CSRF
@@ -501,7 +420,7 @@
                 // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Representante creado correctamente.',
+                    text: 'Parroquia creado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -527,34 +446,38 @@
         });
     });
 
-    // Script para manejar la actualización de un ambiente
+    // Script para manejar la actualización de un parroquia
     $('#editForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        var cedula = $('#edit-cedula').val(); // Obtener el ID del ambiente
+        event.preventDefault();
+        var codigo = $('#edit-code').val();
+        
         $.ajax({
             type: 'PUT',
-            url: '/representantes/' + cedula + '/editar/', // URL para editar un ambiente
-            data: $(this).serialize(),
+            url: '/parroquias/' + codigo + '/editar/',  // Ajusta esta URL según tu configuración
+            data: JSON.stringify({
+                'co_parroquia': $('#edit-code').val(),
+                'des_parroquia': $('#edit-nombre').val(),
+                'municipio': $('#edit-municipio').val()
+            }),
+            contentType: 'application/json',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
             success: function (response) {
-                // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Representante actualizado correctamente.',
+                    text: 'Parroquia actualizado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
+                    location.reload();
                 });
             },
             error: function (xhr) {
-                // Manejar errores
-                let errorMessage = 'Ocurrió un error.';
-
-                // Verifica si el error es por CSRF
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                let errorMessage = 'Ocurrió un error al actualizar la parroquia.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.error;
                 }
-
                 Swal.fire({
                     title: 'Error!',
                     text: errorMessage,
@@ -565,18 +488,18 @@
         });
     });
 
-    // Script para manejar la eliminación de un ambiente
+    // Script para manejar la eliminación de un parroquia
     $('#deleteForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-id').val(); // Obtener el ID del ambiente
+        var id = $('#delete-co_parroquia').val(); // Obtener el ID del parroquia
         $.ajax({
             type: 'DELETE',
-            url: '/ambientes/' + id + '/eliminar/', // URL para eliminar un ambiente
+            url: '/parroquias/' + id + '/eliminar/', // URL para eliminar un parroquia
             success: function (response) {
                 // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Ambiente eliminado correctamente.',
+                    text: 'Parroquia eliminado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -630,25 +553,14 @@ $.ajaxSetup({
         }
     }
 });
+
+$(document).ready(function() {
+    $('#municipio').select2bs4({
+        placeholder: "Seleccione un Municipio",
+        allowClear: true
+    });
+});
 </script>
 
-<script>
-    // Cambiar el texto del label según el estado del checkbox
-    $('#customSwitch3').change(function() {
-        if ($(this).is(':checked')) {
-            $('#switchLabel').text('Activo');
-        } else {
-            $('#switchLabel').text('Inactivo');
-        }
-    });
 
-    $('#edit-customSwitch3').change(function() {
-        if ($(this).is(':checked')) {
-            $('#switchLabel').text('Activo');
-        } else {
-            $('#switchLabel').text('Inactivo');
-        }
-    });
-</script>
-
-{% endblock scripts %} 
+{% endblock scripts %}

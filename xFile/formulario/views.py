@@ -1,15 +1,16 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import (Datos, Ambiente, Lindero, Representante, 
-                     Estado, Municipio, Parroquia, Sector)
+from .models import (Datos, Ambientes, Linderos, Representantes, 
+                     Estados, Municipios, Parroquias, Sectores, Representado)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render
 from .serializers import (DatosSerializer, 
                           AmbienteSerializer, LinderoSerializer, RepresentanteSerializer,
-                          EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer)
+                          EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer,
+                          RepresentadoSerializer)
 from rest_framework import status
 
 # Vista para obtener sector según la parroquia
@@ -18,7 +19,7 @@ def get_sector(request):
     parroquia_id = request.GET.get('parroquia')
     if not parroquia_id:
         return Response({"error": "La parroquia es requerida."}, status=status.HTTP_400_BAD_REQUEST)
-    sectores = Sector.objects.filter(parroquia=parroquia_id)
+    sectores = Sectores.objects.filter(parroquia=parroquia_id)
     serializer = SectorSerializer(sectores, many=True)
     return Response(serializer.data)
 
@@ -28,7 +29,7 @@ def get_parroquias(request):
     municipio_id = request.GET.get('municipio')
     if not municipio_id:
         return Response({"error": "El municipio es requerido."}, status=status.HTTP_400_BAD_REQUEST)
-    parroquias = Parroquia.objects.filter(municipio__co_municipio=municipio_id)
+    parroquias = Parroquias.objects.filter(municipio__co_municipio=municipio_id)
     serializer = ParroquiaSerializer(parroquias, many=True)
     return Response(serializer.data)
 
@@ -38,7 +39,7 @@ def get_municipios(request):
     estado_id = request.GET.get('estado')
     if not estado_id:
         return Response({"error": "El estado es requerido."}, status=status.HTTP_400_BAD_REQUEST)
-    municipios = Municipio.objects.filter(estado__co_estado=estado_id)
+    municipios = Municipios.objects.filter(estado__co_estado=estado_id)
     serializer = MunicipioSerializer(municipios, many=True)
     return Response(serializer.data)
 
@@ -58,11 +59,11 @@ class DatosListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['representantes'] = Representante.objects.all()
-        context['estados'] = Estado.objects.all()
-        context['municipios'] = Municipio.objects.all()
-        context['parroquias'] = Parroquia.objects.all()
-        context['sectores'] = Sector.objects.all()
+        context['representantes'] = Representantes.objects.all()
+        context['estados'] = Estados.objects.all()
+        context['municipios'] = Municipios.objects.all()
+        context['parroquias'] = Parroquias.objects.all()
+        context['sectores'] = Sectores.objects.all()
         context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
         return context
 
@@ -83,11 +84,11 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['representantes'] = Representante.objects.all()
-        context['estados'] = Estado.objects.all()
-        context['municipios'] = Municipio.objects.all()
-        context['parroquias'] = Parroquia.objects.all()
-        context['sectores'] = Sector.objects.all()
+        context['representantes'] = Representantes.objects.all()
+        context['estados'] = Estados.objects.all()
+        context['municipios'] = Municipios.objects.all()
+        context['parroquias'] = Parroquias.objects.all()
+        context['sectores'] = Sectores.objects.all()
         
         return context
     
@@ -120,11 +121,11 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['representantes'] = Representante.objects.all()
-        context['estados'] = Estado.objects.all()
-        context['municipios'] = Municipio.objects.all()
-        context['parroquias'] = Parroquia.objects.all()
-        context['sectores'] = Sector.objects.all()
+        context['representantes'] = Representantes.objects.all()
+        context['estados'] = Estados.objects.all()
+        context['municipios'] = Municipios.objects.all()
+        context['parroquias'] = Parroquias.objects.all()
+        context['sectores'] = Sectores.objects.all()
         return context
     
     def form_valid(self, form):
@@ -148,7 +149,7 @@ def datos_delete(request, pk):
 
 # Vista para listar y gestionar ambientes
 class AmbienteListView(LoginRequiredMixin, ListView):
-    model = Ambiente
+    model = Ambientes
     template_name = 'pages/ambientes.html'  # Cambiar a la nueva plantilla
     context_object_name = 'registros'
     paginate_by = 10
@@ -167,7 +168,7 @@ class AmbienteListView(LoginRequiredMixin, ListView):
 
 # Vista para crear un nuevo ambiente
 class AmbienteCreateView(LoginRequiredMixin, CreateView):
-    model = Ambiente
+    model = Ambientes
     fields = ['ambiente']
     success_url = reverse_lazy('ambiente_list')
 
@@ -178,7 +179,7 @@ class AmbienteCreateView(LoginRequiredMixin, CreateView):
 
 # Vista para actualizar un ambiente existente
 class AmbienteUpdateView(LoginRequiredMixin, UpdateView):
-    model = Ambiente
+    model = Ambientes
     fields = ['ambiente']
     success_url = reverse_lazy('ambiente_list')
 
@@ -189,7 +190,7 @@ class AmbienteUpdateView(LoginRequiredMixin, UpdateView):
 
 # Vista para eliminar un ambiente
 class AmbienteDeleteView(LoginRequiredMixin, DeleteView):
-    model = Ambiente
+    model = Ambientes
     success_url = reverse_lazy('ambiente_list')
 
     def delete(self, request, *args, **kwargs):
@@ -207,7 +208,7 @@ def ambiente_create(request):
 
 @api_view(['PUT'])
 def ambiente_update(request, pk):
-    ambiente = Ambiente.objects.get(pk=pk)
+    ambiente = Ambientes.objects.get(pk=pk)
     serializer = AmbienteSerializer(ambiente, data=request.data)
     if serializer.is_valid():
         serializer.save(us_mo=request.user.username)
@@ -216,13 +217,13 @@ def ambiente_update(request, pk):
 
 @api_view(['DELETE'])
 def ambiente_delete(request, pk):
-    ambiente = Ambiente.objects.get(pk=pk)
+    ambiente = Ambientes.objects.get(pk=pk)
     ambiente.delete()
     return Response({'message': 'Ambiente eliminado exitosamente.'}, status=204)
 
 # Vista para listar y gestionar linderos
 class LinderoListView(LoginRequiredMixin, ListView):
-    model = Lindero
+    model = Linderos
     template_name = 'pages/linderos.html'  # Cambiar a la nueva plantilla
     context_object_name = 'registros'
     paginate_by = 10
@@ -241,7 +242,7 @@ class LinderoListView(LoginRequiredMixin, ListView):
 
 # Vista para crear un nuevo ambiente
 class LinderoCreateView(LoginRequiredMixin, CreateView):
-    model = Lindero
+    model = Linderos
     fields = ['lindero']
     success_url = reverse_lazy('lindero_list')
 
@@ -252,7 +253,7 @@ class LinderoCreateView(LoginRequiredMixin, CreateView):
 
 # Vista para actualizar un lindero existente
 class LinderoUpdateView(LoginRequiredMixin, UpdateView):
-    model = Lindero
+    model = Linderos
     fields = ['lindero']
     success_url = reverse_lazy('lindero_list')
 
@@ -263,7 +264,7 @@ class LinderoUpdateView(LoginRequiredMixin, UpdateView):
 
 # Vista para eliminar un lindero
 class LinderoDeleteView(LoginRequiredMixin, DeleteView):
-    model = Lindero
+    model = Linderos
     success_url = reverse_lazy('lindero_list')
 
     def delete(self, request, *args, **kwargs):
@@ -281,7 +282,7 @@ def lindero_create(request):
 
 @api_view(['PUT'])
 def lindero_update(request, pk):
-    lindero = Lindero.objects.get(pk=pk)
+    lindero = Linderos.objects.get(pk=pk)
     serializer = LinderoSerializer(lindero, data=request.data)
     if serializer.is_valid():
         serializer.save(us_mo=request.user.username)
@@ -290,13 +291,13 @@ def lindero_update(request, pk):
 
 @api_view(['DELETE'])
 def lindero_delete(request, pk):
-    lindero = Lindero.objects.get(pk=pk)
+    lindero = Linderos.objects.get(pk=pk)
     lindero.delete()
     return Response({'message': 'Lindero eliminado exitosamente.'}, status=204)
 
 # Vista para listar y gestionar representantes
 class RepresentanteListView(LoginRequiredMixin, ListView):
-    model = Representante
+    model = Representantes
     template_name = 'pages/representantes.html'
     context_object_name = 'registros'
     paginate_by = 10
@@ -311,11 +312,12 @@ class RepresentanteListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_registros'] = self.get_queryset().count()
+        context['representados'] = Representado.objects.all()  # Agregar la lista de representados
         return context
 
 # Vista para crear un nuevo representante
 class RepresentanteCreateView(LoginRequiredMixin, CreateView):
-    model = Representante
+    model = Representantes
     fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 
               'nombre', 'representante', 'denominara', 'condicion', 'region']
     success_url = reverse_lazy('representante_list')
@@ -332,7 +334,7 @@ class RepresentanteCreateView(LoginRequiredMixin, CreateView):
 
 # Vista para actualizar un representante existente
 class RepresentanteUpdateView(LoginRequiredMixin, UpdateView):
-    model = Representante
+    model = Representantes
     fields = ['nacionalidad', 'ciudadano_ciudadana', 
               'nombre', 'representante', 'denominara', 'condicion', 'region']
     success_url = reverse_lazy('representante_list')
@@ -349,7 +351,7 @@ class RepresentanteUpdateView(LoginRequiredMixin, UpdateView):
 
 # Vista para eliminar un representante
 class RepresentanteDeleteView(LoginRequiredMixin, DeleteView):
-    model = Representante
+    model = Representantes
     success_url = reverse_lazy('representante_list')
 
     def delete(self, request, *args, **kwargs):
@@ -370,7 +372,7 @@ def representante_create(request):
 
 @api_view(['PUT'])
 def representante_update(request, pk):
-    representante = Representante.objects.get(pk=pk)
+    representante = Representantes.objects.get(pk=pk)
     serializer = RepresentanteSerializer(representante, data=request.data)
     if serializer.is_valid():
         serializer.save(us_mo=request.user.username)
@@ -382,14 +384,14 @@ def representante_update(request, pk):
 
 @api_view(['DELETE'])
 def representante_delete(request, pk):
-    lindero = Representante.objects.get(pk=pk)
+    lindero = Representantes.objects.get(pk=pk)
     lindero.delete()
     return Response({'message': 'Representante eliminado exitosamente.'}, status=204)
 
 
 # Vistas para Estado
 class EstadoListView(LoginRequiredMixin, ListView):
-    model = Estado
+    model = Estados
     template_name = 'pages/estados.html'
     context_object_name = 'registros'
     paginate_by = 10
@@ -415,7 +417,7 @@ def estado_create(request):
 
 @api_view(['PUT'])
 def estado_update(request, pk):
-    estado = Estado.objects.get(pk=pk)
+    estado = Estados.objects.get(pk=pk)
     serializer = EstadoSerializer(estado, data=request.data)
     if serializer.is_valid():
         serializer.save(us_mo=request.user.username)
@@ -427,14 +429,14 @@ def estado_update(request, pk):
 
 @api_view(['DELETE'])
 def estado_delete(request, pk):
-    estado = Estado.objects.get(pk=pk)
+    estado = Estados.objects.get(pk=pk)
     estado.delete()
     return Response({'message': 'Estado eliminado exitosamente.'}, status=204)
 
 
 # Vistas para Municipio
 class MunicipioListView(LoginRequiredMixin, ListView):
-    model = Municipio
+    model = Municipios
     template_name = 'pages/municipios.html'
     context_object_name = 'registros'
     paginate_by = 10
@@ -453,7 +455,7 @@ class MunicipioListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['estados'] = Estado.objects.all()  # Agregar la lista de estados
+        context['estados'] = Estados.objects.all()  # Agregar la lista de estados
         return context
 
 
@@ -472,8 +474,8 @@ def municipio_create(request):
 @api_view(['PUT'])
 def municipio_update(request, pk):
     try:
-        municipio = Municipio.objects.get(co_municipio=pk)
-        estado = Estado.objects.get(co_estado=request.data.get('estado'))
+        municipio = Municipios.objects.get(co_municipio=pk)
+        estado = Estados.objects.get(co_estado=request.data.get('estado'))
         
         serializer = MunicipioSerializer(municipio, data={
             'co_municipio': request.data.get('co_municipio'),
@@ -486,22 +488,22 @@ def municipio_update(request, pk):
             return Response({'message': 'Municipio actualizado exitosamente.'}, status=200)
         else:
             return Response(serializer.errors, status=400)
-    except Municipio.DoesNotExist:
+    except Municipios.DoesNotExist:
         return Response({'error': 'Municipio no encontrado.'}, status=404)
-    except Estado.DoesNotExist:
+    except Estados.DoesNotExist:
         return Response({'error': 'Estado no encontrado.'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
 def municipio_delete(request, pk):
-    municipio = Municipio.objects.get(pk=pk)
+    municipio = Municipios.objects.get(pk=pk)
     municipio.delete()
     return Response({'message': 'Municipio eliminado exitosamente.'}, status=204)
 
 # Vistas para Parroquia
 class ParroquiaListView(LoginRequiredMixin, ListView):
-    model = Parroquia
+    model = Parroquias
     template_name = 'pages/parroquias.html'
     context_object_name = 'registros'
     paginate_by = 10
@@ -520,7 +522,7 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['municipios'] = Municipio.objects.all()  # Agregar la lista de municipio
+        context['municipios'] = Municipios.objects.all()  # Agregar la lista de municipio
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -538,8 +540,8 @@ def parroquia_create(request):
 @api_view(['PUT'])
 def parroquia_update(request, pk):
     try:
-        parroquia = Parroquia.objects.get(co_parroquia=pk)
-        municipio = Municipio.objects.get(co_municipio=request.data.get('municipio'))
+        parroquia = Parroquias.objects.get(co_parroquia=pk)
+        municipio = Municipios.objects.get(co_municipio=request.data.get('municipio'))
         
         serializer = ParroquiaSerializer(parroquia, data={
             'co_parroquia': request.data.get('co_parroquia'),
@@ -552,22 +554,22 @@ def parroquia_update(request, pk):
             return Response({'message': 'Parroquia actualizada exitosamente.'}, status=200)
         else:
             return Response(serializer.errors, status=400)
-    except Parroquia.DoesNotExist:
+    except Parroquias.DoesNotExist:
         return Response({'error': 'Parroquia no encontrada.'}, status=404)
-    except Municipio.DoesNotExist:
+    except Municipios.DoesNotExist:
         return Response({'error': 'Parroquia no encontrada.'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
 def parroquia_delete(request, pk):
-    parroquia = Parroquia.objects.get(pk=pk)
+    parroquia = Parroquias.objects.get(pk=pk)
     parroquia.delete()
     return Response({'message': 'Parroquia eliminado exitosamente.'}, status=204)
 
 # Vistas para Sector
 class SectorListView(LoginRequiredMixin, ListView):
-    model = Sector
+    model = Sectores
     template_name = 'pages/sectores.html'
     context_object_name = 'registros'
     paginate_by = 10
@@ -586,7 +588,7 @@ class SectorListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['parroquias'] = Parroquia.objects.all()  # Asegúrate de que esto esté presente
+        context['parroquias'] = Parroquias.objects.all()  # Asegúrate de que esto esté presente
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -604,8 +606,8 @@ def sector_create(request):
 @api_view(['PUT'])
 def sector_update(request, pk):
     try:
-        sector = Sector.objects.get(co_sector=pk)
-        parroquia = Parroquia.objects.get(co_parroquia=request.data.get('parroquia'))
+        sector = Sectores.objects.get(co_sector=pk)
+        parroquia = Parroquias.objects.get(co_parroquia=request.data.get('parroquia'))
         
         serializer = SectorSerializer(sector, data={
             'co_sector': request.data.get('co_sector'),
@@ -618,15 +620,84 @@ def sector_update(request, pk):
             return Response({'message': 'Sector actualizado exitosamente.'}, status=200)
         else:
             return Response(serializer.errors, status=400)
-    except Sector.DoesNotExist:
+    except Sectores.DoesNotExist:
         return Response({'error': 'Sector no encontrado.'}, status=404)
-    except Parroquia.DoesNotExist:
+    except Parroquias.DoesNotExist:
         return Response({'error': 'Parroquia no encontrada.'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
 def sector_delete(request, pk):
-    sector = Sector.objects.get(pk=pk)
+    sector = Sectores.objects.get(pk=pk)
     sector.delete()
     return Response({'message': 'Sector eliminado exitosamente.'}, status=204)
+
+# Vistas para Representado
+class RepresentadoListView(LoginRequiredMixin, ListView):
+    model = Representado
+    template_name = 'pages/representados.html'
+    context_object_name = 'registros'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        if search:
+            queryset = queryset.filter(nombre__icontains=search)
+        return queryset.order_by('nombre')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registros'] = self.get_queryset().count()
+        return context
+
+@api_view(['POST'])
+def representado_create(request):
+    serializer = RepresentadoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        return Response({'message': 'Representado creado exitosamente.'}, status=201)
+    else:
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def representado_update(request, pk):
+    try:
+        representado = Representado.objects.get(pk=pk)
+        serializer = RepresentadoSerializer(representado, data=request.data)
+        if serializer.is_valid():
+            serializer.save(us_mo=request.user.username)
+            return Response({'message': 'Representado actualizado exitosamente.'}, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+    except Representado.DoesNotExist:
+        return Response({'error': 'Representado no encontrado.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['DELETE'])
+def representado_delete(request, pk):
+    try:
+        representado = Representado.objects.get(pk=pk)
+        representado.delete()
+        return Response({'message': 'Representado eliminado exitosamente.'}, status=204)
+    except Representado.DoesNotExist:
+        return Response({'error': 'Representado no encontrado.'}, status=404)
+
+# Vista para ver el detalle de un representado
+class RepresentadoDetailView(LoginRequiredMixin, DetailView):
+    model = Representado
+    template_name = 'pages/representado_detail.html'
+    context_object_name = 'representado'
+
+@api_view(['GET'])
+def representado_detail(request, pk):
+    try:
+        representado = Representado.objects.get(pk=pk)
+        serializer = RepresentadoSerializer(representado)
+        return Response(serializer.data)
+    except Representado.DoesNotExist:
+        return Response({'error': 'Representado no encontrado.'}, status=404)
