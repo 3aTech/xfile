@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views, view_export, view_gen_contratos
 from rest_framework.routers import DefaultRouter
+from django.contrib.auth import views as auth_views
 
 # app_name = '_monedas'
 # Crear un router para las vistas

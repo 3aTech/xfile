@@ -3,14 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import (Datos, Ambientes, Linderos, Representantes, 
-                     Estados, Municipios, Parroquias, Sectores, Representado)
+                     Estados, Municipios, Parroquias, Sectores, Entidades)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render
 from .serializers import (DatosSerializer, 
                           AmbienteSerializer, LinderoSerializer, RepresentanteSerializer,
                           EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer,
-                          RepresentadoSerializer)
+                          EntidadesSerializer)
 from rest_framework import status
 
 # Vista para obtener sector según la parroquia
@@ -312,7 +312,7 @@ class RepresentanteListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_registros'] = self.get_queryset().count()
-        context['representados'] = Representado.objects.all()  # Agregar la lista de representados
+        context['entidades'] = Entidades.objects.all()  # Agregar la lista de entidades
         return context
 
 # Vista para crear un nuevo representante
@@ -633,10 +633,10 @@ def sector_delete(request, pk):
     sector.delete()
     return Response({'message': 'Sector eliminado exitosamente.'}, status=204)
 
-# Vistas para Representado
-class RepresentadoListView(LoginRequiredMixin, ListView):
-    model = Representado
-    template_name = 'pages/representados.html'
+# Vistas para Entidades
+class EntidadesListView(LoginRequiredMixin, ListView):
+    model = Entidades
+    template_name = 'pages/entidades.html'
     context_object_name = 'registros'
     paginate_by = 10
 
@@ -653,51 +653,51 @@ class RepresentadoListView(LoginRequiredMixin, ListView):
         return context
 
 @api_view(['POST'])
-def representado_create(request):
-    serializer = RepresentadoSerializer(data=request.data)
+def entidades_create(request):
+    serializer = EntidadesSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(us_in=request.user.username)
-        return Response({'message': 'Representado creado exitosamente.'}, status=201)
+        return Response({'message': 'Entidades creado exitosamente.'}, status=201)
     else:
         for field, error in serializer.errors.items():
             messages.error(request, f"{field}: {error}")
     return Response(serializer.errors, status=400)
 
 @api_view(['PUT'])
-def representado_update(request, pk):
+def entidades_update(request, pk):
     try:
-        representado = Representado.objects.get(pk=pk)
-        serializer = RepresentadoSerializer(representado, data=request.data)
+        entidades = Entidades.objects.get(pk=pk)
+        serializer = EntidadesSerializer(entidades, data=request.data)
         if serializer.is_valid():
             serializer.save(us_mo=request.user.username)
-            return Response({'message': 'Representado actualizado exitosamente.'}, status=200)
+            return Response({'message': 'Entidades actualizado exitosamente.'}, status=200)
         else:
             return Response(serializer.errors, status=400)
-    except Representado.DoesNotExist:
-        return Response({'error': 'Representado no encontrado.'}, status=404)
+    except Entidades.DoesNotExist:
+        return Response({'error': 'Entidades no encontrado.'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
-def representado_delete(request, pk):
+def entidades_delete(request, pk):
     try:
-        representado = Representado.objects.get(pk=pk)
-        representado.delete()
-        return Response({'message': 'Representado eliminado exitosamente.'}, status=204)
-    except Representado.DoesNotExist:
-        return Response({'error': 'Representado no encontrado.'}, status=404)
+        entidades = Entidades.objects.get(pk=pk)
+        entidades.delete()
+        return Response({'message': 'Entidades eliminado exitosamente.'}, status=204)
+    except Entidades.DoesNotExist:
+        return Response({'error': 'Entidades no encontrado.'}, status=404)
 
-# Vista para ver el detalle de un representado
-class RepresentadoDetailView(LoginRequiredMixin, DetailView):
-    model = Representado
-    template_name = 'pages/representado_detail.html'
-    context_object_name = 'representado'
+# Vista para ver el detalle de un entidades
+class EntidadesDetailView(LoginRequiredMixin, DetailView):
+    model = Entidades
+    template_name = 'pages/entidades_detail.html'
+    context_object_name = 'entidades'
 
 @api_view(['GET'])
-def representado_detail(request, pk):
+def entidades_detail(request, pk):
     try:
-        representado = Representado.objects.get(pk=pk)
-        serializer = RepresentadoSerializer(representado)
+        entidades = Entidades.objects.get(pk=pk)
+        serializer = EntidadesSerializer(entidades)
         return Response(serializer.data)
-    except Representado.DoesNotExist:
-        return Response({'error': 'Representado no encontrado.'}, status=404)
+    except Entidades.DoesNotExist:
+        return Response({'error': 'Entidades no encontrado.'}, status=404)

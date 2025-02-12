@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from usuario.views import home, LoginView, RegisterView, SignOutView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -28,7 +29,7 @@ from formulario.views import (get_municipios, get_parroquias, get_sector,
                               MunicipioListView, municipio_create, municipio_delete, municipio_update,
                               ParroquiaListView, parroquia_create, parroquia_delete, parroquia_update,
                               SectorListView, sector_create, sector_delete, sector_update,
-                              RepresentadoListView, representado_create, RepresentadoDetailView, representado_update, representado_delete
+                              EntidadesListView, entidades_create, EntidadesDetailView, entidades_update, entidades_delete
                               )
 from formulario.view_export import exportar_datos_xlsx
 from formulario.view_gen_contratos import genContratosTotales, genContratosUnico
@@ -44,9 +45,15 @@ urlpatterns = [
     
     path('formulario/', include('formulario.urls')),
     
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    
     path('login', LoginView.as_view(), name='login'),
     path('register', RegisterView.as_view(), name='register'),
     path('logout', SignOutView.as_view(), name='logout'),
+    
+    
     
     # URLs para Ambiente
     path('ambientes/', AmbienteListView.as_view(), name='ambiente_list'),
@@ -90,12 +97,12 @@ urlpatterns = [
     path('sectores/<str:pk>/editar/', sector_update, name='sector_update'),
     path('sectores/<str:pk>/eliminar/', sector_delete, name='municipio_delete'),
     
-    # URLs para Representado
-    path('representados/', RepresentadoListView.as_view(), name='representado_list'),
-    path('representados/crear/', representado_create, name='representado_create'),
-    path('representados/<int:pk>/', RepresentadoDetailView.as_view(), name='representado_detail'),
-    path('representados/<int:pk>/editar/', representado_update, name='representado_update'),
-    path('representados/<int:pk>/eliminar/', representado_delete, name='representado_delete'),
+    # URLs para Entidades
+    path('entidades/', EntidadesListView.as_view(), name='entidades_list'),
+    path('entidades/crear/', entidades_create, name='entidades_create'),
+    path('entidades/<int:pk>/', EntidadesDetailView.as_view(), name='entidades_detail'),
+    path('entidades/<int:pk>/editar/', entidades_update, name='entidades_update'),
+    path('entidades/<int:pk>/eliminar/', entidades_delete, name='entidades_delete'),
     
     path('exportar/', exportar_datos_xlsx, name='exportar_xlsx'),
     path('generar-contatos/', genContratosTotales, name='genContratosTotales'),

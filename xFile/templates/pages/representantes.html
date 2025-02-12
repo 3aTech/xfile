@@ -178,11 +178,11 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                                     </div>
-                                    <select class="form-control select2bs4" id="representado_id" name="representado_id" required aria-label="representado_id">
+                                    <select class="form-control select2bs4" id="entidades_id" name="entidades_id" required aria-label="entidades_id">
                                         <option value="" disabled {% if not object %}selected{% endif %}>Seleccione Empresa o Persona</option>
-                                        {% for representado in representados %}
-                                            <option value="{{ representado.co_estado }}" {% if object.representado.id == representado.id %}selected{% endif %}>
-                                                {{ representado.id }} - {{ representado.nombre }}
+                                        {% for entidades in entidades´ %}
+                                            <option value="{{ entidades.co_estado }}" {% if object.entidades.id == entidades.id %}selected{% endif %}>
+                                                {{ entidades.id }} - {{ entidades.nombre }}
                                             </option>
                                         {% empty %}
                                             <option value="">No hay empresa o persona disponibles</option>

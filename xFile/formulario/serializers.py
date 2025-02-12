@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (Datos, Ambientes, Linderos, Representantes, 
-                     Estados, Municipios, Parroquias, Sectores, Representado)
+                     Estados, Municipios, Parroquias, Sectores, Entidades)
 
 class DatosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,7 +32,7 @@ class RepresentanteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Representantes
         fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 'nombre', 
-                  'representante', 'denominara', 'condicion', 'region', 'inactivo',
+                  'id_entidades', 'denominara', 'condicion', 'region', 'inactivo',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class EstadoSerializer(serializers.ModelSerializer):
@@ -59,9 +59,9 @@ class SectorSerializer(serializers.ModelSerializer):
         fields = ['co_sector', 'des_sector', 'parroquia', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
-class RepresentadoSerializer(serializers.ModelSerializer):
+class EntidadesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Representado
+        model = Entidades
         fields = ['id', 'rif', 'nombre', 'denominara', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 

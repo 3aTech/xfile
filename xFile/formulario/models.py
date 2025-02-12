@@ -50,8 +50,8 @@ class Linderos(ModeloAuditoria):
         self.us_mo = kwargs.pop('usuario_modificador', None)
         super().save(*args, **kwargs)
 
-class Representado(ModeloAuditoria):
-    """Modelo para almacenar representados"""
+class Entidades(ModeloAuditoria):
+    """Modelo para almacenar entidades"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
     rif = models.CharField('R.I.F.', help_text='R.I.F.', max_length=12, unique=True)
     nombre = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
@@ -62,8 +62,8 @@ class Representado(ModeloAuditoria):
         return f'{self.nombre}'
 
     class Meta:
-        verbose_name = 'Representado'
-        verbose_name_plural = 'Representados'
+        verbose_name = 'Entidades'
+        verbose_name_plural = 'Entidades'
         ordering = ['rif', 'nombre']
 
     def save(self, *args, **kwargs):
@@ -78,7 +78,7 @@ class Representantes(ModeloAuditoria):
     nacionalidad = models.CharField('Nacionalidad', help_text='Nacionalidad', max_length=120)
     ciudadano_ciudadana = models.CharField('Ciudadano/Ciudadana', max_length=20, help_text='Ciudadano/Ciudadana')
     nombre = models.CharField('Nombre y Apellido', help_text='Nombre y apellido del representante', max_length=120)
-    representado_id = models.ForeignKey(Representado, on_delete=models.PROTECT, related_name='representante')
+    entidad = models.ForeignKey(Entidades, on_delete=models.PROTECT, related_name='representante')
     denominara = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
     condicion = models.CharField('Condición y/o Caracter Representativo', help_text='Condición y/o Caracter Representativo', max_length=120)
     region = models.CharField('Región', help_text='Región', max_length=120)
