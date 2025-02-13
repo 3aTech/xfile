@@ -33,6 +33,7 @@ from formulario.views import (get_municipios, get_parroquias, get_sector,
                               )
 from formulario.view_export import exportar_datos_xlsx
 from formulario.view_gen_contratos import genContratosTotales, genContratosUnico
+
 urlpatterns = [
     path('', home, name='home'),
     
@@ -52,7 +53,6 @@ urlpatterns = [
     path('login', LoginView.as_view(), name='login'),
     path('register', RegisterView.as_view(), name='register'),
     path('logout', SignOutView.as_view(), name='logout'),
-    
     
     
     # URLs para Ambiente

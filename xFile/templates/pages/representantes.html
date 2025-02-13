@@ -60,7 +60,7 @@
                 <td>{{ representante.nacionalidad }}
                 <td>{{ representante.nombre }}</td>
                 <td class="text-center">
-                    {% if entidad.status %}
+                    {% if representante.status %}
                     <span class="badge bg-success color-palette">Activo</span>
                     {% else %}
                     <span class="badge bg-secondary">Inactivo</span>
@@ -72,8 +72,12 @@
                             data-cedula="{{ representante.cedula }}"
                             data-nacionalidad="{{ representante.nacionalidad }}"
                             data-nombre="{{ representante.nombre }}"
-                            data-stats="{{ entidad.status }}">
-                            <i class='bx bx-edit' ></i>
+                            data-status="{{ representante.status }}"
+                            data-entidad="{{ representante.entidad.id }}"
+                            data-condicion="{{ representante.condicion }}"
+                            data-region="{{ representante.region }}"
+                            data-ciudadano_ciudadana="{{ representante.ciudadano_ciudadana }}">
+                            <i class='bx bx-edit'></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
@@ -333,282 +337,207 @@
 
 <!-- page script -->
 <script>
-  $(function () {
+    $(function () {
+        $("#example1").DataTable({
+            responsive: true,
+            autoWidth: false,
+            language: {
+                sProcessing: "Procesando...",
+                sLengthMenu: "Mostrar _MENU_ registros",
+                sZeroRecords: "No se encontraron registros",
+                sEmptyTable: "No hay datos disponibles en la tabla",
+                sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+                sInfoPostFix: "",
+                sSearch: "Buscar:",
+                sUrl: "",
+                sInfoThousands: ",",
+                sLoadingRecords: "Cargando...",
 
-    $('[data-mask]').inputmask()
+                oPaginate: {
+                    sFirst: "Primero",
+                    sLast: "Último",
+                    sNext: "Siguiente",
+                    sPrevious: "Anterior",
+                },
 
-    $("#example1").DataTable({
-      responsive: true,
-      autoWidth: false,
-      language: {
-        sProcessing: "Procesando...",
-        sLengthMenu: "Mostrar _MENU_ registros",
-        sZeroRecords: "No se encontraron registros",
-        sEmptyTable: "No hay datos disponibles en la tabla",
-        sInfo:
-          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-        sInfoPostFix: "",
-        sSearch: "Buscar:",
-        sUrl: "",
-        sInfoThousands: ",",
-        sLoadingRecords: "Cargando...",
-        oPaginate: {
-          sFirst: "Primero",
-          sLast: "Último",
-          sNext: "Siguiente",
-          sPrevious: "Anterior",
-        },
-        oAria: {
-          sSortAscending:
-            ": Activar para ordenar la columna de manera ascendente",
-          sSortDescending:
-            ": Activar para ordenar la columna de manera descendente",
-        },
-      },
-    });
-    $("#example2").DataTable({
-      paging: true,
-      lengthChange: false,
-      searching: false,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      responsive: true,
-    });
+                oAria: {
+                    sSortAscending:
+                    ": Activar para ordenar la columna de manera ascendente",
+                    sSortDescending:
+                    ": Activar para ordenar la columna de manera descendente",
+                },
+            },
+        });
 
-    // Inicializar Select2 para los campos de entidad
-    $('#entidad, #edit-entidad').select2bs4({
-        placeholder: "Seleccione una entidad",
-        allowClear: true
-    });
+        $("#example2").DataTable({
+            paging: true,
+            lengthChange: false,
+            searching: false,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+        });
 
-    // Script para manejar la carga de datos en el modal de edición
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var cedula = button.data('cedula');
-        var nacionalidad = button.data('nacionalidad');
-        var nombre = button.data('nombre');
-        var status = button.data('status') === 'True' || button.data('status') === true;
-        var entidadId = button.data('entidad'); // Asegúrate de pasar este dato en el botón de edición
+        // Inicializar Select2 para los campos de entidad
+        $('#entidad, #edit-entidad').select2bs4({
+            placeholder: "Seleccione una entidad",
+            allowClear: true
+        });
 
-        var modal = $(this);
-        modal.find('#edit-id').val(id);
-        modal.find('#edit-cedula').val(cedula);
-        modal.find('#edit-nacionalidad').val(nacionalidad);
-        modal.find('#edit-nombre').val(nombre);
-        modal.find('#edit-status').prop('checked', status);
-        modal.find('#edit-entidad').val(entidadId).trigger('change'); // Cargar y seleccionar la entidad
-    });
-  });
-</script>
+        // Script para manejar la carga de datos en el modal de creación
+        $('#createModal').on('show.bs.modal', function () {
+            // Limpiar el formulario
+            $('#createForm')[0].reset();
+            $('#entidad').val(null).trigger('change');
+        });
 
-<script type="text/javascript">
-  $(function () {
-    {% for message in messages %}
-          var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
-          var messageText = "{{ message }}"; // Obtiene el texto del mensaje
+        // Script para manejar la carga de datos en el modal de edición
+        $('#editModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var cedula = button.data('cedula');
+            var nacionalidad = button.data('nacionalidad');
+            var nombre = button.data('nombre');
+            var status = button.data('status') === 'True' || button.data('status') === true;
+            var entidadId = button.data('entidad');
+            var condicion = button.data('condicion');
+            var region = button.data('region');
+            var ciudadano_ciudadana = button.data('ciudadano_ciudadana');
 
-          if (messageType === 'success') {
-              Swal.fire({        
-                type: 'success',
-                title: 'Éxito!',
-                text: messageText,   
-                showConfirmButton: false,   
-                timer: 3000,  
+            var modal = $(this);
+            modal.find('#edit-cedula').val(cedula);
+            modal.find('#edit-nacionalidad').val(nacionalidad);
+            modal.find('#edit-nombre').val(nombre);
+            modal.find('#edit-status').prop('checked', status);
+            modal.find('#edit-entidad').val(entidadId).trigger('change');
+            modal.find('#edit-condicion').val(condicion);
+            modal.find('#edit-region').val(region);
+            modal.find('#edit-ciudadano_ciudadana').val(ciudadano_ciudadana).trigger('change');
+        });
+
+        // Script para manejar la carga de datos en el modal de eliminación
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var cedula = button.data('cedula');
+            var nombre = button.data('nombre');
+            
+            var modal = $(this);
+            modal.find('#delete-cedula').val(cedula);
+            modal.find('#delete-nombre').text(nombre);
+        });
+
+        // Script para manejar la creación de un nuevo representante
+        $('#createForm').on('submit', function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '/representantes/crear/',
+                data: $(this).serialize(),
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response) {
+                    $('#createModal').modal('hide');
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Representante creado correctamente.',
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    let errorMessage = 'Ocurrió un error al crear el representante.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
             });
-          }
-      {% endfor %}
-  });
-</script>
+        });
 
-<script>
-
-    // Script para manejar la carga de datos en los modales
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var co_parroquia = button.data('coParroquia');
-        var des_parroquia = button.data('desParroquia');
-        var municipio = button.data('municipio');
-        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
-
-        var modal = $(this);
-        modal.find('#edit-code').val(co_parroquia);
-        modal.find('#edit-nombre').val(des_parroquia);
-        modal.find('#edit-municipio').val(municipio).trigger('change');
-        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
-    });
-
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var codigo = button.data('codigo');
-        var nombre = button.data('nombre');
-        
-        console.log('codigo:', codigo); // Para depuración
-        console.log('nombre:', nombre); // Para depuración
-        
-        var modal = $(this);
-        modal.find('#delete-co_parroquia').val(codigo);
-        modal.find('#delete-des_parroquia').text(nombre);
-    });
-
-    // Script para manejar la creación de un nuevo parroquia
-    $('#createForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        $.ajax({
-            type: 'POST',
-            url: '/parroquias/crear/', // URL para crear un parroquia
-            data: $(this).serialize(),
-            headers: {
-                'X-CSRFToken': csrftoken // Incluye el token CSRF
-            },
-            success: function (response) {
-                // Manejar la respuesta exitosa
-                Swal.fire({
-                    title: 'Éxito!',
-                    text: 'Parroquia creado correctamente.',
-                    type: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
-                });
-            },
-            error: function (xhr) {
-                // Manejar errores
-                let errorMessage = 'Ocurrió un error.';
-
-                // Verifica si el error es por CSRF
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+        // Script para manejar la actualización de un representante
+        $('#editForm').on('submit', function (event) {
+            event.preventDefault();
+            var cedula = $('#edit-cedula').val();
+            
+            $.ajax({
+                type: 'PUT',
+                url: '/representantes/' + cedula + '/editar/',
+                data: $(this).serialize(),
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response) {
+                    $('#editModal').modal('hide');
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Representante actualizado correctamente.',
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    let errorMessage = 'Ocurrió un error al actualizar el representante.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
                 }
-
-                Swal.fire({
-                    title: 'Error!',
-                    text: errorMessage,
-                    type: 'error',
-                    confirmButtonText: 'Aceptar'
-                });
-            }
+            });
         });
-    });
 
-    // Script para manejar la actualización de un parroquia
-    $('#editForm').on('submit', function (event) {
-        event.preventDefault();
-        var codigo = $('#edit-code').val();
-        
-        $.ajax({
-            type: 'PUT',
-            url: '/parroquias/' + codigo + '/editar/',  // Ajusta esta URL según tu configuración
-            data: JSON.stringify({
-                'co_parroquia': $('#edit-code').val(),
-                'des_parroquia': $('#edit-nombre').val(),
-                'municipio': $('#edit-municipio').val()
-            }),
-            contentType: 'application/json',
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            success: function (response) {
-                Swal.fire({
-                    title: 'Éxito!',
-                    text: 'Parroquia actualizado correctamente.',
-                    type: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    location.reload();
-                });
-            },
-            error: function (xhr) {
-                let errorMessage = 'Ocurrió un error al actualizar la parroquia.';
-                if (xhr.responseJSON && xhr.responseJSON.error) {
-                    errorMessage = xhr.responseJSON.error;
+        // Script para manejar la eliminación de un representante
+        $('#deleteForm').on('submit', function (event) {
+            event.preventDefault();
+            var cedula = $('#delete-cedula').val();
+            $.ajax({
+                type: 'DELETE',
+                url: '/representantes/' + cedula + '/eliminar/',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response) {
+                    $('#deleteModal').modal('hide');
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Representante eliminado correctamente.',
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    let errorMessage = 'Ocurrió un error al eliminar el representante.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
                 }
-                Swal.fire({
-                    title: 'Error!',
-                    text: errorMessage,
-                    type: 'error',
-                    confirmButtonText: 'Aceptar'
-                });
-            }
+            });
         });
     });
-
-    // Script para manejar la eliminación de un parroquia
-    $('#deleteForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_parroquia').val(); // Obtener el ID del parroquia
-        $.ajax({
-            type: 'DELETE',
-            url: '/parroquias/' + id + '/eliminar/', // URL para eliminar un parroquia
-            success: function (response) {
-                // Manejar la respuesta exitosa
-                Swal.fire({
-                    title: 'Éxito!',
-                    text: 'Parroquia eliminado correctamente.',
-                    type: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
-                });
-            },
-            error: function (xhr) {
-                 // Manejar errores
-                 let errorMessage = 'Ocurrió un error.';
-
-                 // Verifica si el error es por CSRF
-                 if (xhr.responseJSON && xhr.responseJSON.detail) {
-                     errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
-                 }
- 
-                 Swal.fire({
-                     title: 'Error!',
-                     text: errorMessage,
-                     type: 'error',
-                     confirmButtonText: 'Aceptar'
-                 });
-            }
-        });
-    });
-
-    <!-- Obtener el token CSRF de la cookie -->
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Verifica si este es el cookie que buscamos
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-const csrftoken = getCookie('csrftoken');
-
-// Incluir el token CSRF en los encabezados de la solicitud AJAX
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-            // Si no es una solicitud a otro dominio, agrega el token CSRF
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
-
-$(document).ready(function() {
-    $('#entidad').select2bs4({
-        placeholder: "Seleccione una empresa o entidad",
-        allowClear: true
-    });
-});
 </script>
-
 
 {% endblock scripts %}

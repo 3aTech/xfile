@@ -312,51 +312,8 @@ class RepresentanteListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_registros'] = self.get_queryset().count()
-        context['entidades'] = Entidades.objects.all()  # Agregar la lista de entidades
+        context['entidades'] = Entidades.objects.filter(status=True)
         return context
-
-# Vista para crear un nuevo representante
-class RepresentanteCreateView(LoginRequiredMixin, CreateView):
-    model = Representantes
-    fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 
-              'nombre', 'representante', 'condicion', 'region', 'status']
-    success_url = reverse_lazy('representante_list')
-
-    def form_valid(self, form):
-        form.instance.us_in = self.request.user.username
-        messages.success(self.request, 'Representante creado exitosamente.')
-        return super().form_valid(form)
-    
-    def form_invalid(self, form):
-        for field, error in form.errors.items():
-            messages.error(self.request, f"{field}: {error}")
-        return super().form_invalid(form)
-
-# Vista para actualizar un representante existente
-class RepresentanteUpdateView(LoginRequiredMixin, UpdateView):
-    model = Representantes
-    fields = ['nacionalidad', 'ciudadano_ciudadana', 
-              'nombre', 'representante', 'condicion', 'region', 'status']
-    success_url = reverse_lazy('representante_list')
-
-    def form_valid(self, form):
-        form.instance.us_mo = self.request.user.username
-        messages.success(self.request, 'Representante actualizado exitosamente.')
-        return super().form_valid(form)
-    
-    def form_invalid(self, form):
-        for field, error in form.errors.items():
-            messages.error(self.request, f"{field}: {error}")
-        return super().form_invalid(form)
-
-# Vista para eliminar un representante
-class RepresentanteDeleteView(LoginRequiredMixin, DeleteView):
-    model = Representantes
-    success_url = reverse_lazy('representante_list')
-
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, 'Representante eliminado exitosamente.')
-        return super().delete(request, *args, **kwargs)
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
 @api_view(['POST'])
@@ -365,9 +322,6 @@ def representante_create(request):
     if serializer.is_valid():
         serializer.save(us_in=request.user.username)
         return Response({'message': 'Representante creado exitosamente.'}, status=201)
-    else:
-        for field, error in serializer.errors.items():
-            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
     return Response(serializer.errors, status=400)
 
 @api_view(['PUT'])

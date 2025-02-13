@@ -313,35 +313,6 @@
     });
   });
 
-  // Script para manejar la carga de datos en los modales
-  $('#editModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-      var id = button.data('id');
-      var rif = button.data('rif');
-      var nombre = button.data('nombre');
-      var denominara = button.data('denominara');
-      var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
-      var direccion = button.data('direccion');
-
-      var modal = $(this);
-      modal.find('#edit-id').val(id);
-      modal.find('#edit-rif').val(rif);
-      modal.find('#edit-nombre').val(nombre);
-      modal.find('#edit-denominara').val(denominara);
-      modal.find('#edit-direccion').val(direccion);
-      modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
-  });
-
-  $('#deleteModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget);
-      var id = button.data('id');
-      var nombre = button.data('nombre');
-
-      var modal = $(this);
-      modal.find('#delete-id').val(id);
-      modal.find('#delete-nombre').text(nombre);
-  });
-
   // Script para manejar la creación de una nueva entidad
   $('#createForm').on('submit', function (event) {
       event.preventDefault();
@@ -384,97 +355,126 @@
               });
           }
       });
-  });
+    });
 
-  // Script para manejar la actualización de una entidad
-  $('#editForm').on('submit', function (event) {
-      event.preventDefault();
-      var id = $('#edit-id').val();
-      if (!id) {
-          Swal.fire({
-              title: 'Error!',
-              text: 'ID de entidad no válido',
-              type: 'error',
-              confirmButtonText: 'Aceptar'
-          });
-          return;
-      }
-      
-      var formData = $(this).serializeArray();
-      // Convertir el estado a booleano
-      formData = formData.map(function(item) {
-          if (item.name === 'status') {
-              item.value = item.value === 'on' ? 'true' : 'false';
-          }
-          return item;
-      });
+    // Script para manejar la carga de datos en los modales
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var rif = button.data('rif');
+        var nombre = button.data('nombre');
+        var denominara = button.data('denominara');
+        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+        var direccion = button.data('direccion');
 
-      $.ajax({
-          type: 'PUT',
-          url: '/entidades/' + id + '/editar/',
-          data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
-          headers: {
-              'X-CSRFToken': csrftoken
-          },
-          success: function (response) {
-              Swal.fire({
-                  title: 'Éxito!',
-                  text: 'Entidad actualizada correctamente.',
-                  type: 'success',
-                  confirmButtonText: 'Aceptar'
-              }).then(() => {
-                  location.reload();
-              });
-          },
-          error: function (xhr) {
-              let errorMessage = 'Ocurrió un error.';
-              if (xhr.responseJSON && xhr.responseJSON.detail) {
-                  errorMessage = xhr.responseJSON.detail;
-              }
-              Swal.fire({
-                  title: 'Error!',
-                  text: errorMessage,
-                  type: 'error',
-                  confirmButtonText: 'Aceptar'
-              });
-          }
-      });
-  });
+        var modal = $(this);
+        modal.find('#edit-id').val(id);
+        modal.find('#edit-rif').val(rif);
+        modal.find('#edit-nombre').val(nombre);
+        modal.find('#edit-denominara').val(denominara);
+        modal.find('#edit-direccion').val(direccion);
+        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
+    });
 
-  // Script para manejar la eliminación de una entidad
-  $('#deleteForm').on('submit', function (event) {
-      event.preventDefault();
-      var id = $('#delete-id').val();
-      $.ajax({
-          type: 'DELETE',
-          url: '/entidades/' + id + '/eliminar/',
-          headers: {
-              'X-CSRFToken': csrftoken
-          },
-          success: function (response) {
-              Swal.fire({
-                  title: 'Éxito!',
-                  text: 'Entidad eliminada correctamente.',
-                  type: 'success',
-                  confirmButtonText: 'Aceptar'
-              }).then(() => {
-                  location.reload();
-              });
-          },
-          error: function (xhr) {
-              let errorMessage = 'Ocurrió un error.';
-              if (xhr.responseJSON && xhr.responseJSON.detail) {
-                  errorMessage = xhr.responseJSON.detail;
-              }
-              Swal.fire({
-                  title: 'Error!',
-                  text: errorMessage,
-                  type: 'error',
-                  confirmButtonText: 'Aceptar'
-              });
-          }
-      });
-  });
+    // Script para manejar la actualización de una entidad
+    $('#editForm').on('submit', function (event) {
+        event.preventDefault();
+        var id = $('#edit-id').val();
+        if (!id) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'ID de entidad no válido',
+                type: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+        
+        var formData = $(this).serializeArray();
+        // Convertir el estado a booleano
+        formData = formData.map(function(item) {
+            if (item.name === 'status') {
+                item.value = item.value === 'on' ? 'true' : 'false';
+            }
+            return item;
+        });
+
+        $.ajax({
+            type: 'PUT',
+            url: '/entidades/' + id + '/editar/',
+            data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Entidad actualizada correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error.';
+                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                    errorMessage = xhr.responseJSON.detail;
+                }
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
+
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var nombre = button.data('nombre');
+  
+        var modal = $(this);
+        modal.find('#delete-id').val(id);
+        modal.find('#delete-nombre').text(nombre);
+    });
+
+    // Script para manejar la eliminación de una entidad
+    $('#deleteForm').on('submit', function (event) {
+        event.preventDefault();
+        var id = $('#delete-id').val();
+        $.ajax({
+            type: 'DELETE',
+            url: '/entidades/' + id + '/eliminar/',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Entidad eliminada correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error.';
+                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                    errorMessage = xhr.responseJSON.detail;
+                }
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
 
   // Obtener el token CSRF de la cookie
   function getCookie(name) {
