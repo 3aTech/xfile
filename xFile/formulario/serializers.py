@@ -32,7 +32,7 @@ class RepresentanteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Representantes
         fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 'nombre', 
-                  'id_entidades', 'denominara', 'condicion', 'region', 'inactivo',
+                  'id_entidades', 'condicion', 'region', 'inactivo',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class EstadoSerializer(serializers.ModelSerializer):

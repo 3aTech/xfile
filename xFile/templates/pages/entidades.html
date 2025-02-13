@@ -1,0 +1,419 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static '3atech/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}" />
+<link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
+{% endblock extrahead %} 
+
+{% block title %}Gestión de Entidades{% endblock title %} 
+
+{% block contentheader %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Listado de Entidades</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+          <li class="breadcrumb-item">Entidades</li>
+          <li class="breadcrumb-item active">Gestión de Entidades</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock contentheader %} 
+
+{% block content %}
+<div class="card" style="width: 60%; margin: auto;">
+    <div class="card-header d-flex justify-content-end">
+       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
+        <i class="fas fa-solid fa-plus me-1"></i>
+       </button>
+    </div>
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>RIF</th>
+                <th>Nombre</th>
+                <th>Denominación</th>
+                <th>Status</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entidad in registros %}
+            <tr>
+                <td>{{ entidad.rif }}</td>
+                <td>{{ entidad.nombre }}</td>
+                <td>{{ entidad.denominara }}</td>
+                <td class="text-center">
+                    {% if entidad.status %}
+                    <span class="badge bg-success color-palette">Activo</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                  </td>
+                <td>
+                    <button class="btn btn-warning" data-toggle="modal" 
+                            data-target="#editModal" 
+                            data-id="{{ entidad.id }}"
+                            data-rif="{{ entidad.rif }}"
+                            data-nombre="{{ entidad.nombre }}"
+                            data-denominara="{{ entidad.denominara }}"
+                            data-stats="{{ entidad.status }}">
+                            <i class='bx bx-edit' ></i>
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" 
+                            data-target="#deleteModal" 
+                            data-id="{{ entidad.id }}" 
+                            data-nombre="{{ entidad.nombre }}">
+                            <i class='bx bx-trash' ></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<!-- Modal para crear una nueva entidad -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <form method="post" id="createForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Agregar Entidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <div class="form-group">                                
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" >
+                                    <label class="custom-control-label" for="customSwitch1">Activo</label>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-4">
+                            <label for="rif" class="form-label">R.I.F.</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
+                                </div>
+                                <input type="text" class="form-control" data-inputmask='"mask": "[J|G|C|E|V]-99.999.999"' data-mask
+                                    id="rif" name="rif" value="{{ object.rif|default:'' }}" required aria-label="RIF">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="nombre" class="form-label">Nombre de la Entidad</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-user-detail'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="nombre" name="nombre" 
+                              value="{{ object.nombre|default:'' }}" required aria-label="Nombre de la Entidad" placeholder="Nombre de la Entidad">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="denominara" class="form-label">Se Denominará</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-briefcase' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="denominara" name="denominara" 
+                              value="{{ object.denominara|default:'' }}" aria-label="Se Denominará" placeholder="Se Denominará">
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="direccion" name="direccion" 
+                              value="{{ object.direccion|default:'' }}" aria-label="Dirección" placeholder="Dirección">
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar una entidad -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <form method="post" id="editForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Editar Entidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit-rif">RIF</label>
+                        <input type="text" class="form-control" id="edit-rif" name="rif" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-nombre">Nombre</label>
+                        <input type="text" class="form-control" id="edit-nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-denominara">Denominación</label>
+                        <input type="text" class="form-control" id="edit-denominara" name="denominara" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar una entidad -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <form method="post" id="deleteForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar Entidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar la entidad "<span id="delete-nombre"></span>"?</p>
+                    <input type="hidden" id="delete-id" name="id">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<!-- DataTables -->
+<script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+
+<script>
+  $(function () {
+
+    $('[data-mask]').inputmask()
+
+
+    $("#example1").DataTable({
+      responsive: true,
+      autoWidth: false,
+      language: {
+        sProcessing: "Procesando...",
+        sLengthMenu: "Mostrar _MENU_ registros",
+        sZeroRecords: "No se encontraron registros",
+        sEmptyTable: "No hay datos disponibles en la tabla",
+        sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+        sInfoPostFix: "",
+        sSearch: "Buscar:",
+        sUrl: "",
+        sInfoThousands: ",",
+        sLoadingRecords: "Cargando...",
+        oPaginate: {
+          sFirst: "Primero",
+          sLast: "Último",
+          sNext: "Siguiente",
+          sPrevious: "Anterior",
+        },
+        oAria: {
+          sSortAscending: ": Activar para ordenar la columna de manera ascendente",
+          sSortDescending: ": Activar para ordenar la columna de manera descendente",
+        },
+      },
+    });
+  });
+
+  // Script para manejar la carga de datos en los modales
+  $('#editModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      var rif = button.data('rif');
+      var nombre = button.data('nombre');
+      var denominara = button.data('denominara');
+
+      var modal = $(this);
+      modal.find('#edit-rif').val(rif);
+      modal.find('#edit-nombre').val(nombre);
+      modal.find('#edit-denominara').val(denominara);
+      modal.find('#edit-id').val(id);
+  });
+
+  $('#deleteModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var id = button.data('id');
+      var nombre = button.data('nombre');
+
+      var modal = $(this);
+      modal.find('#delete-id').val(id);
+      modal.find('#delete-nombre').text(nombre);
+  });
+
+  // Script para manejar la creación de una nueva entidad
+  $('#createForm').on('submit', function (event) {
+      event.preventDefault();
+      $.ajax({
+          type: 'POST',
+          url: '/entidades/crear/',
+          data: $(this).serialize(),
+          headers: {
+              'X-CSRFToken': csrftoken
+          },
+          success: function (response) {
+              Swal.fire({
+                  title: 'Éxito!',
+                  text: 'Entidad creada correctamente.',
+                  type: 'success',
+                  confirmButtonText: 'Aceptar'
+              }).then(() => {
+                  location.reload();
+              });
+          },
+          error: function (xhr) {
+              let errorMessage = 'Ocurrió un error.';
+              if (xhr.responseJSON && xhr.responseJSON.detail) {
+                  errorMessage = xhr.responseJSON.detail;
+              }
+              Swal.fire({
+                  title: 'Error!',
+                  text: errorMessage,
+                  type: 'error',
+                  confirmButtonText: 'Aceptar'
+              });
+          }
+      });
+  });
+
+  // Script para manejar la actualización de una entidad
+  $('#editForm').on('submit', function (event) {
+      event.preventDefault();
+      var id = $('#edit-id').val();
+      $.ajax({
+          type: 'PUT',
+          url: '/entidades/' + id + '/editar/',
+          data: $(this).serialize(),
+          headers: {
+              'X-CSRFToken': csrftoken
+          },
+          success: function (response) {
+              Swal.fire({
+                  title: 'Éxito!',
+                  text: 'Entidad actualizada correctamente.',
+                  type: 'success',
+                  confirmButtonText: 'Aceptar'
+              }).then(() => {
+                  location.reload();
+              });
+          },
+          error: function (xhr) {
+              let errorMessage = 'Ocurrió un error.';
+              if (xhr.responseJSON && xhr.responseJSON.detail) {
+                  errorMessage = xhr.responseJSON.detail;
+              }
+              Swal.fire({
+                  title: 'Error!',
+                  text: errorMessage,
+                  type: 'error',
+                  confirmButtonText: 'Aceptar'
+              });
+          }
+      });
+  });
+
+  // Script para manejar la eliminación de una entidad
+  $('#deleteForm').on('submit', function (event) {
+      event.preventDefault();
+      var id = $('#delete-id').val();
+      $.ajax({
+          type: 'DELETE',
+          url: '/entidades/' + id + '/eliminar/',
+          headers: {
+              'X-CSRFToken': csrftoken
+          },
+          success: function (response) {
+              Swal.fire({
+                  title: 'Éxito!',
+                  text: 'Entidad eliminada correctamente.',
+                  type: 'success',
+                  confirmButtonText: 'Aceptar'
+              }).then(() => {
+                  location.reload();
+              });
+          },
+          error: function (xhr) {
+              let errorMessage = 'Ocurrió un error.';
+              if (xhr.responseJSON && xhr.responseJSON.detail) {
+                  errorMessage = xhr.responseJSON.detail;
+              }
+              Swal.fire({
+                  title: 'Error!',
+                  text: errorMessage,
+                  type: 'error',
+                  confirmButtonText: 'Aceptar'
+              });
+          }
+      });
+  });
+
+  // Obtener el token CSRF de la cookie
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+</script>
+{% endblock %}

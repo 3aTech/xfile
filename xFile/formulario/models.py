@@ -55,7 +55,8 @@ class Entidades(ModeloAuditoria):
     id = models.AutoField('Código', help_text='Código', primary_key=True)
     rif = models.CharField('R.I.F.', help_text='R.I.F.', max_length=12, unique=True)
     nombre = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
-    denominara = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
+    denominara = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120, null=True, blank=True)
+    direccion = models.CharField('Dirección', help_text='Dirección', max_length=250, null=True, blank=True)
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
     
     def __str__(self) -> str:
@@ -79,7 +80,6 @@ class Representantes(ModeloAuditoria):
     ciudadano_ciudadana = models.CharField('Ciudadano/Ciudadana', max_length=20, help_text='Ciudadano/Ciudadana')
     nombre = models.CharField('Nombre y Apellido', help_text='Nombre y apellido del representante', max_length=120)
     entidad = models.ForeignKey(Entidades, on_delete=models.PROTECT, related_name='representante')
-    denominara = models.CharField('Se Denominará', help_text='Se Denominará', max_length=120)
     condicion = models.CharField('Condición y/o Caracter Representativo', help_text='Condición y/o Caracter Representativo', max_length=120)
     region = models.CharField('Región', help_text='Región', max_length=120)
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
@@ -185,7 +185,7 @@ class Urbanismos(ModeloAuditoria):
     """Modelo para almacenar sectores"""
     co_urb = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
     des_urb = models.CharField('Nombre', help_text='Nombre del sector', max_length=120)
-    direccion = models.CharField('Dirección', help_text='Dirección', max_length=250)
+    direccion = models.CharField('Dirección', help_text='Dirección', max_length=250, null=True, blank=True)
     estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='urbanismos')
     municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='urbanismos')
     parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='urbanismos')

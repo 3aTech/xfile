@@ -97,7 +97,7 @@
                         <div class="col-md-6">
                             <div class="form-group">                                
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="inactivo" >
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" >
                                     <label class="custom-control-label" for="customSwitch1">Activo</label>
                                 </div>
                             </div>
@@ -116,20 +116,27 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="nacionalidad">Nacionalidad</label>
-                                <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" required>
+                            <label for="nacionalidad" class="form-label">Nacionalidad</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-flag-alt'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" 
+                              value="{{ object.expediente|default:'' }}" aria-label="Nacionalidad" placeholder="Nacionalidad">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
-                                <select class="form-control select2bs4" style="width: 100%;"
-                                    id="ciudadano_ciudadana" name="ciudadano_ciudadana" required>
+                        <div class="col-md-4">        
+                            <label for="ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-solid fa-users"></i></span>
+                                </div>
+                                <select class="form-control select2bs4" id="ciudadano_ciudadana" name="ciudadano_ciudadana" required aria-label="Ciudadano/Ciudadana">
+                                    <option value="" disabled {% if not object %}selected{% endif %}>---</option>
                                     {% if object.ciudadano_ciudadana %} 
-                                        <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
-                                            {{ object.ciudadano_ciudadana }}
-                                        </option> 
+                                    <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
+                                        {{ object.ciudadano_ciudadana }}
+                                    </option> 
                                     {% endif %}
                                     {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
                                         <option>CIUDADANO</option>
@@ -143,52 +150,53 @@
                     </div>
                     <div class="row mb-3"> 
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                            <label for="nombre" class="form-label">Nombre y Apellido</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-user-detail'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="nombre" name="nombre" 
+                              value="{{ object.nombre|default:'' }}" aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="condicion">Cargo</label>
-                                <input type="text" class="form-control" id="condicion" name="condicion" required>
+                            <label for="condicion" class="form-label">Cargo</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-briefcase' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="condicion" name="condicion" 
+                              value="{{ object.condicion|default:'' }}" aria-label="Cargo" placeholder="Cargo">
                             </div>
                         </div>    
                     </div>
                     <div class="row mb-3"> 
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="condicion">Region</label>
-                                <input type="text" class="form-control" id="region" name="region" required>
+                            <label for="region" class="form-label">Región</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-alt' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="region" name="region" 
+                              value="{{ object.region|default:'' }}" aria-label="Región" placeholder="Región">
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="denominara">Se Denominará</label>
-                                <input type="text" class="form-control" id="denominara" name="denominara" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="col-md-3">
-                                <label for="estado" class="form-label">Representante de</label>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
-                                    </div>
-                                    <select class="form-control select2bs4" id="entidades_id" name="entidades_id" required aria-label="entidades_id">
-                                        <option value="" disabled {% if not object %}selected{% endif %}>Seleccione Empresa o Persona</option>
-                                        {% for entidades in entidades´ %}
-                                            <option value="{{ entidades.co_estado }}" {% if object.entidades.id == entidades.id %}selected{% endif %}>
-                                                {{ entidades.id }} - {{ entidades.nombre }}
-                                            </option>
-                                        {% empty %}
-                                            <option value="">No hay empresa o persona disponibles</option>
-                                        {% endfor %}
-                                      </select>
+                            <label for="entidad" class="form-label">Representante de</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-buildings' ></i></span>
                                 </div>
+                                <select class="form-control select2bs4" id="entidad" name="entidad" required aria-label="Entidad">
+                                    <option value="" disabled {% if not object %}selected{% endif %}>Seleccione Empresa o Persona</option>
+                                    {% for entidad in entidades %}
+                                        <option value="{{ entidades.id }}" {% if object.entidades.id == entidades.id %}selected{% endif %}>
+                                            {{ entidades.id }} - {{ entidades.nombre }}
+                                        </option>
+                                    {% empty %}
+                                        <option value="">No hay empresa o persona disponibles</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
