@@ -59,14 +59,15 @@
                     <span class="badge bg-secondary">Inactivo</span>
                     {% endif %}
                   </td>
-                <td>
+                <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
                             data-id="{{ entidad.id }}"
                             data-rif="{{ entidad.rif }}"
                             data-nombre="{{ entidad.nombre }}"
                             data-denominara="{{ entidad.denominara }}"
-                            data-stats="{{ entidad.status }}">
+                            data-stats="{{ entidad.status }}"
+                            data-direccion="{{ entidad.direccion|default_if_none:'' }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
@@ -100,7 +101,7 @@
                         <div class="col-md-6">
                             <div class="form-group">                                
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" >
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
                                     <label class="custom-control-label" for="customSwitch1">Activo</label>
                                 </div>
                             </div>
@@ -113,8 +114,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
                                 </div>
-                                <input type="text" class="form-control" data-inputmask='"mask": "[J|G|C|E|V]-99.999.999"' data-mask
-                                    id="rif" name="rif" value="{{ object.rif|default:'' }}" required aria-label="RIF">
+                                <input type="text" class="form-control" data-inputmask='"mask": "[J|G|C|E|V]-99999999-9"' data-mask
+                                    id="rif" name="rif" required aria-label="RIF">
                             </div>
                         </div>
                         <div class="col-md-8">
@@ -124,7 +125,7 @@
                                 <span class="input-group-text"><i class='bx bxs-user-detail'></i></span>
                               </div>
                               <input type="text" class="form-control" id="nombre" name="nombre" 
-                              value="{{ object.nombre|default:'' }}" required aria-label="Nombre de la Entidad" placeholder="Nombre de la Entidad">
+                               required aria-label="Nombre de la Entidad" placeholder="Nombre de la Entidad">
                             </div>
                         </div>
                     </div>
@@ -136,7 +137,7 @@
                                 <span class="input-group-text"><i class='bx bxs-briefcase' ></i></span>
                               </div>
                               <input type="text" class="form-control" id="denominara" name="denominara" 
-                              value="{{ object.denominara|default:'' }}" aria-label="Se Denominará" placeholder="Se Denominará">
+                              aria-label="Se Denominará" placeholder="Se Denominará">
                             </div>
                         </div>    
                     </div>
@@ -148,7 +149,7 @@
                                 <span class="input-group-text"><i class='bx bxs-map-pin' ></i></span>
                               </div>
                               <input type="text" class="form-control" id="direccion" name="direccion" 
-                              value="{{ object.direccion|default:'' }}" aria-label="Dirección" placeholder="Dirección">
+                              aria-label="Dirección" placeholder="Dirección">
                             </div>
                         </div>    
                     </div>
@@ -175,17 +176,62 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="edit-rif">RIF</label>
-                        <input type="text" class="form-control" id="edit-rif" name="rif" required>
+                    <input type="hidden" id="edit-id" name="id">
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <div class="form-group">                                
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="edit-status" name="status">
+                                    <label class="custom-control-label" for="edit-status">Activo</label>
+                                </div>
+                            </div>
+                        </div>                        
                     </div>
-                    <div class="form-group">
-                        <label for="edit-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="edit-nombre" name="nombre" required>
+                    <div class="row mb-3"> 
+                        <div class="col-md-4">
+                            <label for="edit-rif" class="form-label">R.I.F.</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
+                                </div>
+                                <input type="text" class="form-control" data-inputmask='"mask": "[J|G|C|E|V]-99999999-9"' data-mask
+                                    id="edit-rif" name="rif" required aria-label="RIF" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="edit-nombre" class="form-label">Nombre de la Entidad</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-user-detail'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-nombre" name="nombre" 
+                              required aria-label="Nombre de la Entidad" placeholder="Nombre de la Entidad">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="edit-denominara">Denominación</label>
-                        <input type="text" class="form-control" id="edit-denominara" name="denominara" required>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="edit-denominara" class="form-label">Se Denominará</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-briefcase' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-denominara" name="denominara" 
+                              aria-label="Se Denominará" placeholder="Se Denominará">
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="edit-direccion" class="form-label">Dirección</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-direccion" name="direccion" 
+                              aria-label="Dirección" placeholder="Dirección">
+                            </div>
+                        </div>    
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -274,12 +320,16 @@
       var rif = button.data('rif');
       var nombre = button.data('nombre');
       var denominara = button.data('denominara');
+      var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+      var direccion = button.data('direccion');
 
       var modal = $(this);
+      modal.find('#edit-id').val(id);
       modal.find('#edit-rif').val(rif);
       modal.find('#edit-nombre').val(nombre);
       modal.find('#edit-denominara').val(denominara);
-      modal.find('#edit-id').val(id);
+      modal.find('#edit-direccion').val(direccion);
+      modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
   });
 
   $('#deleteModal').on('show.bs.modal', function (event) {
@@ -295,10 +345,12 @@
   // Script para manejar la creación de una nueva entidad
   $('#createForm').on('submit', function (event) {
       event.preventDefault();
+      var formData = $(this).serializeArray();
+      // No filtrar campos vacíos para la dirección
       $.ajax({
           type: 'POST',
           url: '/entidades/crear/',
-          data: $(this).serialize(),
+          data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
           headers: {
               'X-CSRFToken': csrftoken
           },
@@ -314,8 +366,15 @@
           },
           error: function (xhr) {
               let errorMessage = 'Ocurrió un error.';
-              if (xhr.responseJSON && xhr.responseJSON.detail) {
-                  errorMessage = xhr.responseJSON.detail;
+              if (xhr.responseJSON) {
+                  // Si hay errores específicos del formulario
+                  if (xhr.responseJSON.errors) {
+                      errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
+                  }
+                  // Si hay un mensaje de error general
+                  else if (xhr.responseJSON.detail) {
+                      errorMessage = xhr.responseJSON.detail;
+                  }
               }
               Swal.fire({
                   title: 'Error!',
@@ -331,10 +390,29 @@
   $('#editForm').on('submit', function (event) {
       event.preventDefault();
       var id = $('#edit-id').val();
+      if (!id) {
+          Swal.fire({
+              title: 'Error!',
+              text: 'ID de entidad no válido',
+              type: 'error',
+              confirmButtonText: 'Aceptar'
+          });
+          return;
+      }
+      
+      var formData = $(this).serializeArray();
+      // Convertir el estado a booleano
+      formData = formData.map(function(item) {
+          if (item.name === 'status') {
+              item.value = item.value === 'on' ? 'true' : 'false';
+          }
+          return item;
+      });
+
       $.ajax({
           type: 'PUT',
           url: '/entidades/' + id + '/editar/',
-          data: $(this).serialize(),
+          data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
           headers: {
               'X-CSRFToken': csrftoken
           },
