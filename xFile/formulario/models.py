@@ -100,8 +100,8 @@ class Representantes(ModeloAuditoria):
 
 class Estados(ModeloAuditoria):
     """Modelo para almacenar estados/provincias"""
-    co_estado = models.CharField('Código', help_text='Código del estado', max_length=6, primary_key=True)
-    des_estado = models.CharField('Nombre', help_text='Nombre del estado', max_length=60)
+    co_edo = models.CharField('Código', help_text='Código del estado', max_length=6, primary_key=True)
+    des_edo = models.CharField('Nombre', help_text='Nombre del estado', max_length=60)
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
@@ -110,7 +110,7 @@ class Estados(ModeloAuditoria):
     class Meta:
         verbose_name = 'Estado'
         verbose_name_plural = 'Estados'
-        ordering = ['des_estado']
+        ordering = ['des_edo']
 
     def save(self, *args, **kwargs):
         if not self.us_in:
@@ -120,8 +120,8 @@ class Estados(ModeloAuditoria):
 
 class Municipios(ModeloAuditoria):
     """Modelo para almacenar municipios"""
-    co_municipio = models.CharField('Código', help_text='Código del municipio', max_length=6, primary_key=True)
-    des_municipio = models.CharField('Nombre', help_text='Nombre del municipio', max_length=60)
+    co_mpo = models.CharField('Código', help_text='Código del municipio', max_length=6, primary_key=True)
+    des_mpo = models.CharField('Nombre', help_text='Nombre del municipio', max_length=60)
     estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='municipios')
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
@@ -131,7 +131,7 @@ class Municipios(ModeloAuditoria):
     class Meta:
         verbose_name = 'Municipio'
         verbose_name_plural = 'Municipios'
-        ordering = ['des_municipio']
+        ordering = ['des_mpo']
 
     def save(self, *args, **kwargs):
         if not self.us_in:
@@ -141,8 +141,8 @@ class Municipios(ModeloAuditoria):
 
 class Parroquias(ModeloAuditoria):
     """Modelo para almacenar parroquias"""
-    co_parroquia = models.CharField('Código', help_text='Código de la parroquia', max_length=6, primary_key=True)
-    des_parroquia = models.CharField('Nombre', help_text='Nombre de la parroquia', max_length=60)
+    co_pquia = models.CharField('Código', help_text='Código de la parroquia', max_length=6, primary_key=True)
+    des_pquia = models.CharField('Nombre', help_text='Nombre de la parroquia', max_length=60)
     municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='parroquias')
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
@@ -152,7 +152,7 @@ class Parroquias(ModeloAuditoria):
     class Meta:
         verbose_name = 'Parroquia'
         verbose_name_plural = 'Parroquias'
-        ordering = ['des_parroquia']
+        ordering = ['des_pquia']
 
     def save(self, *args, **kwargs):
         if not self.us_in:
@@ -162,8 +162,8 @@ class Parroquias(ModeloAuditoria):
 
 class Sectores(ModeloAuditoria):
     """Modelo para almacenar sectores"""
-    co_sector = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
-    des_sector = models.CharField('Nombre', help_text='Nombre del sector', max_length=60)
+    co_sec = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
+    des_sec = models.CharField('Nombre', help_text='Nombre del sector', max_length=60)
     parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='sectores')
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
@@ -173,7 +173,31 @@ class Sectores(ModeloAuditoria):
     class Meta:
         verbose_name = 'Sector'
         verbose_name_plural = 'Sectores'
-        ordering = ['des_sector']
+        ordering = ['des_sec']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        super().save(*args, **kwargs)
+
+class Urbanismos(ModeloAuditoria):
+    """Modelo para almacenar sectores"""
+    co_urb = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
+    des_urb = models.CharField('Nombre', help_text='Nombre del sector', max_length=120)
+    direccion = models.CharField('Dirección', help_text='Dirección', max_length=250)
+    estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='urbanismos')
+    municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='urbanismos')
+    parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='urbanismos')
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
+
+    def __str__(self) -> str:
+        return f'{self.des_sector}'
+
+    class Meta:
+        verbose_name = 'Urbanismo'
+        verbose_name_plural = 'Urbanismos'
+        ordering = ['des_urb']
 
     def save(self, *args, **kwargs):
         if not self.us_in:
@@ -203,7 +227,7 @@ class Datos(ModeloAuditoria):
     municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='datos')
     parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='datos')
     sector = models.ForeignKey(Sectores, on_delete=models.PROTECT, related_name='datos')
-    urbanismo = models.CharField('Urbanismo', max_length=120, help_text='Urbanismo')
+    urbanismo = models.ForeignKey(Urbanismos, on_delete=models.PROTECT, related_name='datos')
     torre = models.CharField('Torre', max_length=10, help_text='Torre')
     piso = models.CharField('Piso', max_length=8, help_text='Piso')
     apartamento = models.CharField('Apartamento', max_length=8, help_text='Apartamento')

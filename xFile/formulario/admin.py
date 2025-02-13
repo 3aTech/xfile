@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Datos, Contratos, Estados, Municipios, Parroquias, Sectores, Representantes
+from .models import Datos, Contratos, Estados, Municipios, Parroquias, Sectores, Urbanismos, Representantes, Entidades
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -32,8 +32,8 @@ class EstadosResource(resources.ModelResource):
         model = Estados
 
 class EstadosAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ['co_estado', 'des_estado']
-    list_display = ['co_estado', 'des_estado']
+    search_fields = ['co_edo', 'des_edo']
+    list_display = ['co_edo', 'des_edo']
     resource_class = EstadosResource
 
 admin.site.register(Estados, EstadosAdmin)
@@ -45,8 +45,8 @@ class MunicipiosResource(resources.ModelResource):
         model = Municipios
 
 class MunicipiosAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ['co_municipio', 'des_municipio']
-    list_display = ['co_municipio', 'des_municipio']
+    search_fields = ['co_mpo', 'des_mpo']
+    list_display = ['co_mpo', 'des_mpo']
     resource_class = MunicipiosResource
 
 admin.site.register(Municipios, MunicipiosAdmin)
@@ -58,8 +58,8 @@ class ParroquiasResource(resources.ModelResource):
         model = Parroquias
 
 class ParroquiasAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ['co_parroquia', 'des_parroquia']
-    list_display = ['co_parroquia', 'des_parroquia']
+    search_fields = ['co_pquia', 'des_pquia']
+    list_display = ['co_pquia', 'des_pquia']
     resource_class = ParroquiasResource
 
 admin.site.register(Parroquias, ParroquiasAdmin)
@@ -71,11 +71,24 @@ class SectoresResource(resources.ModelResource):
         model = Sectores
 
 class SectoresAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ['co_sector', 'des_sector']
-    list_display = ['co_sector', 'des_sector']
+    search_fields = ['co_sec', 'des_sec']
+    list_display = ['co_sec', 'des_sec']
     resource_class = SectoresResource
 
 admin.site.register(Sectores, SectoresAdmin)
+
+
+
+class UrbanismosResource(resources.ModelResource):
+    class Meta:
+        model = Urbanismos
+
+class UrbanismosAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    search_fields = ['co_urb', 'des_urb']
+    list_display = ['co_urb', 'des_urb']
+    resource_class = UrbanismosResource
+
+admin.site.register(Urbanismos, UrbanismosAdmin)
 
 
 
@@ -89,5 +102,18 @@ class RepresentantesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = RepresentantesResource
 
 admin.site.register(Representantes, RepresentantesAdmin)
+
+
+
+class EntidadesResource(resources.ModelResource):
+    class Meta:
+        model = Entidades
+
+class EntidadesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    search_fields = ['id', 'rif', 'nombre']
+    list_display = ['id', 'rif', 'nombre']
+    resource_class = EntidadesResource
+
+admin.site.register(Entidades, EntidadesAdmin)
 
 
