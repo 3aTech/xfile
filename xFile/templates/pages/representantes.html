@@ -49,6 +49,7 @@
                 <th>Cédula</th>
                 <th>Nacionalidad</th>
                 <th>Nombre y Apellido</th>
+                <th>Status</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -59,11 +60,19 @@
                 <td>{{ representante.nacionalidad }}
                 <td>{{ representante.nombre }}</td>
                 <td class="text-center">
+                    {% if entidad.status %}
+                    <span class="badge bg-success color-palette">Activo</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
                             data-cedula="{{ representante.cedula }}"
                             data-nacionalidad="{{ representante.nacionalidad }}"
-                            data-nombre="{{ representante.nombre }}">
+                            data-nombre="{{ representante.nombre }}"
+                            data-stats="{{ entidad.status }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
@@ -111,7 +120,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
                                 </div>
-                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V|J|G]-99.999.999"' data-mask
+                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
                                     id="cedula" name="cedula" value="{{ object.cedula|default:'' }}" required aria-label="Cédula">
                             </div>
                         </div>
@@ -188,13 +197,11 @@
                                     <span class="input-group-text"><i class='bx bxs-buildings' ></i></span>
                                 </div>
                                 <select class="form-control select2bs4" id="entidad" name="entidad" required aria-label="Entidad">
-                                    <option value="" disabled {% if not object %}selected{% endif %}>Seleccione Empresa o Persona</option>
+                                    <option value="" disabled selected>Seleccione una entidad</option>
                                     {% for entidad in entidades %}
-                                        <option value="{{ entidades.id }}" {% if object.entidades.id == entidades.id %}selected{% endif %}>
-                                            {{ entidades.id }} - {{ entidades.nombre }}
-                                        </option>
+                                        <option value="{{ entidad.id }}">{{ entidad.rif }} - {{ entidad.nombre }}</option>
                                     {% empty %}
-                                        <option value="">No hay empresa o persona disponibles</option>
+                                        <option value="">No hay entidades disponibles</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -214,15 +221,16 @@
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
-            <form method="post" id="createForm">
+            <form method="post" id="editForm">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Editar Representante</h5>
+                    <h5 class="modal-title" id="editModalLabel">Editar Representante</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" id="edit-id" name="id">
                     <div class="form-group">
                         <label for="edit-cedula">Código</label>
                         <input type="text" class="form-control" id="edit-cedula" name="cedula" required>
@@ -254,7 +262,12 @@
                     </div>
                     <div class="form-group">
                         <label for="edit-representante">Representante de</label>
-                        <input type="text" class="form-control" id="edit-representante" name="representante" required>
+                        <select class="form-control select2bs4" id="edit-entidad" name="entidad" required>
+                            <option value="" disabled>Seleccione una entidad</option>
+                            {% for entidad in entidades %}
+                                <option value="{{ entidad.id }}">{{ entidad.rif }} - {{ entidad.nombre }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="edit-denominara">Denominara</label>
@@ -271,7 +284,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Agregar</button>
+                    <button type="submit" class="btn btn-warning">Actualizar</button>
                 </div>
             </form>
         </div>
@@ -364,6 +377,31 @@
       autoWidth: false,
       responsive: true,
     });
+
+    // Inicializar Select2 para los campos de entidad
+    $('#entidad, #edit-entidad').select2bs4({
+        placeholder: "Seleccione una entidad",
+        allowClear: true
+    });
+
+    // Script para manejar la carga de datos en el modal de edición
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var cedula = button.data('cedula');
+        var nacionalidad = button.data('nacionalidad');
+        var nombre = button.data('nombre');
+        var status = button.data('status') === 'True' || button.data('status') === true;
+        var entidadId = button.data('entidad'); // Asegúrate de pasar este dato en el botón de edición
+
+        var modal = $(this);
+        modal.find('#edit-id').val(id);
+        modal.find('#edit-cedula').val(cedula);
+        modal.find('#edit-nacionalidad').val(nacionalidad);
+        modal.find('#edit-nombre').val(nombre);
+        modal.find('#edit-status').prop('checked', status);
+        modal.find('#edit-entidad').val(entidadId).trigger('change'); // Cargar y seleccionar la entidad
+    });
   });
 </script>
 
@@ -394,11 +432,13 @@
         var co_parroquia = button.data('coParroquia');
         var des_parroquia = button.data('desParroquia');
         var municipio = button.data('municipio');
+        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
 
         var modal = $(this);
         modal.find('#edit-code').val(co_parroquia);
         modal.find('#edit-nombre').val(des_parroquia);
         modal.find('#edit-municipio').val(municipio).trigger('change');
+        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {
@@ -563,8 +603,8 @@ $.ajaxSetup({
 });
 
 $(document).ready(function() {
-    $('#municipio').select2bs4({
-        placeholder: "Seleccione un Municipio",
+    $('#entidad').select2bs4({
+        placeholder: "Seleccione una empresa o entidad",
         allowClear: true
     });
 });
