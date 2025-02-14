@@ -83,7 +83,7 @@
                             data-target="#deleteModal" 
                             data-cedula="{{ representante.cedula }}" 
                             data-nombre="{{ representante.nombre }}">
-                            <i class='bx bx-trash' ></i>
+                            <i class='bx bx-trash'></i>
                     </button>
                 </td>
             </tr>
@@ -124,7 +124,7 @@
                                     <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
                                 </div>
                                 <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
-                                    id="cedula" name="cedula" value="{{ object.cedula|default:'' }}" required aria-label="Cédula">
+                                    id="cedula" name="cedula" required aria-label="Cédula">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -134,7 +134,7 @@
                                 <span class="input-group-text"><i class='bx bxs-flag-alt'></i></span>
                               </div>
                               <input type="text" class="form-control" id="nacionalidad" name="nacionalidad" 
-                              value="{{ object.expediente|default:'' }}" aria-label="Nacionalidad" placeholder="Nacionalidad">
+                              aria-label="Nacionalidad" placeholder="Nacionalidad">
                             </div>
                         </div>
                         <div class="col-md-4">        
@@ -145,17 +145,8 @@
                                 </div>
                                 <select class="form-control select2bs4" id="ciudadano_ciudadana" name="ciudadano_ciudadana" required aria-label="Ciudadano/Ciudadana">
                                     <option value="" disabled {% if not object %}selected{% endif %}>---</option>
-                                    {% if object.ciudadano_ciudadana %} 
-                                    <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
-                                        {{ object.ciudadano_ciudadana }}
-                                    </option> 
-                                    {% endif %}
-                                    {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
                                         <option>CIUDADANO</option>
-                                    {% endif %}
-                                    {% if object.ciudadano_ciudadana != 'CIUDADANA' %}
                                         <option>CIUDADANA</option>
-                                    {% endif %}
                                 </select>
                             </div>
                         </div>
@@ -168,7 +159,7 @@
                                 <span class="input-group-text"><i class='bx bxs-user-detail'></i></span>
                               </div>
                               <input type="text" class="form-control" id="nombre" name="nombre" 
-                              value="{{ object.nombre|default:'' }}" aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
+                              aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -178,7 +169,7 @@
                                 <span class="input-group-text"><i class='bx bxs-briefcase' ></i></span>
                               </div>
                               <input type="text" class="form-control" id="condicion" name="condicion" 
-                              value="{{ object.condicion|default:'' }}" aria-label="Cargo" placeholder="Cargo">
+                              aria-label="Cargo" placeholder="Cargo">
                             </div>
                         </div>    
                     </div>
@@ -190,7 +181,7 @@
                                 <span class="input-group-text"><i class='bx bxs-map-alt' ></i></span>
                               </div>
                               <input type="text" class="form-control" id="region" name="region" 
-                              value="{{ object.region|default:'' }}" aria-label="Región" placeholder="Región">
+                              aria-label="Región" placeholder="Región">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -233,56 +224,100 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="edit-id" name="id">
-                    <div class="form-group">
-                        <label for="edit-cedula">Código</label>
-                        <input type="text" class="form-control" id="edit-cedula" name="cedula" required>
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <div class="form-group">                                
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
+                                    <label class="custom-control-label" for="customSwitch1">Activo</label>
+                                </div>
+                            </div>
+                        </div>    
                     </div>
-                    <div class="form-group">
-                        <label for="edit-nacionalidad">Nacionalidad</label>
-                        <input type="text" class="form-control" id="edit-nacionalidad" name="nacionalidad" required>
+                    <div class="row mb-3"> 
+                        <div class="col-md-4">
+                            <label for="edit-cedula" class="form-label">Cédula</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-light fa-address-card"></i></span>
+                                </div>
+                                <input type="text" class="form-control" data-inputmask='"mask": "[E|V]-99.999.999"' data-mask
+                                    id="edit-cedula" name="cedula" required aria-label="Cédula">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-nacionalidad" class="form-label">Nacionalidad</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-flag-alt'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-nacionalidad" name="nacionalidad" 
+                              aria-label="Nacionalidad" placeholder="Nacionalidad">
+                            </div>
+                        </div>
+                        <div class="col-md-4">        
+                            <label for="edit-ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-solid fa-users"></i></span>
+                                </div>
+                                <select class="form-control select2bs4" id="edit-ciudadano_ciudadana" name="ciudadano_ciudadana" required aria-label="Ciudadano/Ciudadana">
+                                    <option value="" disabled {% if not object %}selected{% endif %}>---</option>
+                                        <option>CIUDADANO</option>
+                                        <option>CIUDADANA</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="edit-ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
-                        <select class="form-control select2bs4" style="width: 100%;"
-                            id="edit-ciudadano_ciudadana" name="ciudadano_ciudadana" required>
-                            {% if object.ciudadano_ciudadana %} 
-                                <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
-                                    {{ object.ciudadano_ciudadana }}
-                                </option> 
-                            {% endif %}
-                            {% if object.ciudadano_ciudadana != 'CIUDADANO' %}
-                                <option>CIUDADANO</option>
-                            {% endif %}
-                            {% if object.ciudadano_ciudadana != 'CIUDADANA' %}
-                                <option>CIUDADANA</option>
-                            {% endif %}
-                        </select>
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <label for="edit-nombre" class="form-label">Nombre y Apellido</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-user-detail'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-nombre" name="nombre" 
+                              aria-label="Nombre y Apellido" placeholder="Nombre y Apellido">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit-condicion" class="form-label">Cargo</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-briefcase' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-condicion" name="condicion" 
+                              aria-label="Cargo" placeholder="Cargo">
+                            </div>
+                        </div>    
                     </div>
-                    <div class="form-group">
-                        <label for="edit-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="edit-nombre" name="nombre" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-representante">Representante de</label>
-                        <select class="form-control select2bs4" id="edit-entidad" name="entidad" required>
-                            <option value="" disabled>Seleccione una entidad</option>
-                            {% for entidad in entidades %}
-                                <option value="{{ entidad.id }}">{{ entidad.rif }} - {{ entidad.nombre }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-denominara">Denominara</label>
-                        <input type="text" class="form-control" id="edit-denominara" name="denominara" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-condicion">Cargo</label>
-                        <input type="text" class="form-control" id="edit-condicion" name="condicion" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-region">Region</label>
-                        <input type="text" class="form-control" id="edit-region" name="region" required>
+                    <div class="row mb-3"> 
+                        <div class="col-md-6">
+                            <label for="edit-region" class="form-label">Región</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-alt' ></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-region" name="region" 
+                              aria-label="Región" placeholder="Región">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit-entidad" class="form-label">Representante de</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-buildings' ></i></span>
+                                </div>
+                                <select class="form-control select2bs4" id="edit-entidad" name="entidad" required aria-label="Entidad">
+                                    <option value="" disabled selected>Seleccione una entidad</option>
+                                    {% for entidad in entidades %}
+                                        <option value="{{ entidad.id }}">{{ entidad.rif }} - {{ entidad.nombre }}</option>
+                                    {% empty %}
+                                        <option value="">No hay entidades disponibles</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -308,7 +343,7 @@
                 </div>
                 <div class="modal-body">
                     <p>¿Estás seguro de que deseas eliminar el representante "<span id="delete-nombre"></span>"?</p>
-                    <input type="hidden" id="delete-cedula" name="nombre">
+                    <input type="hidden" id="delete-cedula" name="cedula">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -337,6 +372,9 @@
 <!-- page script -->
 <script>
     $(function () {
+
+        $('[data-mask]').inputmask()
+
         $("#example1").DataTable({
             responsive: true,
             autoWidth: false,
@@ -379,180 +417,202 @@
             autoWidth: false,
             responsive: true,
         });
+    });
 
-        // Inicializar Select2 para los campos de entidad
-        $('#entidad, #edit-entidad').select2bs4({
-            placeholder: "Seleccione una entidad",
-            allowClear: true
-        });
+    // Inicializar Select2 para los campos de entidad
+    $('#entidad, #edit-entidad').select2bs4({
+        placeholder: "Seleccione una entidad",
+        allowClear: true
+    });
 
-        // Script para manejar la creación de una nueva entidad
-        $('#createForm').on('submit', function (event) {
-            event.preventDefault();
-            var formData = $(this).serializeArray();
-            // No filtrar campos vacíos para la dirección
-            $.ajax({
-                type: 'POST',
-                url: '/representantes/crear/',
-                data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                success: function (response) {
-                    Swal.fire({
-                        title: 'Éxito!',
-                        text: 'Representante creado correctamente.',
-                        type: 'success',
-                        confirmButtonText: 'Aceptar'
-                    }).then(() => {
-                        location.reload();
-                    });
-                },
-                error: function (xhr) {
-                    let errorMessage = 'Ocurrió un error.';
-                    if (xhr.responseJSON) {
-                        // Si hay errores específicos del formulario
-                        if (xhr.responseJSON.errors) {
-                            errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
-                        }
-                        // Si hay un mensaje de error general
-                        else if (xhr.responseJSON.detail) {
-                            errorMessage = xhr.responseJSON.detail;
-                        }
+    // Script para manejar la creación de una nueva entidad
+    $('#createForm').on('submit', function (event) {
+        event.preventDefault();
+        var formData = $(this).serializeArray();
+        // No filtrar campos vacíos para la dirección
+        $.ajax({
+            type: 'POST',
+            url: '/representantes/crear/',
+            data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Representante creado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error.';
+                if (xhr.responseJSON) {
+                    // Si hay errores específicos del formulario
+                    if (xhr.responseJSON.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
                     }
-                    Swal.fire({
-                        title: 'Error!',
-                        text: errorMessage,
-                        type: 'error',
-                        confirmButtonText: 'Aceptar'
-                    });
+                    // Si hay un mensaje de error general
+                    else if (xhr.responseJSON.detail) {
+                        errorMessage = xhr.responseJSON.detail;
+                    }
                 }
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
+
+    // Script para manejar la carga de datos en los modales
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var cedula = button.data('cedula');
+        var nacionalidad = button.data('nacionalidad');
+        var ciudadano_ciudadana = button.data('ciudadano_ciudadana');
+        var nombre = button.data('nombre');
+        var condicion = button.data('condicion');
+        var region = button.data('region');
+        var entidad = button.data('entidad');
+        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+
+        var modal = $(this);
+        modal.find('#edit-cedula').val(cedula);
+        modal.find('#edit-nacionalidad').val(nacionalidad);
+        modal.find('#edit-ciudadano_ciudadana').val(ciudadano_ciudadana);
+        modal.find('#edit-nombre').val(nombre);
+        modal.find('#edit-condicion').val(condicion);
+        modal.find('#edit-entidad').val(entidad);
+        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
+        
+    });
+       
+    // Script para manejar la actualización de un representante
+    $('#editForm').on('submit', function (event) {
+        event.preventDefault();
+        var cedula = $('#edit-cedula').val();
+        if (!cedula) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Cédula del representante no válido',
+                type: 'error',
+                confirmButtonText: 'Aceptar'
             });
+            return;
+        }
+                
+        var formData = $(this).serializeArray();
+        // Convertir el estado a booleano
+        formData = formData.map(function(item) {
+            if (item.name === 'status') {
+                item.value = item.value === 'on' ? 'true' : 'false';
+            }
+            return item;
         });
 
-        // Script para manejar la carga de datos en el modal de edición
-        $('#editModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var cedula = button.data('cedula');
-            var nacionalidad = button.data('nacionalidad');
-            var nombre = button.data('nombre');
-            var status = button.data('status') === 'True' || button.data('status') === true;
-            var entidadId = button.data('entidad');
-            var condicion = button.data('condicion');
-            var region = button.data('region');
-            var ciudadano_ciudadana = button.data('ciudadano_ciudadana');
-
-            var modal = $(this);
-            modal.find('#edit-cedula').val(cedula);
-            modal.find('#edit-nacionalidad').val(nacionalidad);
-            modal.find('#edit-nombre').val(nombre);
-            modal.find('#edit-status').prop('checked', status);
-            modal.find('#edit-entidad').val(entidadId).trigger('change');
-            modal.find('#edit-condicion').val(condicion);
-            modal.find('#edit-region').val(region);
-            modal.find('#edit-ciudadano_ciudadana').val(ciudadano_ciudadana).trigger('change');
-        });
-
-        // Script para manejar la carga de datos en el modal de eliminación
-        $('#deleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var cedula = button.data('cedula');
-            var nombre = button.data('nombre');
-            
-            var modal = $(this);
-            modal.find('#delete-cedula').val(cedula);
-            modal.find('#delete-nombre').text(nombre);
-        });
-
-        // Script para manejar la actualización de un representante
-        $('#editForm').on('submit', function (event) {
-            event.preventDefault();
-            var cedula = $('#edit-cedula').val();
-            
-            $.ajax({
-                type: 'PUT',
-                url: '/representantes/' + cedula + '/editar/',
-                data: $(this).serialize(),
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                success: function (response) {
-                    $('#editModal').modal('hide');
-                    Swal.fire({
-                        title: 'Éxito!',
-                        text: 'Representante actualizado correctamente.',
-                        type: 'success',
-                        confirmButtonText: 'Aceptar'
-                    }).then(() => {
-                        location.reload();
-                    });
-                },
-                error: function (xhr) {
-                    let errorMessage = 'Ocurrió un error al actualizar el representante.';
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        errorMessage = xhr.responseJSON.error;
-                    }
-                    Swal.fire({
-                        title: 'Error!',
-                        text: errorMessage,
-                        type: 'error',
-                        confirmButtonText: 'Aceptar'
-                    });
+        $.ajax({
+            type: 'PUT',
+            url: '/representantes/' + cedula + '/editar/',
+            data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Representante actualizado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error.';
+                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                    errorMessage = xhr.responseJSON.detail;
                 }
-            });
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
         });
+    });
 
-        // Script para manejar la eliminación de un representante
-        $('#deleteForm').on('submit', function (event) {
-            event.preventDefault();
-            var cedula = $('#delete-cedula').val();
-            $.ajax({
-                type: 'DELETE',
-                url: '/representantes/' + cedula + '/eliminar/',
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                success: function (response) {
-                    $('#deleteModal').modal('hide');
-                    Swal.fire({
-                        title: 'Éxito!',
-                        text: 'Representante eliminado correctamente.',
-                        type: 'success',
-                        confirmButtonText: 'Aceptar'
-                    }).then(() => {
-                        location.reload();
-                    });
-                },
-                error: function (xhr) {
-                    let errorMessage = 'Ocurrió un error al eliminar el representante.';
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        errorMessage = xhr.responseJSON.error;
-                    }
-                    Swal.fire({
-                        title: 'Error!',
-                        text: errorMessage,
-                        type: 'error',
-                        confirmButtonText: 'Aceptar'
-                    });
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var cedula = button.data('cedula');
+        var nombre = button.data('nombre');
+        
+        console.log("Cédula:", cedula);
+        console.log("Nombre:", nombre);
+        
+        var modal = $(this);
+        modal.find('#delete-cedula').val(cedula);
+        modal.find('#delete-nombre').text(nombre);
+    });
+
+    // Script para manejar la eliminación de una entidad
+    $('#deleteForm').on('submit', function (event) {
+        event.preventDefault();
+        var cedula = $('#delete-cedula').val();
+        $.ajax({
+            type: 'DELETE',
+            url: '/representantes/' + cedula + '/eliminar/',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: 'Representante eliminado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error.';
+                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                    errorMessage = xhr.responseJSON.detail;
                 }
-            });
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
         });
-        // Función para obtener el token CSRF de la cookie
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
+    });
+
+
+    // Obtener el token CSRF de la cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
             }
-            return cookieValue;
         }
-    });
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
 </script>
 
 {% endblock scripts %}
