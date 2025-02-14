@@ -8,9 +8,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render
 from .serializers import (DatosSerializer, 
-                          AmbienteSerializer, LinderoSerializer, RepresentanteSerializer,
+                          AmbienteSerializer, LinderoSerializer,
                           EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer,
-                          EntidadesSerializer)
+                          EntidadesSerializer, RepresentanteSerializer)
 from rest_framework import status
 
 # Vista para obtener sector según la parroquia
@@ -295,54 +295,6 @@ def lindero_delete(request, pk):
     lindero.delete()
     return Response({'message': 'Lindero eliminado exitosamente.'}, status=204)
 
-# Vista para listar y gestionar representantes
-class RepresentanteListView(LoginRequiredMixin, ListView):
-    model = Representantes
-    template_name = 'pages/representantes.html'
-    context_object_name = 'registros'
-    paginate_by = 10
-    
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        search = self.request.GET.get('search', '')
-        if search:
-            queryset = queryset.filter(nombre__icontains=search)
-        return queryset.order_by('nombre')
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['total_registros'] = self.get_queryset().count()
-        context['entidades'] = Entidades.objects.filter(status=True)
-        return context
-
-# Vista para manejar las solicitudes AJAX para crear, editar y eliminar
-@api_view(['POST'])
-def representante_create(request):
-    serializer = RepresentanteSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save(us_in=request.user.username)
-        return Response({'message': 'Representante creado exitosamente.'}, status=201)
-    return Response(serializer.errors, status=400)
-
-@api_view(['PUT'])
-def representante_update(request, pk):
-    representante = Representantes.objects.get(pk=pk)
-    serializer = RepresentanteSerializer(representante, data=request.data)
-    if serializer.is_valid():
-        serializer.save(us_mo=request.user.username)
-        return Response({'message': 'Representante actualizado exitosamente.'}, status=200)
-    else:
-        for field, error in serializer.errors.items():
-            messages.error(request, f"{field}: {error}")  # Enviar mensaje de error
-    return Response(serializer.errors, status=400)
-
-@api_view(['DELETE'])
-def representante_delete(request, pk):
-    lindero = Representantes.objects.get(pk=pk)
-    lindero.delete()
-    return Response({'message': 'Representante eliminado exitosamente.'}, status=204)
-
-
 # Vistas para Estado
 class EstadoListView(LoginRequiredMixin, ListView):
     model = Estados
@@ -411,7 +363,6 @@ class MunicipioListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['estados'] = Estados.objects.all()  # Agregar la lista de estados
         return context
-
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
 @api_view(['POST'])
@@ -655,3 +606,76 @@ def entidades_detail(request, pk):
         return Response(serializer.data)
     except Entidades.DoesNotExist:
         return Response({'error': 'Entidades no encontrado.'}, status=404)
+
+# Vistas para Representantes
+class RepresentantesListView(LoginRequiredMixin, ListView):
+    model = Representantes
+    template_name = 'pages/representantes.html'
+    context_object_name = 'registros'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        if search:
+            queryset = queryset.filter(nombre__icontains=search)
+        return queryset.order_by('cedula')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entidades'] = Entidades.objects.filter(status=True)
+        context['total_registros'] = self.get_queryset().count()
+        return context
+
+@api_view(['POST'])
+def representantes_create(request):
+    print("Datos recibidos:", request.data)  # Log para verificar los datos recibidos
+    serializer = RepresentanteSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        print("Representante creado exitosamente")  # Log para confirmar creación
+        return Response({'message': 'Representante creado exitosamente.'}, status=201)
+    else:
+        print("Errores de validación:", serializer.errors)  # Log para errores de validación
+        for field, error in serializer.errors.items():
+            messages.error(request, f"{field}: {error}")
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT'])
+def representantes_update(request, pk):
+    try:
+        representante = Representantes.objects.get(pk=pk)
+        serializer = RepresentanteSerializer(representante, data=request.data)
+        if serializer.is_valid():
+            serializer.save(us_mo=request.user.username)
+            return Response({'message': 'Representante actualizado exitosamente.'}, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+    except Representantes.DoesNotExist:
+        return Response({'error': 'Representante no encontrado.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['DELETE'])
+def representantes_delete(request, pk):
+    try:
+        representante = Representantes.objects.get(pk=pk)
+        representante.delete()
+        return Response({'message': 'Representante eliminado exitosamente.'}, status=204)
+    except Representantes.DoesNotExist:
+        return Response({'error': 'Representante no encontrado.'}, status=404)
+
+# Vista para ver el detalle de un representante
+class RepresentantesDetailView(LoginRequiredMixin, DetailView):
+    model = Representantes
+    template_name = 'pages/representantes_detail.html'
+    context_object_name = 'representante'
+
+@api_view(['GET'])
+def representantes_detail(request, pk):
+    try:
+        representante = Representantes.objects.get(pk=pk)
+        serializer = RepresentanteSerializer(representante)
+        return Response(serializer.data)
+    except Representantes.DoesNotExist:
+        return Response({'error': 'Representante no encontrado.'}, status=404)

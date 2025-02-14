@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import (Datos, Ambientes, Linderos, Representantes, 
-                     Estados, Municipios, Parroquias, Sectores, Urbanismos, Entidades)
+from .models import (Datos, Ambientes, Linderos, 
+                     Estados, Municipios, Parroquias, Sectores, Urbanismos, Entidades, Representantes)
 
 class DatosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,13 +26,6 @@ class LinderoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Linderos
         fields = ['id', 'lindero', 'status',
-                  'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
-
-class RepresentanteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Representantes
-        fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 'nombre', 
-                  'entidad', 'condicion', 'region', 'inactivo',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class EstadoSerializer(serializers.ModelSerializer):
@@ -72,5 +65,11 @@ class EntidadesSerializer(serializers.ModelSerializer):
         fields = ['id', 'rif', 'nombre', 'denominara', 'direccion', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
+class RepresentanteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Representantes
+        fields = ['cedula', 'nacionalidad', 'ciudadano_ciudadana', 'nombre', 
+                  'entidad', 'condicion', 'region', 'status',
+                  'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 

@@ -24,12 +24,12 @@ from django.conf.urls.static import static
 from formulario.views import (get_municipios, get_parroquias, get_sector,
                               ambiente_create, ambiente_delete, AmbienteListView, ambiente_update,
                               LinderoListView, lindero_create, lindero_delete, lindero_update,
-                              RepresentanteListView, representante_create, representante_update, representante_delete,
                               EstadoListView, estado_create, estado_delete, estado_update,
                               MunicipioListView, municipio_create, municipio_delete, municipio_update,
                               ParroquiaListView, parroquia_create, parroquia_delete, parroquia_update,
                               SectorListView, sector_create, sector_delete, sector_update,
-                              EntidadesListView, entidades_create, EntidadesDetailView, entidades_update, entidades_delete
+                              EntidadesListView, entidades_create, EntidadesDetailView, entidades_update, entidades_delete,
+                              RepresentantesListView, representantes_create, RepresentantesDetailView, representantes_update, representantes_delete
                               )
 from formulario.view_export import exportar_datos_xlsx
 from formulario.view_gen_contratos import genContratosTotales, genContratosUnico
@@ -67,12 +67,6 @@ urlpatterns = [
     path('linderos/<str:pk>/editar/', lindero_update, name='lindero_update'),
     path('linderos/<str:pk>/eliminar/', lindero_delete, name='lindero_delete'),
     
-    # URLs para Representante
-    path('representantes/', RepresentanteListView.as_view(), name='representante_list'),
-    path('representantes/crear/', representante_create, name='representante_create'),
-    path('representantes/<str:pk>/editar/', representante_update, name='representante_update'),
-    path('representantes/<str:pk>/eliminar/', representante_delete, name='representante_delete'),
-    
     # URLs para Estado
     path('estados/', EstadoListView.as_view(), name='estado_list'),
     path('estados/crear/', estado_create, name='estado_create'),
@@ -103,6 +97,13 @@ urlpatterns = [
     path('entidades/<int:pk>/', EntidadesDetailView.as_view(), name='entidades_detail'),
     path('entidades/<int:pk>/editar/', entidades_update, name='entidades_update'),
     path('entidades/<int:pk>/eliminar/', entidades_delete, name='entidades_delete'),
+    
+    # URLs para Representantes
+    path('representantes/', RepresentantesListView.as_view(), name='representantes_list'),
+    path('representantes/crear/', representantes_create, name='representantes_create'),
+    path('representantes/<str:pk>/', RepresentantesDetailView.as_view(), name='representantes_detail'),
+    path('representantes/<str:pk>/editar/', representantes_update, name='representantes_update'),
+    path('representantes/<str:pk>/eliminar/', representantes_delete, name='representantes_delete'),
     
     path('exportar/', exportar_datos_xlsx, name='exportar_xlsx'),
     path('generar-contatos/', genContratosTotales, name='genContratosTotales'),

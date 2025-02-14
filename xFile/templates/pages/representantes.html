@@ -110,12 +110,11 @@
                         <div class="col-md-6">
                             <div class="form-group">                                
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" >
+                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
                                     <label class="custom-control-label" for="customSwitch1">Activo</label>
                                 </div>
                             </div>
-                        </div>
-                        
+                        </div>    
                     </div>
                     <div class="row mb-3"> 
                         <div class="col-md-4">
@@ -387,11 +386,48 @@
             allowClear: true
         });
 
-        // Script para manejar la carga de datos en el modal de creación
-        $('#createModal').on('show.bs.modal', function () {
-            // Limpiar el formulario
-            $('#createForm')[0].reset();
-            $('#entidad').val(null).trigger('change');
+        // Script para manejar la creación de una nueva entidad
+        $('#createForm').on('submit', function (event) {
+            event.preventDefault();
+            var formData = $(this).serializeArray();
+            // No filtrar campos vacíos para la dirección
+            $.ajax({
+                type: 'POST',
+                url: '/representantes/crear/',
+                data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Representante creado correctamente.',
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    let errorMessage = 'Ocurrió un error.';
+                    if (xhr.responseJSON) {
+                        // Si hay errores específicos del formulario
+                        if (xhr.responseJSON.errors) {
+                            errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
+                        }
+                        // Si hay un mensaje de error general
+                        else if (xhr.responseJSON.detail) {
+                            errorMessage = xhr.responseJSON.detail;
+                        }
+                    }
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
         });
 
         // Script para manejar la carga de datos en el modal de edición
@@ -426,42 +462,6 @@
             var modal = $(this);
             modal.find('#delete-cedula').val(cedula);
             modal.find('#delete-nombre').text(nombre);
-        });
-
-        // Script para manejar la creación de un nuevo representante
-        $('#createForm').on('submit', function (event) {
-            event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: '/representantes/crear/',
-                data: $(this).serialize(),
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                success: function (response) {
-                    $('#createModal').modal('hide');
-                    Swal.fire({
-                        title: 'Éxito!',
-                        text: 'Representante creado correctamente.',
-                        type: 'success',
-                        confirmButtonText: 'Aceptar'
-                    }).then(() => {
-                        location.reload();
-                    });
-                },
-                error: function (xhr) {
-                    let errorMessage = 'Ocurrió un error al crear el representante.';
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        errorMessage = xhr.responseJSON.error;
-                    }
-                    Swal.fire({
-                        title: 'Error!',
-                        text: errorMessage,
-                        type: 'error',
-                        confirmButtonText: 'Aceptar'
-                    });
-                }
-            });
         });
 
         // Script para manejar la actualización de un representante
@@ -537,6 +537,21 @@
                 }
             });
         });
+        // Función para obtener el token CSRF de la cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
     });
 </script>
 
