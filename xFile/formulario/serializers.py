@@ -62,7 +62,7 @@ class UrbanismoSerializer(serializers.ModelSerializer):
 class EntidadesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Entidades
-        fields = ['id', 'rif', 'nombre', 'denominara', 'direccion', 'status',
+        fields = ['id', 'rif', 'nombre', 'denominara', 'direccion', 'status', 'representante',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class RepresentanteSerializer(serializers.ModelSerializer):

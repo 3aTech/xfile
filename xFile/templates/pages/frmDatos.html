@@ -39,64 +39,64 @@
       <form method="post">
         {% csrf_token %}
         <div class="card card-default card-primary">
-          <div class="card-header">
-            <h3 class="card-title">Datos de Expediente</h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+            <div class="card-header">
+                    <h3 class="card-title">Datos de Expediente</h3>
+                    <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+                    </div>
             </div>
-          </div>
-          <div class="card-body">
-            <div class="row mb-3"> 
-              <div class="col-md-3">
-                <label for="serial_cliente" class="form-label">Serial Cliente</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-light fa-qrcode"></i></span>
-                  </div>
-                  <input type="text" class="form-control" id="serial_cliente" name="serial_cliente"
-                  value="{{ object.serial_cliente|default:'' }}" required 
-                  aria-label="Serial Cliente" {% if object %} readonly {% endif %}
-                  placeholder="Serial Cliente">
+            <div class="card-body">
+                <div class="row mb-3"> 
+                <div class="col-md-3">
+                    <label for="serial_cliente" class="form-label">Serial Cliente</label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-light fa-qrcode"></i></span>
+                    </div>
+                    <input type="text" class="form-control" id="serial_cliente" name="serial_cliente"
+                    value="{{ object.serial_cliente|default:'' }}" required 
+                    aria-label="Serial Cliente" {% if object %} readonly {% endif %}
+                    placeholder="Serial Cliente">
+                    </div>
                 </div>
-              </div>
-              <div class="col-md-3">
-                <label for="expediente" class="form-label">Nro. Expediente</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><b>#</b></span>
-                  </div>
-                  <input type="text" class="form-control" id="expediente" name="expediente" 
-                  value="{{ object.expediente|default:'' }}" aria-label="Nro. Expediente" placeholder="Nro. Expediente">
+                <div class="col-md-3">
+                    <label for="expediente" class="form-label">Nro. Expediente</label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><b>#</b></span>
+                    </div>
+                    <input type="text" class="form-control" id="expediente" name="expediente" 
+                    value="{{ object.expediente|default:'' }}" aria-label="Nro. Expediente" placeholder="Nro. Expediente">
+                    </div>
                 </div>
-              </div>
-              <div class="col-md-3">
-                <label for="contrato_nro" class="form-label">Nro. Contrato</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><b>#</b></span>
-                  </div>
-                  <input type="text" class="form-control" id="contrato_nro" name="contrato_nro" 
-                  value="{{ object.contrato_nro|default:'' }}" aria-label="Nro. Contrato" placeholder="Nro. Contrato">
+                <div class="col-md-3">
+                    <label for="contrato_nro" class="form-label">Nro. Contrato</label>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><b>#</b></span>
+                    </div>
+                    <input type="text" class="form-control" id="contrato_nro" name="contrato_nro" 
+                    value="{{ object.contrato_nro|default:'' }}" aria-label="Nro. Contrato" placeholder="Nro. Contrato">
+                    </div>
                 </div>
-              </div>
-              <div class="col-md-3">
-                <label for="representante" class="form-label">Representante</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class='bx bx-briefcase'></i></span>
-                  </div>
-                  <select class="form-control select2bs4" id="representante" name="representante" required aria-label="representante">
-                    <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Representante</option>
-                    {% for representante in representantes %}
-                        <option value="{{ representante.cedula }}" {% if object.representante.cedula == representante.cedula %}selected{% endif %}>
-                            {{ representante.nombre }}
-                        </option>
-                    {% empty %}
-                        <option value="">No hay representantes disponibles</option>
-                    {% endfor %}
-                  </select>
-                </div>             
-              </div>
+                <div class="col-md-3">
+                    <label for="representante" class="form-label">Representante</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class='bx bx-briefcase'></i></span>
+                        </div>
+                        <select class="form-control select2bs4" id="representante" name="representante" required aria-label="representante">
+                            <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Representante</option>
+                            {% for representante in representantes %}
+                                <option value="{{ representante.cedula }}" {% if object.representante.cedula == representante.cedula %}selected{% endif %}>
+                                    {{ representante.nombre }}
+                                </option>
+                            {% empty %}
+                                <option value="">No hay representantes disponibles</option>
+                            {% endfor %}
+                        </select>
+                    </div>             
+                </div>
             </div>
             <div class="row mb-3"> 
                 <div class="col-md-3">
