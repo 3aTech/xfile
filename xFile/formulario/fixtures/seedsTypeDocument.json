@@ -1,0 +1,38 @@
+[
+    {
+        "model": "App.TypeDocument",
+        "pk": "V",
+        "fields": {
+            "co_tdoc": "V",
+            "des_tdoc": "Venezuelano",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.TypeDocument",
+        "pk": "E",
+        "fields": {
+            "co_tdoc": "E",
+            "des_tdoc": "Extrangero",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.TypeDocument",
+        "pk": "J",
+        "fields": {
+            "co_tdoc": "J",
+            "des_tdoc": "Joridico",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.TypeDocument",
+        "pk": "G",
+        "fields": {
+            "co_tdoc": "G",
+            "des_tdoc": "Gubernamental",
+            "status": "A"
+        }
+    }
+]

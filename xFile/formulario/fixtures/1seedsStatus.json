@@ -1,0 +1,47 @@
+[
+    {
+        "model": "App.Status",
+        "pk": "A",
+        "fields": {
+            "co_status": "A",
+            "des_status": "Activo",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Status",
+        "pk": "B",
+        "fields": {
+            "co_status": "B",
+            "des_status": "Bloqueado",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Status",
+        "pk": "I",
+        "fields": {
+            "co_status": "I",
+            "des_status": "Inactivo",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Status",
+        "pk": "S",
+        "fields": {
+            "co_status": "S",
+            "des_status": "Suspendido",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Status",
+        "pk": "X",
+        "fields": {
+            "co_status": "X",
+            "des_status": "Eliminado",
+            "status": "A"
+        }
+    }
+]

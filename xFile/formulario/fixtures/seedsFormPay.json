@@ -1,0 +1,76 @@
+[
+    {
+        "model": "App.FormPay",
+        "pk": "1",
+        "fields": {
+            "co_fPay": "1",
+            "des_fPay": "EFECTIVO",
+            "status": "A"
+            
+        }
+    },
+    {
+        "model": "App.FormPay",
+        "pk": "2",
+        "fields": {
+            "co_fPay": "2",
+            "des_fPay": "TRANSFERENCIA",
+            "status": "A"
+            
+        }
+    },
+    {
+        "model": "App.FormPay",
+        "pk": "3",
+        "fields": {
+            "co_fPay": "3",
+            "des_fPay": "TARJETA DE DEBITO",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.FormPay",
+        "pk": "4",
+        "fields": {
+            "co_fPay": "4",
+            "des_fPay": "TARJETA DE CREDITO",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.FormPay",
+        "pk": "5",
+        "fields": {
+            "co_fPay": "5",
+            "des_fPay": "CHEQUE",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.FormPay",
+        "pk": "6",
+        "fields": {
+            "co_fPay": "6",
+            "des_fPay": "DEBITO RECURRENTE",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.FormPay",
+        "pk": "7",
+        "fields": {
+            "co_fPay": "7",
+            "des_fPay": "CREDITO RECURRENTE",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.FormPay",
+        "pk": "8",
+        "fields": {
+            "co_fPay": "8",
+            "des_fPay": "PAGO MOVIL C2P",
+            "status": "A"
+        }
+    }
+]

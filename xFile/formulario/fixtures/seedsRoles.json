@@ -1,0 +1,38 @@
+[
+    {
+        "model": "App.Roles",
+        "pk": "A",
+        "fields": {
+            "co_rol": "A",
+            "des_rol": "Administrador",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Roles",
+        "pk": "P",
+        "fields": {
+            "co_rol": "P",
+            "des_rol": "Programador",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Roles",
+        "pk": "S",
+        "fields": {
+            "co_rol": "S",
+            "des_rol": "Supervisor",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Roles",
+        "pk": "U",
+        "fields": {
+            "co_rol": "U",
+            "des_rol": "Usuario",
+            "status": "A"
+        }
+    }
+]

@@ -10,6 +10,10 @@ class ModeloAuditoria(models.Model):
     class Meta:
         abstract = True
 
+    def save(self, *args, **kwargs):
+        print(f'Usuario que crea: {self.us_in}, Usuario que modifica: {self.us_mo}')
+        super().save(*args, **kwargs)
+
 class Ambientes(ModeloAuditoria):
     """Modelo para almacenar ambientes"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
@@ -28,6 +32,7 @@ class Ambientes(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Linderos(ModeloAuditoria):
@@ -48,6 +53,7 @@ class Linderos(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Entidades(ModeloAuditoria):
@@ -71,6 +77,7 @@ class Entidades(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Representantes(ModeloAuditoria):
@@ -96,16 +103,18 @@ class Representantes(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
-
+        
 class Estados(ModeloAuditoria):
     """Modelo para almacenar estados/provincias"""
     co_edo = models.CharField('Código', help_text='Código del estado', max_length=6, primary_key=True)
     des_edo = models.CharField('Nombre', help_text='Nombre del estado', max_length=60)
+    iso_3166_2 = models.CharField('iso_3166-2', help_text='ISO_3166-2', max_length=4, null=True, blank=True)
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
-        return f'{self.des_estado}'
+        return f'{self.des_edo}'
 
     class Meta:
         verbose_name = 'Estado'
@@ -116,6 +125,7 @@ class Estados(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Municipios(ModeloAuditoria):
@@ -126,7 +136,7 @@ class Municipios(ModeloAuditoria):
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
-        return f'{self.des_municipio}'
+        return f'{self.des_mpo}'
 
     class Meta:
         verbose_name = 'Municipio'
@@ -137,6 +147,7 @@ class Municipios(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Parroquias(ModeloAuditoria):
@@ -158,6 +169,7 @@ class Parroquias(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Sectores(ModeloAuditoria):
@@ -179,6 +191,7 @@ class Sectores(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Urbanismos(ModeloAuditoria):
@@ -203,6 +216,7 @@ class Urbanismos(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Datos(ModeloAuditoria):
@@ -269,6 +283,7 @@ class Datos(ModeloAuditoria):
     def save(self, *args, **kwargs):
         self.us_in = self.us_in or kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
     class Meta:
@@ -294,6 +309,7 @@ class Ambiente_Dato(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 class Contratos(ModeloAuditoria):
@@ -323,6 +339,7 @@ class Contratos(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
 
@@ -344,4 +361,5 @@ class Lindero_Dato(ModeloAuditoria):
         if not self.us_in:
             self.us_in = kwargs.pop('usuario', None)
         self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)

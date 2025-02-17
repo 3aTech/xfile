@@ -31,7 +31,7 @@ class LinderoSerializer(serializers.ModelSerializer):
 class EstadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estados
-        fields = ['co_edo', 'des_edo', 'status',
+        fields = ['co_edo', 'des_edo', 'iso_3166_2', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class MunicipioSerializer(serializers.ModelSerializer):

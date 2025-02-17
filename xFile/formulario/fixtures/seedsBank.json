@@ -1,0 +1,252 @@
+[
+    {
+        "model": "App.Bank",
+        "pk": 1,
+        "fields": {
+            "co_bank": 1,
+            "des_bank": "Banco Central de Venezuela",
+            "codbank": "0001",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 2,
+        "fields": {
+            "co_bank": 2,
+            "des_bank": "Banco de Venezuela (BDV)",
+            "codbank": "0102",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 3,
+        "fields": {
+            "co_bank": 3,
+            "des_bank": "Banco Venezolano de Cr\u00e9dito (BVC)",
+            "codbank": "0104",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 4,
+        "fields": {
+            "co_bank": 4,
+            "des_bank": "Banco Mercantil",
+            "codbank": "0105",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 5,
+        "fields": {
+            "co_bank": 5,
+            "des_bank": "Banco Provincial (BBVA)",
+            "codbank": "0108",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 6,
+        "fields": {
+            "co_bank": 6,
+            "des_bank": "Bancaribe",
+            "codbank": "0114",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 7,
+        "fields": {
+            "co_bank": 7,
+            "des_bank": "Banco Exterior",
+            "codbank": "0115",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 8,
+        "fields": {
+            "co_bank": 8,
+            "des_bank": "Banco Caron\u00ed",
+            "codbank": "0128",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 9,
+        "fields": {
+            "co_bank": 9,
+            "des_bank": "Banesco Banco Universal",
+            "codbank": "0134",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 10,
+        "fields": {
+            "co_bank": 10,
+            "des_bank": "Sofitasa",
+            "codbank": "0137",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 11,
+        "fields": {
+            "co_bank": 11,
+            "des_bank": "Banco Plaza",
+            "codbank": "0138",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 12,
+        "fields": {
+            "co_bank": 12,
+            "des_bank": "Bangente",
+            "codbank": "0146",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 13,
+        "fields": {
+            "co_bank": 13,
+            "des_bank": "Banco Fondo Com\u00fan (BFC)",
+            "codbank": "0151",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 14,
+        "fields": {
+            "co_bank": 14,
+            "des_bank": "100% Banco",
+            "codbank": "0156",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 15,
+        "fields": {
+            "co_bank": 15,
+            "des_bank": "Del Sur Banco Universal",
+            "codbank": "0157",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 16,
+        "fields": {
+            "co_bank": 16,
+            "des_bank": "Banco del Tesoro",
+            "codbank": "0163",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 17,
+        "fields": {
+            "co_bank": 17,
+            "des_bank": "Banco Agr\u00edcola de Venezuela",
+            "codbank": "0166",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 18,
+        "fields": {
+            "co_bank": 18,
+            "des_bank": "Bancrecer",
+            "codbank": "0168",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 19,
+        "fields": {
+            "co_bank": 19,
+            "des_bank": "Mi Banco, Banco Microfinanciero C.A",
+            "codbank": "0169",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 20,
+        "fields": {
+            "co_bank": 20,
+            "des_bank": "Banco Activo",
+            "codbank": "0171",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 21,
+        "fields": {
+            "co_bank": 21,
+            "des_bank": "Bancamiga",
+            "codbank": "0172",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 22,
+        "fields": {
+            "co_bank": 22,
+            "des_bank": "Banplus",
+            "codbank": "0174",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 23,
+        "fields": {
+            "co_bank": 23,
+            "des_bank": "Banco Bicentenario del Pueblo",
+            "codbank": "0175",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 24,
+        "fields": {
+            "co_bank": 24,
+            "des_bank": "Banfanb",
+            "codbank": "0177",
+            "status": "A"
+        }
+    },
+    {
+        "model": "App.Bank",
+        "pk": 25,
+        "fields": {
+            "co_bank": 25,
+            "des_bank": "Banco Nacional de Cr\u00e9dito (BNC)",
+            "codbank": "0191",
+            "status": "A"
+        }
+    }
+]

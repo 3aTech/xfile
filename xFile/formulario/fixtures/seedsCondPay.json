@@ -1,0 +1,41 @@
+[
+    {
+        "model": "App.CondPay",
+        "pk": "CRED15",
+        "fields": {
+            "co_pay": "CRED15",
+            "des_pay": "CREDITO A 15 DÍAS",
+            "day": "15",
+            "co_us_in": "",
+            "fe_us_in": "2023-04-29",
+            "co_us_mo": "",
+            "fe_us_mo": "2023-04-30"
+        }
+    },
+    {
+        "model": "App.CondPay",
+        "pk": "CRED05",
+        "fields": {
+            "co_pay": "CRED05",
+            "des_pay": "CREDITO A 5 DÍAS",
+            "day": "5",
+            "co_us_in": "",
+            "fe_us_in": "2023-04-29",
+            "co_us_mo": "",
+            "fe_us_mo": "2023-04-30"
+        }
+    },
+    {
+        "model": "App.CondPay",
+        "pk": "CONTD",
+        "fields": {
+            "co_pay": "CONTD",
+            "des_pay": "CONTADO",
+            "day": "0",
+            "co_us_in": "",
+            "fe_us_in": "2023-04-29",
+            "co_us_mo": "",
+            "fe_us_mo": "2023-04-29"
+        }
+    }
+]

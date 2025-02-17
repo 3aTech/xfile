@@ -29,7 +29,7 @@ def get_parroquias(request):
     municipio_id = request.GET.get('municipio')
     if not municipio_id:
         return Response({"error": "El municipio es requerido."}, status=status.HTTP_400_BAD_REQUEST)
-    parroquias = Parroquias.objects.filter(municipio__co_municipio=municipio_id)
+    parroquias = Parroquias.objects.filter(municipio__co_mpo=municipio_id)
     serializer = ParroquiaSerializer(parroquias, many=True)
     return Response(serializer.data)
 
@@ -48,7 +48,7 @@ class DatosListView(LoginRequiredMixin, ListView):
     model = Datos
     template_name = 'pages/list_datos.html'
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -152,7 +152,7 @@ class AmbienteListView(LoginRequiredMixin, ListView):
     model = Ambientes
     template_name = 'pages/ambientes.html'  # Cambiar a la nueva plantilla
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -226,7 +226,7 @@ class LinderoListView(LoginRequiredMixin, ListView):
     model = Linderos
     template_name = 'pages/linderos.html'  # Cambiar a la nueva plantilla
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
     
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -300,14 +300,13 @@ class EstadoListView(LoginRequiredMixin, ListView):
     model = Estados
     template_name = 'pages/estados.html'
     context_object_name = 'registros'
-    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
         search = self.request.GET.get('search', '')
         if search:
-            queryset = queryset.filter(des_estado__icontains=search)
-        return queryset.order_by('des_estado')
+            queryset = queryset.filter(des_edo__icontains=search)
+        return queryset.order_by('des_edo')
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
 @api_view(['POST'])
@@ -345,7 +344,7 @@ class MunicipioListView(LoginRequiredMixin, ListView):
     model = Municipios
     template_name = 'pages/municipios.html'
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -353,15 +352,15 @@ class MunicipioListView(LoginRequiredMixin, ListView):
         estado = self.request.GET.get('estado', '')
         
         if search:
-            queryset = queryset.filter(des_municipio__icontains=search)
+            queryset = queryset.filter(des_mpo__icontains=search)
         if estado:
             queryset = queryset.filter(estado__co_estado=estado)
 
-        return queryset.select_related('estado').order_by('des_municipio')
+        return queryset.select_related('estado').order_by('des_mpo')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['estados'] = Estados.objects.all()  # Agregar la lista de estados
+        context['estados'] = Estados.objects.filter(status=True)
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -379,13 +378,14 @@ def municipio_create(request):
 @api_view(['PUT'])
 def municipio_update(request, pk):
     try:
-        municipio = Municipios.objects.get(co_municipio=pk)
+        municipio = Municipios.objects.get(co_mpo=pk)
         estado = Estados.objects.get(co_estado=request.data.get('estado'))
         
         serializer = MunicipioSerializer(municipio, data={
-            'co_municipio': request.data.get('co_municipio'),
-            'des_municipio': request.data.get('des_municipio'),
-            'estado': estado.co_estado
+            'co_mpo': request.data.get('co_mpo'),
+            'des_mpo': request.data.get('des_mpo'),
+            'estado': estado.co_estado,
+            'status': request.data.get('status')
         })
         
         if serializer.is_valid():
@@ -411,7 +411,7 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
     model = Parroquias
     template_name = 'pages/parroquias.html'
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -421,7 +421,7 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
         if search:
             queryset = queryset.filter(des_parroquia__icontains=search)
         if municipio:
-            queryset = queryset.filter(municipio__co_municipio=municipio)
+            queryset = queryset.filter(municipio__co_mpo=municipio)
 
         return queryset.select_related('municipio').order_by('des_parroquia')
     
@@ -446,12 +446,13 @@ def parroquia_create(request):
 def parroquia_update(request, pk):
     try:
         parroquia = Parroquias.objects.get(co_parroquia=pk)
-        municipio = Municipios.objects.get(co_municipio=request.data.get('municipio'))
+        municipio = Municipios.objects.get(co_mpo=request.data.get('municipio'))
         
         serializer = ParroquiaSerializer(parroquia, data={
             'co_parroquia': request.data.get('co_parroquia'),
             'des_parroquia': request.data.get('des_parroquia'),
-            'municipio': municipio.co_municipio
+            'municipio': municipio.co_mpo,
+            'status': request.data.get('status')
         })
         
         if serializer.is_valid():
@@ -477,7 +478,7 @@ class SectorListView(LoginRequiredMixin, ListView):
     model = Sectores
     template_name = 'pages/sectores.html'
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -517,7 +518,8 @@ def sector_update(request, pk):
         serializer = SectorSerializer(sector, data={
             'co_sector': request.data.get('co_sector'),
             'des_sector': request.data.get('des_sector'),
-            'parroquia': parroquia.co_parroquia
+            'parroquia': parroquia.co_parroquia,
+            'status': request.data.get('status')
         })
         
         if serializer.is_valid():
@@ -543,7 +545,7 @@ class EntidadesListView(LoginRequiredMixin, ListView):
     model = Entidades
     template_name = 'pages/entidades.html'
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -612,7 +614,7 @@ class RepresentantesListView(LoginRequiredMixin, ListView):
     model = Representantes
     template_name = 'pages/representantes.html'
     context_object_name = 'registros'
-    paginate_by = 10
+    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()

@@ -48,24 +48,33 @@
             <tr>
                 <th>Código</th>
                 <th>Estado</th>
+                <th>Status</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for estado in registros %}
             <tr>
-                <td>{{ estado.co_estado }}</td>
-                <td>{{ estado.des_estado }}</td>
+                <td>{{ estado.co_edo }}</td>
+                <td>{{ estado.des_edo }}</td>
+                <td class="text-center">
+                    {% if estado.status %}
+                    <span class="badge bg-success color-palette">Activo</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
                 <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
-                            data-target="#editModal" data-co-estado="{{ estado.co_estado }}" 
-                            data-des-estado="{{ estado.des_estado }}">
+                            data-target="#editModal" data-co-estado="{{ estado.co_edo }}" 
+                            data-des-estado="{{ estado.des_edo }}"
+                            data-stats="{{ estado.status }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ estado.co_estado }}" 
-                            data-nombre="{{ estado.des_estado }}">
+                            data-codigo="{{ estado.co_edo }}" 
+                            data-nombre="{{ estado.des_edo }}">
                             <i class='bx bx-trash' ></i>
                     </button>
                 </td>
@@ -89,13 +98,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="co_estado">Código</label>
-                        <input type="text" class="form-control" id="co_estado" name="co_estado" required>
+                    <div class="form-group">                                
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
+                            <label class="custom-control-label" for="customSwitch1">Activo</label>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="des_estado">Nombre</label>
-                        <input type="text" class="form-control" id="des_estado" name="des_estado" required>
+                        <label for="co_edo">Código</label>
+                        <input type="text" class="form-control" id="co_edo" name="co_edo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="des_edo">Nombre</label>
+                        <input type="text" class="form-control" id="des_edo" name="des_edo" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -121,13 +136,19 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <div class="form-group">                                
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="edit-status" name="status">
+                                <label class="custom-control-label" for="edit-status">Activo</label>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="edit-code">Código</label>
-                            <input type="text" class="form-control" id="edit-code" name="co_estado" required readonly>
+                            <input type="text" class="form-control" id="edit-code" name="co_edo" required readonly>
                         </div>
                         <div class="form-group">
                             <label for="edit-nombre">Nombre</label>
-                            <input type="text" class="form-control" id="edit-nombre" name="des_estado" required>
+                            <input type="text" class="form-control" id="edit-nombre" name="des_edo" required>
                         </div>
                     </div>
                 </div>
@@ -153,8 +174,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar el estado "<span id="delete-des_estado"></span>"?</p>
-                    <input type="hidden" id="delete-co_estado" name="co_estado">
+                    <p>¿Estás seguro de que deseas eliminar el estado "<span id="delete-des_edo"></span>"?</p>
+                    <input type="hidden" id="delete-co_edo" name="co_edo">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -181,53 +202,53 @@
 <script src="{% static '3atech/js/ui-modals.js' %}"></script>
 
 <!-- page script -->
-<script>
-  $(function () {
-    $("#example1").DataTable({
-      responsive: true,
-      autoWidth: false,
-      language: {
-        sProcessing: "Procesando...",
-        sLengthMenu: "Mostrar _MENU_ registros",
-        sZeroRecords: "No se encontraron registros",
-        sEmptyTable: "No hay datos disponibles en la tabla",
-        sInfo:
-          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-        sInfoPostFix: "",
-        sSearch: "Buscar:",
-        sUrl: "",
-        sInfoThousands: ",",
-        sLoadingRecords: "Cargando...",
-        oPaginate: {
-          sFirst: "Primero",
-          sLast: "Último",
-          sNext: "Siguiente",
-          sPrevious: "Anterior",
-        },
-        oAria: {
-          sSortAscending:
-            ": Activar para ordenar la columna de manera ascendente",
-          sSortDescending:
-            ": Activar para ordenar la columna de manera descendente",
-        },
-      },
-    });
-    $("#example2").DataTable({
-      paging: true,
-      lengthChange: false,
-      searching: false,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      responsive: true,
-    });
-  });
-</script>
 
 <script type="text/javascript">
   $(function () {
+
+    $("#example1").DataTable({
+        responsive: true,
+        autoWidth: true,
+        language: {
+          sProcessing: "Procesando...",
+          sLengthMenu: "Mostrar _MENU_ registros",
+          sZeroRecords: "No se encontraron registros",
+          sEmptyTable: "No hay datos disponibles en la tabla",
+          sInfo:
+            "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+          sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+          sInfoPostFix: "",
+          sSearch: "Buscar:",
+          sUrl: "",
+          sInfoThousands: ",",
+          sLoadingRecords: "Cargando...",
+          oPaginate: {
+            sFirst: "Primero",
+            sLast: "Último",
+            sNext: "Siguiente",
+            sPrevious: "Anterior",
+          },
+          oAria: {
+            sSortAscending:
+              ": Activar para ordenar la columna de manera ascendente",
+            sSortDescending:
+              ": Activar para ordenar la columna de manera descendente",
+          },
+        },
+      });
+
+    $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": false,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+
+
     {% for message in messages %}
           var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
           var messageText = "{{ message }}"; // Obtiene el texto del mensaje
@@ -249,12 +270,14 @@
     // Script para manejar la carga de datos en los modales
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var co_estado = button.data('coEstado');
-        var des_estado = button.data('desEstado');
-
+        var co_edo = button.data('coEstado');
+        var des_edo = button.data('desEstado');
+        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+        
         var modal = $(this);
-        modal.find('#edit-code').val(co_estado);
-        modal.find('#edit-nombre').val(des_estado);
+        modal.find('#edit-code').val(co_edo);
+        modal.find('#edit-nombre').val(des_edo);
+        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {
@@ -266,8 +289,8 @@
         console.log('nombre:', nombre); // Para depuración
         
         var modal = $(this);
-        modal.find('#delete-co_estado').val(codigo);
-        modal.find('#delete-des_estado').text(nombre);
+        modal.find('#delete-co_edo').val(codigo);
+        modal.find('#delete-des_edo').text(nombre);
     });
 
     // Script para manejar la creación de un nuevo estado
@@ -314,6 +337,16 @@
     $('#editForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
         var codigo = $('#edit-code').val(); // Obtener el ID del estado
+
+        var formData = $(this).serializeArray();
+        // Convertir el estado a booleano
+        formData = formData.map(function(item) {
+            if (item.name === 'status') {
+                item.value = item.value === 'on' ? 'true' : 'false';
+            }
+            return item;
+        });
+
         $.ajax({
             type: 'PUT',
             url: '/estados/' + codigo + '/editar/', // URL para editar un estado
@@ -351,7 +384,7 @@
     // Script para manejar la eliminación de un estado
     $('#deleteForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_estado').val(); // Obtener el ID del estado
+        var id = $('#delete-co_edo').val(); // Obtener el ID del estado
         $.ajax({
             type: 'DELETE',
             url: '/estados/' + id + '/eliminar/', // URL para eliminar un estado

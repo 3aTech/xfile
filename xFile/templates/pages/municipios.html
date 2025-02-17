@@ -5,6 +5,10 @@
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static '3atech/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}" />
 <link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
+
+<!-- Select2 -->
+<link rel="stylesheet" href="{% static '3atech/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static '3atech/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
 {% endblock extrahead %} 
 
 {% block title %}Gestión de Municipios{% endblock title %} 
@@ -49,27 +53,36 @@
                 <th>Código</th>
                 <th>Municipio</th>
                 <th>Estado</th>
+                <th>Status</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for municipio in registros %}
             <tr>
-                <td>{{ municipio.co_municipio }}</td>
-                <td>{{ municipio.des_municipio }}</td>
+                <td>{{ municipio.co_mpo }}</td>
+                <td>{{ municipio.des_mpo }}</td>
                 <td>{{ municipio.estado }}</td>
-                <td>
+                <td class="text-center">
+                    {% if municipio.status %}
+                    <span class="badge bg-success color-palette">Activo</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
-                            data-co-municipio="{{ municipio.co_municipio }}"
-                            data-des-municipio="{{ municipio.des_municipio }}"
-                            data-estado="{{ municipio.estado.co_estado }}">
+                            data-co-municipio="{{ municipio.co_mpo }}"
+                            data-des-municipio="{{ municipio.des_mpo }}"
+                            data-estado="{{ municipio.estado.co_edo  }}"
+                            data-stats="{{ municipio.status }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ municipio.co_municipio }}" 
-                            data-nombre="{{ municipio.des_municipio }}">
+                            data-codigo="{{ municipio.co_mpo }}" 
+                            data-nombre="{{ municipio.des_mpo }}">
                             <i class='bx bx-trash' ></i>
                     </button>
                 </td>
@@ -93,13 +106,19 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="co_municipio">Código</label>
-                        <input type="text" class="form-control" id="co_municipio" name="co_municipio" required>
+                    <div class="form-group">                                
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" {% if municipio.status %}checked{% endif %}>
+                            <label class="custom-control-label" for="customSwitch1">Activo</label>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="des_municipio">Nombre</label>
-                        <input type="text" class="form-control" id="des_municipio" name="des_municipio" required>
+                        <label for="co_mpo">Código</label>
+                        <input type="text" class="form-control" id="co_mpo" name="co_mpo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="des_mpo">Nombre</label>
+                        <input type="text" class="form-control" id="des_mpo" name="des_mpo" required>
                     </div>
                     <div class="form-group">
                         <label for="estado" class="form-label">Estado</label>
@@ -107,14 +126,10 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
-                            <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
-                                <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un estado</option>
+                            <select class="form-control select2bs4" id="estado" name="estado" required aria-label="estado">
+                                <option value="" disabled selected>Seleccione un Estado</option>
                                 {% for estado in estados %}
-                                    <option value="{{ estado.co_estado }}" {% if object.estado.co_estado == estado.co_estado %}selected{% endif %}>
-                                        {{ estado.co_estado }} - {{ estado.des_estado }}
-                                    </option>
-                                {% empty %}
-                                    <option value="">No hay estados disponibles</option>
+                                    <option value="{{ estado.co_edo }}">{{ estado.co_edo }} - {{ estado.des_edo }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -143,12 +158,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="edit-status" name="status" {% if municipio.status %}checked{% endif %}>
+                            <label class="custom-control-label" for="edit-status">Activo</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="edit-code">Código</label>
-                        <input type="text" class="form-control" id="edit-code" name="co_municipio" required readonly>
+                        <input type="text" class="form-control" id="edit-code" name="co_mpo" required readonly>
                     </div>
                     <div class="form-group">
                         <label for="edit-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="edit-nombre" name="des_municipio" required>
+                        <input type="text" class="form-control" id="edit-nombre" name="des_mpo" required>
                     </div>
                     <div class="form-group">
                         <label for="edit-estado" class="form-label">Estado</label>
@@ -157,10 +178,10 @@
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
                             <select class="form-control select2bs4" id="edit-estado" name="estado" required aria-label="estado">
-                                <option value="" disabled>Seleccione un estado</option>
+                                <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Estado</option>
                                 {% for estado in estados %}
-                                    <option value="{{ estado.co_estado }}" {% if estado.co_estado == object.estado.co_estado %}selected{% endif %}>
-                                        {{ estado.co_estado }} - {{ estado.des_estado }}
+                                    <option value="{{ estado.co_edo }}" {% if object.estado.co_edo == estado.co_edo %}selected{% endif %}>
+                                        {{ estado.co_edo }} - {{ estado.des_edo }}
                                     </option>
                                 {% empty %}
                                     <option value="">No hay estados disponibles</option>
@@ -191,8 +212,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar el municipio "<span id="delete-des_municipio"></span>"?</p>
-                    <input type="hidden" id="delete-co_municipio" name="co_municipio">
+                    <p>¿Estás seguro de que deseas eliminar el municipio "<span id="delete-des_mpo"></span>"?</p>
+                    <input type="hidden" id="delete-co_mpo" name="co_mpo">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -206,260 +227,273 @@
 {% endblock %}
 
 {% block scripts %}
-  <!-- Bootstrap Switch -->
-  <script src="{% static '3atech/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+    <!-- Select2 -->
+    <script src="{% static '3atech/plugins/select2/js/select2.js' %}"></script>
+    <script src="{% static '3atech/plugins/select2/js/select2.full.min.js' %}"></script>
+    <!-- Bootstrap Switch -->
+    <script src="{% static '3atech/plugins/bootstrap-switch/js/bootstrap-switch.min.js' %}"></script>
+    <!-- DataTables -->
+    <script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <!-- Page JS -->
+    <script src="{% static '3atech/js/ui-modals.js' %}"></script>
 
-<!-- DataTables -->
-<script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-<script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
-<script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
-<script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <!-- page script -->
+    <script type="text/javascript">
+        $(function () {
+    
+        //Initialize Select2 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: "Seleccione un Estado",
+            allowClear: true,
+            minimumResultsForSearch: 1
+        })
 
-<!-- Page JS -->
-<script src="{% static '3atech/js/ui-modals.js' %}"></script>
-
-<!-- page script -->
-<script>
-  $(function () {
-    $("#example1").DataTable({
-      responsive: true,
-      autoWidth: false,
-      language: {
-        sProcessing: "Procesando...",
-        sLengthMenu: "Mostrar _MENU_ registros",
-        sZeroRecords: "No se encontraron registros",
-        sEmptyTable: "No hay datos disponibles en la tabla",
-        sInfo:
-          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-        sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-        sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-        sInfoPostFix: "",
-        sSearch: "Buscar:",
-        sUrl: "",
-        sInfoThousands: ",",
-        sLoadingRecords: "Cargando...",
-        oPaginate: {
-          sFirst: "Primero",
-          sLast: "Último",
-          sNext: "Siguiente",
-          sPrevious: "Anterior",
-        },
-        oAria: {
-          sSortAscending:
-            ": Activar para ordenar la columna de manera ascendente",
-          sSortDescending:
-            ": Activar para ordenar la columna de manera descendente",
-        },
-      },
-    });
-    $("#example2").DataTable({
-      paging: true,
-      lengthChange: false,
-      searching: false,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      responsive: true,
-    });
-  });
-</script>
-
-<script type="text/javascript">
-  $(function () {
-    {% for message in messages %}
-          var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
-          var messageText = "{{ message }}"; // Obtiene el texto del mensaje
-
-          if (messageType === 'success') {
-              Swal.fire({        
-                type: 'success',
-                title: 'Éxito!',
-                text: messageText,   
-                showConfirmButton: false,   
-                timer: 3000,  
+        $("#example1").DataTable({
+            responsive: true,
+            autoWidth: true,
+            language: {
+                sProcessing: "Procesando...",
+                sLengthMenu: "Mostrar _MENU_ registros",
+                sZeroRecords: "No se encontraron registros",
+                sEmptyTable: "No hay datos disponibles en la tabla",
+                sInfo:
+                "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+                sInfoPostFix: "",
+                sSearch: "Buscar:",
+                sUrl: "",
+                sInfoThousands: ",",
+                sLoadingRecords: "Cargando...",
+                oPaginate: {
+                sFirst: "Primero",
+                sLast: "Último",
+                sNext: "Siguiente",
+                sPrevious: "Anterior",
+                },
+                oAria: {
+                sSortAscending:
+                    ": Activar para ordenar la columna de manera ascendente",
+                sSortDescending:
+                    ": Activar para ordenar la columna de manera descendente",
+                },
+            },
             });
-          }
-      {% endfor %}
-  });
-</script>
-
-<script>
-    // Script para manejar la carga de datos en los modales
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var co_municipio = button.data('coMunicipio');
-        var des_municipio = button.data('desMunicipio');
-        var estado = button.data('estado');
-
-        var modal = $(this);
-        modal.find('#edit-code').val(co_municipio);
-        modal.find('#edit-nombre').val(des_municipio);
-        modal.find('#edit-estado').val(estado).trigger('change');
-    });
-
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var codigo = button.data('codigo');
-        var nombre = button.data('nombre');
-                
-        var modal = $(this);
-        modal.find('#delete-co_municipio').val(codigo);
-        modal.find('#delete-des_municipio').text(nombre);
-    });
-
-    // Script para manejar la creación de un nuevo municipio
-    $('#createForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        $.ajax({
-            type: 'POST',
-            url: '/municipios/crear/', // URL para crear un municipio
-            data: $(this).serialize(),
-            headers: {
-                'X-CSRFToken': csrftoken // Incluye el token CSRF
-            },
-            success: function (response) {
-                // Manejar la respuesta exitosa
-                Swal.fire({
-                    title: 'Éxito!',
-                    text: 'Municipio creado correctamente.',
+    
+        $('#example2').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            });
+    
+    
+        {% for message in messages %}
+                var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
+                var messageText = "{{ message }}"; // Obtiene el texto del mensaje
+    
+                if (messageType === 'success') {
+                    Swal.fire({        
                     type: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
+                    title: 'Éxito!',
+                    text: messageText,   
+                    showConfirmButton: false,   
+                    timer: 3000,  
                 });
-            },
-            error: function (xhr) {
-                // Manejar errores
-                let errorMessage = 'Ocurrió un error.';
-
-                // Verifica si el error es por CSRF
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
                 }
-
-                Swal.fire({
-                    title: 'Error!',
-                    text: errorMessage,
-                    type: 'error',
-                    confirmButtonText: 'Aceptar'
-                });
-            }
+            {% endfor %}
         });
-    });
+    </script>
 
-    // Script para manejar la actualización de un municipio
-    $('#editForm').on('submit', function (event) {
-        event.preventDefault();
-        var codigo = $('#edit-code').val(); // Usar el código del municipio
-        $.ajax({
-            type: 'PUT',
-            url: '/municipios/' + codigo + '/editar/',
-            data: {
-                co_municipio: $('#edit-code').val(),
-                des_municipio: $('#edit-nombre').val(),
-                estado: $('#edit-estado').val()
-            },
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
-            success: function (response) {
-                Swal.fire({
-                    title: 'Éxito!',
-                    text: 'Municipio actualizado correctamente.',
-                    type: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    location.reload();
-                });
-            },
-            error: function (xhr) {
-                let errorMessage = 'Ocurrió un error.';
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail;
+
+    <script>
+        // Script para manejar la carga de datos en los modales
+        $('#editModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var co_mpo = button.data('coMunicipio');
+            var des_mpo = button.data('desMunicipio');
+            var estado = button.data('estado');
+            var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+
+            var modal = $(this);
+            modal.find('#edit-code').val(co_mpo);
+            modal.find('#edit-nombre').val(des_mpo);
+            modal.find('#edit-estado').val(estado).trigger('change');
+            modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
+        });
+
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var codigo = button.data('codigo');
+            var nombre = button.data('nombre');
+                    
+            var modal = $(this);
+            modal.find('#delete-co_mpo').val(codigo);
+            modal.find('#delete-des_mpo').text(nombre);
+        });
+
+        // Script para manejar la creación de un nuevo municipio
+        $('#createForm').on('submit', function (event) {
+            event.preventDefault(); // Evita el envío normal del formulario
+            $.ajax({
+                type: 'POST',
+                url: '/municipios/crear/', // URL para crear un municipio
+                data: $(this).serialize(),
+                headers: {
+                    'X-CSRFToken': csrftoken // Incluye el token CSRF
+                },
+                success: function (response) {
+                    // Manejar la respuesta exitosa
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Municipio creado correctamente.',
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload(); // Recargar la página para ver los cambios
+                    });
+                },
+                error: function (xhr) {
+                    // Manejar errores
+                    let errorMessage = 'Ocurrió un error.';
+
+                    // Verifica si el error es por CSRF
+                    if (xhr.responseJSON && xhr.responseJSON.detail) {
+                        errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                    }
+
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
                 }
-                Swal.fire({
-                    title: 'Error!',
-                    text: errorMessage,
-                    type: 'error',
-                    confirmButtonText: 'Aceptar'
-                });
+            });
+        });
+
+        // Script para manejar la actualización de un municipio
+        $('#editForm').on('submit', function (event) {
+            event.preventDefault();
+            var codigo = $('#edit-code').val(); // Usar el código del municipio
+
+            var formData = $(this).serializeArray();
+            // Convertir el estado a booleano
+            formData = formData.map(function(item) {
+                if (item.name === 'status') {
+                    item.value = item.value === 'on' ? 'true' : 'false';
+                }
+                return item;
+            });
+
+            $.ajax({
+                type: 'PUT',
+                url: '/municipios/' + codigo + '/editar/',
+                data: {
+                    co_mpo: $('#edit-code').val(),
+                    des_mpo: $('#edit-nombre').val(),
+                    estado: $('#edit-estado').val()
+                },
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Municipio actualizado correctamente.',
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function (xhr) {
+                    let errorMessage = 'Ocurrió un error.';
+                    if (xhr.responseJSON && xhr.responseJSON.detail) {
+                        errorMessage = xhr.responseJSON.detail;
+                    }
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        });
+
+        // Script para manejar la eliminación de un municipio
+        $('#deleteForm').on('submit', function (event) {
+            event.preventDefault(); // Evita el envío normal del formulario
+            var id = $('#delete-co_mpo').val(); // Obtener el ID del municipio
+            $.ajax({
+                type: 'DELETE',
+                url: '/municipios/' + id + '/eliminar/', // URL para eliminar un municipio
+                success: function (response) {
+                    // Manejar la respuesta exitosa
+                    Swal.fire({
+                        title: 'Éxito!',
+                        text: 'Municipio eliminado correctamente.',
+                        type: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        location.reload(); // Recargar la página para ver los cambios
+                    });
+                },
+                error: function (xhr) {
+                    // Manejar errores
+                    let errorMessage = 'Ocurrió un error.';
+
+                    // Verifica si el error es por CSRF
+                    if (xhr.responseJSON && xhr.responseJSON.detail) {
+                        errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                    }
+    
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        type: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        });
+    
+        // Obtener el token CSRF de la cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Verifica si este es el cookie que buscamos
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+
+        // Incluir el token CSRF en los encabezados de la solicitud AJAX
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    // Si no es una solicitud a otro dominio, agrega el token CSRF
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
             }
         });
-    });
 
-    // Script para manejar la eliminación de un municipio
-    $('#deleteForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_municipio').val(); // Obtener el ID del municipio
-        $.ajax({
-            type: 'DELETE',
-            url: '/municipios/' + id + '/eliminar/', // URL para eliminar un municipio
-            success: function (response) {
-                // Manejar la respuesta exitosa
-                Swal.fire({
-                    title: 'Éxito!',
-                    text: 'Municipio eliminado correctamente.',
-                    type: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
-                });
-            },
-            error: function (xhr) {
-                 // Manejar errores
-                 let errorMessage = 'Ocurrió un error.';
-
-                 // Verifica si el error es por CSRF
-                 if (xhr.responseJSON && xhr.responseJSON.detail) {
-                     errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
-                 }
- 
-                 Swal.fire({
-                     title: 'Error!',
-                     text: errorMessage,
-                     type: 'error',
-                     confirmButtonText: 'Aceptar'
-                 });
-            }
-        });
-    });
-
-    <!-- Obtener el token CSRF de la cookie -->
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Verifica si este es el cookie que buscamos
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-const csrftoken = getCookie('csrftoken');
-
-// Incluir el token CSRF en los encabezados de la solicitud AJAX
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-            // Si no es una solicitud a otro dominio, agrega el token CSRF
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
-
-$(document).ready(function() {
-    $('#estado').select2bs4({
-        placeholder: "Seleccione un Estado",
-        allowClear: true
-    });
-});
-</script>
-
-
+    </script>
 {% endblock scripts %}

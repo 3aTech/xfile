@@ -1,0 +1,352 @@
+[
+    {
+        "model": "formulario.Estados",
+        "pk": "AMA",
+        "fields": {
+            "co_edo": "AMA",
+            "des_edo": "AMAZONAS",
+            "iso_3166_2": "VE-X",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "ANZ",
+        "fields": {
+            "co_edo": "ANZ",
+            "des_edo": "ANZOÁTEGUI",
+            "iso_3166_2": "VE-B",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "APU",
+        "fields": {
+            "co_edo": "APU",
+            "des_edo": "APURE",
+            "iso_3166_2": "VE-C",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "ARA",
+        "fields": {
+            "co_edo": "ARA",
+            "des_edo": "ARAGUA",
+            "iso_3166_2": "VE-D",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "BAR",
+        "fields": {
+            "co_edo": "BAR",
+            "des_edo": "BARINAS",
+            "iso_3166_2": "VE-E",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "BOL",
+        "fields": {
+            "co_edo": "BOL",
+            "des_edo": "BOLÍVAR",
+            "iso_3166_2": "VE-F",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "CAR",
+        "fields": {
+            "co_edo": "CAR",
+            "des_edo": "CARABOBO",
+            "iso_3166_2": "VE-G",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "COJ",
+        "fields": {
+            "co_edo": "COJ",
+            "des_edo": "COJEDES",
+            "iso_3166_2": "VE-H",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "DEL",
+        "fields": {
+            "co_edo": "DEL",
+            "des_edo": "DELTA AMACURO",
+            "iso_3166_2": "VE-Y",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "FAL",
+        "fields": {
+            "co_edo": "FAL",
+            "des_edo": "FALCÓN",
+            "iso_3166_2": "VE-I",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "GUA",
+        "fields": {
+            "co_edo": "GUA",
+            "des_edo": "GUÁRICO",
+            "iso_3166_2": "VE-J",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "LAR",
+        "fields": {
+            "co_edo": "LAR",
+            "des_edo": "LARA",
+            "iso_3166_2": "VE-K",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "MÉR",
+        "fields": {
+            "co_edo": "MÉR",
+            "des_edo": "MÉRIDA",
+            "iso_3166_2": "VE-L",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "MIR",
+        "fields": {
+            "co_edo": "MIR",
+            "des_edo": "MIRANDA",
+            "iso_3166_2": "VE-M",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "MON",
+        "fields": {
+            "co_edo": "MON",
+            "des_edo": "MONAGAS",
+            "iso_3166_2": "VE-N",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "NUE",
+        "fields": {
+            "co_edo": "NUE",
+            "des_edo": "NUEVA ESPARTA",
+            "iso_3166_2": "VE-O",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "POR",
+        "fields": {
+            "co_edo": "POR",
+            "des_edo": "PORTUGUESA",
+            "iso_3166_2": "VE-P",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "SUC",
+        "fields": {
+            "co_edo": "SUC",
+            "des_edo": "SUCRE",
+            "iso_3166_2": "VE-R",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "TÁC",
+        "fields": {
+            "co_edo": "TÁC",
+            "des_edo": "TÁCHIRA",
+            "iso_3166_2": "VE-S",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "TRU",
+        "fields": {
+            "co_edo": "TRU",
+            "des_edo": "TRUJILLO",
+            "iso_3166_2": "VE-T",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "LGR",
+        "fields": {
+            "co_edo": "LGR",
+            "des_edo": "LA GUAIRA",
+            "iso_3166_2": "VE-W",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "YAR",
+        "fields": {
+            "co_edo": "YAR",
+            "des_edo": "YARACUY",
+            "iso_3166_2": "VE-U",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "ZUL",
+        "fields": {
+            "co_edo": "ZUL",
+            "des_edo": "ZULIA",
+            "iso_3166_2": "VE-V",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "DIS",
+        "fields": {
+            "co_edo": "DIS",
+            "des_edo": "DISTRITO CAPITAL",
+            "iso_3166_2": "VE-A",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Estados",
+        "pk": "DEP",
+        "fields": {
+            "co_edo": "DEP",
+            "des_edo": "DEPENDENCIAS FEDERALES",
+            "iso_3166_2": "VE-Z",
+            "status": false,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    }
+]

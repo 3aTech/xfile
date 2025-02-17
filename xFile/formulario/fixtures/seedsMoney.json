@@ -1,0 +1,42 @@
+[
+    {
+        "model": "App.Moneda",
+        "pk": "USDT",
+        "fields": {
+            "co_mon": "USDT",
+            "des_mon": "Tether",
+            "tasa": "1.00000000",
+            "sign": "USDT"
+        }
+    },
+    {
+        "model": "App.Moneda",
+        "pk": "USD",
+        "fields": {
+            "co_mon": "USD",
+            "des_mon": "Dolar Americado",
+            "tasa": "1.00000000",
+            "sign": "<i class=\"fa  fa-dollar \"></i>"
+        }
+    },
+    {
+        "model": "App.Moneda",
+        "pk": "EUR",
+        "fields": {
+            "co_mon": "EUR",
+            "des_mon": "Euros",
+            "tasa": "1.00000000",
+            "sign": "<i class=\"fa  fa-euro \"></i>"
+        }
+    },
+    {
+        "model": "App.Moneda",
+        "pk": "BS",
+        "fields": {
+            "co_mon": "BS",
+            "des_mon": "Bolívares",
+            "tasa": "1.00000000",
+            "sign": "Bs."
+        }
+    }
+]

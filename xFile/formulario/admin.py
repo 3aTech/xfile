@@ -33,7 +33,7 @@ class EstadosResource(resources.ModelResource):
 
 class EstadosAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     search_fields = ['co_edo', 'des_edo']
-    list_display = ['co_edo', 'des_edo']
+    list_display = ['co_edo', 'des_edo', 'iso_3166_2']
     resource_class = EstadosResource
 
 admin.site.register(Estados, EstadosAdmin)
