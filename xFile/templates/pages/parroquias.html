@@ -49,27 +49,36 @@
                 <th>Código</th>
                 <th>Parroquia</th>
                 <th>Municipio</th>
+                <th>Status</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for parroquia in registros %}
             <tr>
-                <td>{{ parroquia.co_parroquia }}</td>
-                <td>{{ parroquia.des_parroquia }}</td>
+                <td>{{ parroquia.co_pquia }}</td>
+                <td>{{ parroquia.des_pquia }}</td>
                 <td>{{ parroquia.municipio }}</td>
+                <td class="text-center">
+                    {% if parroquia.status %}
+                    <span class="badge bg-success color-palette">Activo</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
                 <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
-                            data-co-parroquia="{{ parroquia.co_parroquia }}"
-                            data-des-parroquia="{{ parroquia.des_parroquia }}"
-                            data-municipio="{{ parroquia.municipio.co_municipio }}">
+                            data-co-parroquia="{{ parroquia.co_pquia }}"
+                            data-des-parroquia="{{ parroquia.des_pquia }}"
+                            data-municipio="{{ parroquia.municipio.co_mpo }}"
+                            data-stats="{{ parroquia.status }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ parroquia.co_parroquia }}" 
-                            data-nombre="{{ parroquia.des_parroquia }}">
+                            data-codigo="{{ parroquia.co_pquia }}" 
+                            data-nombre="{{ parroquia.des_pquia }}">
                             <i class='bx bx-trash' ></i>
                     </button>
                 </td>
@@ -93,25 +102,44 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="co_parroquia">Código</label>
-                        <input type="text" class="form-control" id="co_parroquia" name="co_parroquia" required>
+                    <div class="form-group">                                
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" {% if parroquia.status %}checked{% endif %}>
+                            <label class="custom-control-label" for="customSwitch1">Activo</label>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="des_parroquia">Nombre</label>
-                        <input type="text" class="form-control" id="des_parroquia" name="des_parroquia" required>
+                        <label for="co_pquia">Código</label>
+                        <input type="text" class="form-control" id="co_pquia" name="co_pquia" required>
                     </div>
+                    <div class="form-group">
+                        <label for="des_pquia">Nombre</label>
+                        <input type="text" class="form-control" id="des_pquia" name="des_pquia" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Minimal</label>
+                        <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" data-select2-id="17" tabindex="-1" aria-hidden="true">
+                          <option selected="selected" data-select2-id="19">Alabama</option>
+                          <option data-select2-id="103">Alaska</option>
+                          <option data-select2-id="104">California</option>
+                          <option data-select2-id="105">Delaware</option>
+                          <option data-select2-id="106">Tennessee</option>
+                          <option data-select2-id="107">Texas</option>
+                          <option data-select2-id="108">Washington</option>
+                        </select><span class="select2 select2-container select2-container--bootstrap4 select2-container--below select2-container--focus" dir="ltr" data-select2-id="18" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-i8v7-container"><span class="select2-selection__rendered" id="select2-i8v7-container" role="textbox" aria-readonly="true" title="Alabama">Alabama</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
+                      </div>
+
                     <div class="form-group">
                         <label for="municipio" class="form-label">Municipio</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
-                            <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                            <select class="form-control select2bs4" id="municipio" name="municipio" required aria-label="municipio">
                                 <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un municipio</option>
                                 {% for municipio in municipios %}
-                                    <option value="{{ municipio.co_municipio }}" {% if object.municipio.co_municipio == municipio.co_municipio %}selected{% endif %}>
-                                        {{ municipio.co_municipio }} - {{ municipio.des_municipio }}
+                                    <option value="{{ municipio.co_mpo }}" {% if object.municipio.co_mpo == municipio.co_mpo %}selected{% endif %}>
+                                        {{ municipio.co_mpo }} - {{ municipio.des_mpo }}
                                     </option>
                                 {% empty %}
                                     <option value="">No hay municipios disponibles</option>
@@ -143,12 +171,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="edit-status" name="status" {% if parroquia.status %}checked{% endif %}>
+                            <label class="custom-control-label" for="edit-status">Activo</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="edit-code">Código</label>
-                        <input type="text" class="form-control" id="edit-code" name="co_parroquia" required readonly>
+                        <input type="text" class="form-control" id="edit-code" name="co_pquia" required readonly>
                     </div>
                     <div class="form-group">
                         <label for="edit-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="edit-nombre" name="des_parroquia" required>
+                        <input type="text" class="form-control" id="edit-nombre" name="des_pquia" required>
                     </div>
                     <div class="form-group">
                         <label for="edit-municipio" class="form-label">Municipio</label>
@@ -159,8 +193,8 @@
                             <select class="form-control select2bs4" id="edit-municipio" name="municipio" required aria-label="municipio">
                                 <option value="" disabled>Seleccione un municipio</option>
                                 {% for municipio in municipios %}
-                                    <option value="{{ municipio.co_municipio }}" {% if municipio.co_municipio == object.municipio.co_municipio %}selected{% endif %}>
-                                        {{ municipio.co_municipio }} - {{ municipio.des_municipio }}
+                                    <option value="{{ municipio.co_mpo }}" {% if municipio.co_mpo == object.municipio.co_mpo %}selected{% endif %}>
+                                        {{ municipio.co_mpo }} - {{ municipio.des_mpo }}
                                     </option>
                                 {% empty %}
                                     <option value="">No hay municipios disponibles</option>
@@ -191,8 +225,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar el parroquia "<span id="delete-des_parroquia"></span>"?</p>
-                    <input type="hidden" id="delete-co_parroquia" name="co_parroquia">
+                    <p>¿Estás seguro de que deseas eliminar el parroquia "<span id="delete-des_pquia"></span>"?</p>
+                    <input type="hidden" id="delete-co_pquia" name="co_pquia">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -287,14 +321,16 @@
     // Script para manejar la carga de datos en los modales
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var co_parroquia = button.data('coParroquia');
-        var des_parroquia = button.data('desParroquia');
+        var co_pquia = button.data('coParroquia');
+        var des_pquia = button.data('desParroquia');
         var municipio = button.data('municipio');
+        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
 
         var modal = $(this);
-        modal.find('#edit-code').val(co_parroquia);
-        modal.find('#edit-nombre').val(des_parroquia);
+        modal.find('#edit-code').val(co_pquia);
+        modal.find('#edit-nombre').val(des_pquia);
         modal.find('#edit-municipio').val(municipio).trigger('change');
+        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {
@@ -306,8 +342,8 @@
         console.log('nombre:', nombre); // Para depuración
         
         var modal = $(this);
-        modal.find('#delete-co_parroquia').val(codigo);
-        modal.find('#delete-des_parroquia').text(nombre);
+        modal.find('#delete-co_pquia').val(codigo);
+        modal.find('#delete-des_pquia').text(nombre);
     });
 
     // Script para manejar la creación de un nuevo parroquia
@@ -359,9 +395,10 @@
             type: 'PUT',
             url: '/parroquias/' + codigo + '/editar/',  // Ajusta esta URL según tu configuración
             data: JSON.stringify({
-                'co_parroquia': $('#edit-code').val(),
-                'des_parroquia': $('#edit-nombre').val(),
+                'co_pquia': $('#edit-code').val(),
+                'des_pquia': $('#edit-nombre').val(),
                 'municipio': $('#edit-municipio').val()
+                'status': $('#edit-status').val()
             }),
             contentType: 'application/json',
             headers: {
@@ -395,7 +432,7 @@
     // Script para manejar la eliminación de un parroquia
     $('#deleteForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_parroquia').val(); // Obtener el ID del parroquia
+        var id = $('#delete-co_pquia').val(); // Obtener el ID del parroquia
         $.ajax({
             type: 'DELETE',
             url: '/parroquias/' + id + '/eliminar/', // URL para eliminar un parroquia
@@ -464,6 +501,19 @@ $(document).ready(function() {
         allowClear: true
     });
 });
+</script>
+
+<script>
+    $(function () {
+      //Initialize Select2 Elements
+      $('.select2').select2()
+  
+      //Initialize Select2 Elements
+      $('.select2bs4').select2({
+        theme: 'bootstrap4'
+      })
+  
+    })
 </script>
 
 

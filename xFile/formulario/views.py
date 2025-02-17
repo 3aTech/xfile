@@ -39,7 +39,7 @@ def get_municipios(request):
     estado_id = request.GET.get('estado')
     if not estado_id:
         return Response({"error": "El estado es requerido."}, status=status.HTTP_400_BAD_REQUEST)
-    municipios = Municipios.objects.filter(estado__co_estado=estado_id)
+    municipios = Municipios.objects.filter(estado__co_edo=estado_id)
     serializer = MunicipioSerializer(municipios, many=True)
     return Response(serializer.data)
 
@@ -419,11 +419,11 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
         municipio = self.request.GET.get('municipio', '')
         
         if search:
-            queryset = queryset.filter(des_parroquia__icontains=search)
+            queryset = queryset.filter(des_pquia__icontains=search)
         if municipio:
             queryset = queryset.filter(municipio__co_mpo=municipio)
 
-        return queryset.select_related('municipio').order_by('des_parroquia')
+        return queryset.select_related('municipio').order_by('des_pquia')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -445,12 +445,12 @@ def parroquia_create(request):
 @api_view(['PUT'])
 def parroquia_update(request, pk):
     try:
-        parroquia = Parroquias.objects.get(co_parroquia=pk)
+        parroquia = Parroquias.objects.get(co_pquia=pk)
         municipio = Municipios.objects.get(co_mpo=request.data.get('municipio'))
         
         serializer = ParroquiaSerializer(parroquia, data={
-            'co_parroquia': request.data.get('co_parroquia'),
-            'des_parroquia': request.data.get('des_parroquia'),
+            'co_pquia': request.data.get('co_pquia'),
+            'des_pquia': request.data.get('des_pquia'),
             'municipio': municipio.co_mpo,
             'status': request.data.get('status')
         })
@@ -488,7 +488,7 @@ class SectorListView(LoginRequiredMixin, ListView):
         if search:
             queryset = queryset.filter(des_sector__icontains=search)
         if parroquia:
-            queryset = queryset.filter(parroquia__co_parroquia=parroquia)
+            queryset = queryset.filter(parroquia__co_pquia=parroquia)
 
         return queryset.select_related('parroquia').order_by('des_sector')
     
@@ -513,12 +513,12 @@ def sector_create(request):
 def sector_update(request, pk):
     try:
         sector = Sectores.objects.get(co_sector=pk)
-        parroquia = Parroquias.objects.get(co_parroquia=request.data.get('parroquia'))
+        parroquia = Parroquias.objects.get(co_pquia=request.data.get('parroquia'))
         
         serializer = SectorSerializer(sector, data={
             'co_sector': request.data.get('co_sector'),
             'des_sector': request.data.get('des_sector'),
-            'parroquia': parroquia.co_parroquia,
+            'parroquia': parroquia.co_pquia,
             'status': request.data.get('status')
         })
         

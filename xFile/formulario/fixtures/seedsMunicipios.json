@@ -71,9 +71,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "MAR",
+        "pk": "060",
         "fields": {
-            "co_mpo": "MAR",
+            "co_mpo": "060",
             "des_mpo": "MAROA",
             "estado": "AMA",
             "status": true,
@@ -477,9 +477,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SFE",
+        "pk": "046",
         "fields": {
-            "co_mpo": "SFE",
+            "co_mpo": "046",
             "des_mpo": "SAN FERNANDO",
             "estado": "APU",
             "status": true,
@@ -505,9 +505,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "BOL",
+        "pk": "038",
         "fields": {
-            "co_mpo": "BOL",
+            "co_mpo": "038",
             "des_mpo": "BOLÍVAR",
             "estado": "ARA",
             "status": true,
@@ -897,9 +897,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAR",
+        "pk": "002",
         "fields": {
-            "co_mpo": "CAR",
+            "co_mpo": "002",
             "des_mpo": "SOSA",
             "estado": "BAR",
             "status": true,
@@ -1429,9 +1429,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAR",
+        "pk": "003",
         "fields": {
-            "co_mpo": "CAR",
+            "co_mpo": "003",
             "des_mpo": "TUCUPITA",
             "estado": "DEL",
             "status": true,
@@ -1443,9 +1443,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "COL",
+        "pk": "053",
         "fields": {
-            "co_mpo": "COL",
+            "co_mpo": "053",
             "des_mpo": "ACOSTA",
             "estado": "FAL",
             "status": true,
@@ -1947,9 +1947,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "TOR",
+        "pk": "032",
         "fields": {
-            "co_mpo": "TOR",
+            "co_mpo": "032",
             "des_mpo": "SAN GERÓNIMO DE GUAYABAL",
             "estado": "GUA",
             "status": true,
@@ -2283,9 +2283,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAR",
+        "pk": "004",
         "fields": {
-            "co_mpo": "CAR",
+            "co_mpo": "004",
             "des_mpo": "LIBERTADOR",
             "estado": "LAR",
             "status": true,
@@ -2451,9 +2451,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAR",
+        "pk": "005",
         "fields": {
-            "co_mpo": "CAR",
+            "co_mpo": "005",
             "des_mpo": "ACEVEDO",
             "estado": "MIR",
             "status": true,
@@ -2857,9 +2857,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "MAR",
+        "pk": "062",
         "fields": {
-            "co_mpo": "MAR",
+            "co_mpo": "062",
             "des_mpo": "PIAR",
             "estado": "MON",
             "status": true,
@@ -2955,9 +2955,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAR",
+        "pk": "007",
         "fields": {
-            "co_mpo": "CAR",
+            "co_mpo": "007",
             "des_mpo": "GARCÍA",
             "estado": "NUE",
             "status": true,
@@ -3249,9 +3249,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAR",
+        "pk": "008",
         "fields": {
-            "co_mpo": "CAR",
+            "co_mpo": "008",
             "des_mpo": "SUCRE",
             "estado": "POR",
             "status": true,
@@ -3277,9 +3277,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "JFM",
+        "pk": "011",
         "fields": {
-            "co_mpo": "JFM",
+            "co_mpo": "011",
             "des_mpo": "ANDRÉS ELOY BLANCO",
             "estado": "SUC",
             "status": true,
@@ -3305,9 +3305,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "LCE",
+        "pk": "012",
         "fields": {
-            "co_mpo": "LCE",
+            "co_mpo": "012",
             "des_mpo": "ARISMENDI",
             "estado": "SUC",
             "status": true,
@@ -3417,9 +3417,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "VAR",
+        "pk": "023",
         "fields": {
-            "co_mpo": "VAR",
+            "co_mpo": "023",
             "des_mpo": "MEJÍA",
             "estado": "SUC",
             "status": true,
@@ -3445,9 +3445,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "BRU",
+        "pk": "049",
         "fields": {
-            "co_mpo": "BRU",
+            "co_mpo": "049",
             "des_mpo": "RIBERO",
             "estado": "SUC",
             "status": true,
@@ -3557,9 +3557,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "URA",
+        "pk": "047",
         "fields": {
-            "co_mpo": "URA",
+            "co_mpo": "047",
             "des_mpo": "CÓRDOBA",
             "estado": "TAC",
             "status": true,
@@ -3613,9 +3613,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAT",
+        "pk": "050",
         "fields": {
-            "co_mpo": "CAT",
+            "co_mpo": "050",
             "des_mpo": "GUÁSIMOS",
             "estado": "TAC",
             "status": true,
@@ -3627,9 +3627,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "COL",
+        "pk": "052",
         "fields": {
-            "co_mpo": "COL",
+            "co_mpo": "052",
             "des_mpo": "INDEPENDENCIA",
             "estado": "TAC",
             "status": true,
@@ -3641,9 +3641,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "FJP",
+        "pk": "054",
         "fields": {
-            "co_mpo": "FJP",
+            "co_mpo": "054",
             "des_mpo": "JÁUREGUI",
             "estado": "TAC",
             "status": true,
@@ -3655,9 +3655,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "JEL",
+        "pk": "055",
         "fields": {
-            "co_mpo": "JEL",
+            "co_mpo": "055",
             "des_mpo": "JOSÉ MARÍA VARGAS",
             "estado": "TAC",
             "status": true,
@@ -3725,9 +3725,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "MAR",
+        "pk": "061",
         "fields": {
-            "co_mpo": "MAR",
+            "co_mpo": "061",
             "des_mpo": "MICHELENA",
             "estado": "TAC",
             "status": true,
@@ -3781,9 +3781,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "VER",
+        "pk": "024",
         "fields": {
-            "co_mpo": "VER",
+            "co_mpo": "024",
             "des_mpo": "SAMUEL DARÍO MALDONADO",
             "estado": "TAC",
             "status": true,
@@ -3795,9 +3795,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "YAR",
+        "pk": "039",
         "fields": {
-            "co_mpo": "YAR",
+            "co_mpo": "039",
             "des_mpo": "SAN CRISTÓBAL",
             "estado": "TAC",
             "status": true,
@@ -3809,9 +3809,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SIL",
+        "pk": "030",
         "fields": {
-            "co_mpo": "SIL",
+            "co_mpo": "030",
             "des_mpo": "SEBORUCO",
             "estado": "TAC",
             "status": true,
@@ -3823,9 +3823,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SIM",
+        "pk": "028",
         "fields": {
-            "co_mpo": "SIM",
+            "co_mpo": "028",
             "des_mpo": "SIMÓN RODRÍGUEZ",
             "estado": "TAC",
             "status": true,
@@ -3837,9 +3837,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SUC",
+        "pk": "018",
         "fields": {
-            "co_mpo": "SUC",
+            "co_mpo": "018",
             "des_mpo": "SUCRE",
             "estado": "TAC",
             "status": true,
@@ -3851,9 +3851,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "TOR",
+        "pk": "031",
         "fields": {
-            "co_mpo": "TOR",
+            "co_mpo": "031",
             "des_mpo": "TORBES",
             "estado": "TAC",
             "status": true,
@@ -3865,9 +3865,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "URI",
+        "pk": "034",
         "fields": {
-            "co_mpo": "URI",
+            "co_mpo": "034",
             "des_mpo": "URIBANTE",
             "estado": "TAC",
             "status": true,
@@ -3879,9 +3879,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SJT",
+        "pk": "035",
         "fields": {
-            "co_mpo": "SJT",
+            "co_mpo": "035",
             "des_mpo": "SAN JUDAS TADEO",
             "estado": "TAC",
             "status": true,
@@ -3921,9 +3921,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "BOL",
+        "pk": "036",
         "fields": {
-            "co_mpo": "BOL",
+            "co_mpo": "036",
             "des_mpo": "BOLÍVAR",
             "estado": "TRU",
             "status": true,
@@ -3949,9 +3949,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAR",
+        "pk": "009",
         "fields": {
-            "co_mpo": "CAR",
+            "co_mpo": "009",
             "des_mpo": "CARACHE",
             "estado": "TRU",
             "status": true,
@@ -3963,9 +3963,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "ESC",
+        "pk": "010",
         "fields": {
-            "co_mpo": "ESC",
+            "co_mpo": "010",
             "des_mpo": "ESCUQUE",
             "estado": "TRU",
             "status": true,
@@ -4047,9 +4047,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "MOT",
+        "pk": "013",
         "fields": {
-            "co_mpo": "MOT",
+            "co_mpo": "013",
             "des_mpo": "MOTATÁN",
             "estado": "TRU",
             "status": true,
@@ -4061,9 +4061,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "PAM",
+        "pk": "014",
         "fields": {
-            "co_mpo": "PAM",
+            "co_mpo": "014",
             "des_mpo": "PAMPÁN",
             "estado": "TRU",
             "status": true,
@@ -4089,9 +4089,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "RRA",
+        "pk": "015",
         "fields": {
-            "co_mpo": "RRA",
+            "co_mpo": "015",
             "des_mpo": "RAFAEL RANGEL",
             "estado": "TRU",
             "status": true,
@@ -4103,9 +4103,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SRC",
+        "pk": "016",
         "fields": {
-            "co_mpo": "SRC",
+            "co_mpo": "016",
             "des_mpo": "SAN RAFAEL DE CARVAJAL",
             "estado": "TRU",
             "status": true,
@@ -4117,9 +4117,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SUC",
+        "pk": "020",
         "fields": {
-            "co_mpo": "SUC",
+            "co_mpo": "020",
             "des_mpo": "SUCRE",
             "estado": "TRU",
             "status": true,
@@ -4131,9 +4131,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "TRU",
+        "pk": "021",
         "fields": {
-            "co_mpo": "TRU",
+            "co_mpo": "021",
             "des_mpo": "TRUJILLO",
             "estado": "TRU",
             "status": true,
@@ -4201,9 +4201,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "BOL",
+        "pk": "037",
         "fields": {
-            "co_mpo": "BOL",
+            "co_mpo": "037",
             "des_mpo": "BOLÍVAR",
             "estado": "YAR",
             "status": true,
@@ -4229,9 +4229,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "COC",
+        "pk": "048",
         "fields": {
-            "co_mpo": "COC",
+            "co_mpo": "048",
             "des_mpo": "COCOROTE",
             "estado": "YAR",
             "status": true,
@@ -4257,9 +4257,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "JAP",
+        "pk": "041",
         "fields": {
-            "co_mpo": "JAP",
+            "co_mpo": "041",
             "des_mpo": "JOSÉ ANTONIO PÁEZ",
             "estado": "YAR",
             "status": true,
@@ -4271,9 +4271,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "LTR",
+        "pk": "042",
         "fields": {
-            "co_mpo": "LTR",
+            "co_mpo": "042",
             "des_mpo": "LA TRINIDAD",
             "estado": "YAR",
             "status": true,
@@ -4285,9 +4285,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "MMG",
+        "pk": "043",
         "fields": {
-            "co_mpo": "MMG",
+            "co_mpo": "043",
             "des_mpo": "MANUEL MONGE",
             "estado": "YAR",
             "status": true,
@@ -4299,9 +4299,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "NIR",
+        "pk": "044",
         "fields": {
-            "co_mpo": "NIR",
+            "co_mpo": "044",
             "des_mpo": "NIRGUA",
             "estado": "YAR",
             "status": true,
@@ -4327,9 +4327,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SFE",
+        "pk": "045",
         "fields": {
-            "co_mpo": "SFE",
+            "co_mpo": "045",
             "des_mpo": "SAN FELIPE",
             "estado": "YAR",
             "status": true,
@@ -4341,9 +4341,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SUC",
+        "pk": "017",
         "fields": {
-            "co_mpo": "SUC",
+            "co_mpo": "017",
             "des_mpo": "SUCRE",
             "estado": "YAR",
             "status": true,
@@ -4369,9 +4369,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "VER",
+        "pk": "025",
         "fields": {
-            "co_mpo": "VER",
+            "co_mpo": "025",
             "des_mpo": "JOSÉ JOAQUÍN VEROES",
             "estado": "YAR",
             "status": true,
@@ -4411,9 +4411,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "CAB",
+        "pk": "051",
         "fields": {
-            "co_mpo": "CAB",
+            "co_mpo": "051",
             "des_mpo": "CABIMAS",
             "estado": "ZUL",
             "status": true,
@@ -4495,9 +4495,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "JMS",
+        "pk": "057",
         "fields": {
-            "co_mpo": "JMS",
+            "co_mpo": "057",
             "des_mpo": "JESÚS MARÍA SEMPRÚN",
             "estado": "ZUL",
             "status": true,
@@ -4509,9 +4509,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "LCU",
+        "pk": "056",
         "fields": {
-            "co_mpo": "LCU",
+            "co_mpo": "056",
             "des_mpo": "LA CAÑADA DE URDANETA",
             "estado": "ZUL",
             "status": true,
@@ -4523,9 +4523,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "LAG",
+        "pk": "001",
         "fields": {
-            "co_mpo": "LAG",
+            "co_mpo": "001",
             "des_mpo": "LAGUNILLAS",
             "estado": "ZUL",
             "status": true,
@@ -4537,9 +4537,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "MAP",
+        "pk": "058",
         "fields": {
-            "co_mpo": "MAP",
+            "co_mpo": "058",
             "des_mpo": "MACHIQUES DE PERIJÁ",
             "estado": "ZUL",
             "status": true,
@@ -4551,9 +4551,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "MAR",
+        "pk": "059",
         "fields": {
-            "co_mpo": "MAR",
+            "co_mpo": "059",
             "des_mpo": "MARA",
             "estado": "ZUL",
             "status": true,
@@ -4607,9 +4607,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "VER",
+        "pk": "027",
         "fields": {
-            "co_mpo": "VER",
+            "co_mpo": "027",
             "des_mpo": "SAN FRANCISCO",
             "estado": "ZUL",
             "status": true,
@@ -4621,9 +4621,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "YAR",
+        "pk": "040",
         "fields": {
-            "co_mpo": "YAR",
+            "co_mpo": "040",
             "des_mpo": "SANTA RITA",
             "estado": "ZUL",
             "status": true,
@@ -4635,9 +4635,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SIL",
+        "pk": "029",
         "fields": {
-            "co_mpo": "SIL",
+            "co_mpo": "029",
             "des_mpo": "SIMÓN BOLÍVAR",
             "estado": "ZUL",
             "status": true,
@@ -4663,9 +4663,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "SUC",
+        "pk": "019",
         "fields": {
-            "co_mpo": "SUC",
+            "co_mpo": "019",
             "des_mpo": "VALMORE RODRÍGUEZ",
             "estado": "ZUL",
             "status": true,
@@ -4677,9 +4677,9 @@
     },
     {
         "model": "formulario.Municipios",
-        "pk": "TOR",
+        "pk": "033",
         "fields": {
-            "co_mpo": "TOR",
+            "co_mpo": "033",
             "des_mpo": "LIBERTADOR",
             "estado": "DIS",
             "status": true,
