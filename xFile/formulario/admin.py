@@ -45,8 +45,8 @@ class MunicipiosResource(resources.ModelResource):
         model = Municipios
 
 class MunicipiosAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ['co_mpo', 'des_mpo']
-    list_display = ['co_mpo', 'des_mpo']
+    search_fields = ['co_mpo', 'des_mpo', 'estado']
+    list_display = ['co_mpo', 'des_mpo', 'estado']
     resource_class = MunicipiosResource
 
 admin.site.register(Municipios, MunicipiosAdmin)

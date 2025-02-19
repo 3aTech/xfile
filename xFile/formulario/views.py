@@ -12,6 +12,7 @@ from .serializers import (DatosSerializer,
                           EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer,
                           EntidadesSerializer, RepresentanteSerializer)
 from rest_framework import status
+from django.db.models import ProtectedError
 
 # Vista para obtener sector según la parroquia
 @api_view(['GET'])
@@ -334,10 +335,25 @@ def estado_update(request, pk):
 
 @api_view(['DELETE'])
 def estado_delete(request, pk):
-    estado = Estados.objects.get(pk=pk)
-    estado.delete()
-    return Response({'message': 'Estado eliminado exitosamente.'}, status=204)
-
+    try:
+        estado = Estados.objects.get(pk=pk)
+        estado.delete()
+        return Response({'message': 'Estado eliminado exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
+    except ProtectedError:
+        return Response(
+            {'error': 'protected_relation', 'message': 'No se puede eliminar el estado porque tiene municipios asociados.'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    except Estados.DoesNotExist:
+        return Response(
+            {'error': 'not_found', 'message': 'Estado no encontrado.'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': 'server_error', 'message': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 # Vistas para Municipio
 class MunicipioListView(LoginRequiredMixin, ListView):
@@ -354,9 +370,9 @@ class MunicipioListView(LoginRequiredMixin, ListView):
         if search:
             queryset = queryset.filter(des_mpo__icontains=search)
         if estado:
-            queryset = queryset.filter(estado__co_estado=estado)
+            queryset = queryset.filter(estado__co_edo=estado)
 
-        return queryset.select_related('estado').order_by('des_mpo')
+        return queryset.select_related('estado').order_by('estado')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -379,12 +395,12 @@ def municipio_create(request):
 def municipio_update(request, pk):
     try:
         municipio = Municipios.objects.get(co_mpo=pk)
-        estado = Estados.objects.get(co_estado=request.data.get('estado'))
+        estado = Estados.objects.get(co_edo=request.data.get('estado'))
         
         serializer = MunicipioSerializer(municipio, data={
             'co_mpo': request.data.get('co_mpo'),
             'des_mpo': request.data.get('des_mpo'),
-            'estado': estado.co_estado,
+            'estado': estado.co_edo,
             'status': request.data.get('status')
         })
         
@@ -392,7 +408,11 @@ def municipio_update(request, pk):
             serializer.save(us_mo=request.user.username)
             return Response({'message': 'Municipio actualizado exitosamente.'}, status=200)
         else:
-            return Response(serializer.errors, status=400)
+            # Devolver errores de validación detallados
+            errors = {}
+            for field, error_list in serializer.errors.items():
+                errors[field] = [str(error) for error in error_list]
+            return Response({'error': 'Error de validación', 'details': errors}, status=400)
     except Municipios.DoesNotExist:
         return Response({'error': 'Municipio no encontrado.'}, status=404)
     except Estados.DoesNotExist:
@@ -402,9 +422,25 @@ def municipio_update(request, pk):
 
 @api_view(['DELETE'])
 def municipio_delete(request, pk):
-    municipio = Municipios.objects.get(pk=pk)
-    municipio.delete()
-    return Response({'message': 'Municipio eliminado exitosamente.'}, status=204)
+    try:
+        municipio = Municipios.objects.get(pk=pk)
+        municipio.delete()
+        return Response({'message': 'Municipio eliminado exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
+    except ProtectedError:
+        return Response(
+            {'error': 'protected_relation', 'message': 'No se puede eliminar el municipios porque tiene parroquias asociadas.'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    except Estados.DoesNotExist:
+        return Response(
+            {'error': 'not_found', 'message': 'Municipios no encontrado.'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': 'server_error', 'message': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 # Vistas para Parroquia
 class ParroquiaListView(LoginRequiredMixin, ListView):

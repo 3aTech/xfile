@@ -108,7 +108,7 @@
                 <div class="modal-body">
                     <div class="form-group">                                
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" {% if municipio.status %}checked{% endif %}>
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
                             <label class="custom-control-label" for="customSwitch1">Activo</label>
                         </div>
                     </div>
@@ -284,17 +284,6 @@
             },
             });
     
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-            });
-    
-    
         {% for message in messages %}
                 var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
                 var messageText = "{{ message }}"; // Obtiene el texto del mensaje
@@ -314,61 +303,41 @@
 
 
     <script>
-        // Script para manejar la carga de datos en los modales
-        $('#editModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var co_mpo = button.data('coMunicipio');
-            var des_mpo = button.data('desMunicipio');
-            var estado = button.data('estado');
-            var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
-
-            var modal = $(this);
-            modal.find('#edit-code').val(co_mpo);
-            modal.find('#edit-nombre').val(des_mpo);
-            modal.find('#edit-estado').val(estado).trigger('change');
-            modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
-        });
-
-        $('#deleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var codigo = button.data('codigo');
-            var nombre = button.data('nombre');
-                    
-            var modal = $(this);
-            modal.find('#delete-co_mpo').val(codigo);
-            modal.find('#delete-des_mpo').text(nombre);
-        });
 
         // Script para manejar la creación de un nuevo municipio
         $('#createForm').on('submit', function (event) {
-            event.preventDefault(); // Evita el envío normal del formulario
+            event.preventDefault();
+            var formData = $(this).serializeArray();
+            // No filtrar campos vacíos para la dirección
             $.ajax({
                 type: 'POST',
                 url: '/municipios/crear/', // URL para crear un municipio
-                data: $(this).serialize(),
+                data: $(this).serialize(), // Usar serialize() en lugar de $.param(formData)
                 headers: {
-                    'X-CSRFToken': csrftoken // Incluye el token CSRF
+                    'X-CSRFToken': csrftoken
                 },
                 success: function (response) {
-                    // Manejar la respuesta exitosa
                     Swal.fire({
                         title: 'Éxito!',
                         text: 'Municipio creado correctamente.',
                         type: 'success',
                         confirmButtonText: 'Aceptar'
                     }).then(() => {
-                        location.reload(); // Recargar la página para ver los cambios
+                        location.reload();
                     });
                 },
                 error: function (xhr) {
-                    // Manejar errores
                     let errorMessage = 'Ocurrió un error.';
-
-                    // Verifica si el error es por CSRF
-                    if (xhr.responseJSON && xhr.responseJSON.detail) {
-                        errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                    if (xhr.responseJSON) {
+                        // Si hay errores específicos del formulario
+                        if (xhr.responseJSON.errors) {
+                            errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
+                        }
+                        // Si hay un mensaje de error general
+                        else if (xhr.responseJSON.detail) {
+                            errorMessage = xhr.responseJSON.detail;
+                        }
                     }
-
                     Swal.fire({
                         title: 'Error!',
                         text: errorMessage,
@@ -378,6 +347,24 @@
                 }
             });
         });
+            
+        // Script para manejar la carga de datos en los modales
+        $('#editModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var co_mpo = button.data('coMunicipio');
+            var des_mpo = button.data('desMunicipio');
+            var estado = button.data('estado');
+            var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+
+            console.log('codigo:', co_mpo); // Para depuración
+            console.log('nombre:', des_mpo); // Para depuración
+
+            var modal = $(this);
+            modal.find('#edit-code').val(co_mpo);
+            modal.find('#edit-nombre').val(des_mpo);
+            modal.find('#edit-estado').val(estado).trigger('change');
+            modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
+        });   
 
         // Script para manejar la actualización de un municipio
         $('#editForm').on('submit', function (event) {
@@ -399,7 +386,7 @@
                 data: {
                     co_mpo: $('#edit-code').val(),
                     des_mpo: $('#edit-nombre').val(),
-                    estado: $('#edit-estado').val()
+                    estado: $('#edit-estado').val(),
                     status: $('#edit-status').val()
                 },
                 headers: {
@@ -428,6 +415,19 @@
                     });
                 }
             });
+        });
+
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var codigo = button.data('codigo');
+            var nombre = button.data('nombre');
+
+            console.log('codigo:', codigo); // Para depuración
+            console.log('nombre:', nombre); // Para depuración
+                    
+            var modal = $(this);
+            modal.find('#delete-co_mpo').val(codigo);
+            modal.find('#delete-des_mpo').text(nombre);
         });
 
         // Script para manejar la eliminación de un municipio

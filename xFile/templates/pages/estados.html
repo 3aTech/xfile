@@ -210,89 +210,53 @@
         responsive: true,
         autoWidth: true,
         language: {
-          sProcessing: "Procesando...",
-          sLengthMenu: "Mostrar _MENU_ registros",
-          sZeroRecords: "No se encontraron registros",
-          sEmptyTable: "No hay datos disponibles en la tabla",
-          sInfo:
+            sProcessing: "Procesando...",
+            sLengthMenu: "Mostrar _MENU_ registros",
+            sZeroRecords: "No se encontraron registros",
+            sEmptyTable: "No hay datos disponibles en la tabla",
+            sInfo:
             "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-          sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
-          sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-          sInfoPostFix: "",
-          sSearch: "Buscar:",
-          sUrl: "",
-          sInfoThousands: ",",
-          sLoadingRecords: "Cargando...",
-          oPaginate: {
+            sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+            sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+            sInfoPostFix: "",
+            sSearch: "Buscar:",
+            sUrl: "",
+            sInfoThousands: ",",
+            sLoadingRecords: "Cargando...",
+            oPaginate: {
             sFirst: "Primero",
             sLast: "Último",
             sNext: "Siguiente",
             sPrevious: "Anterior",
-          },
-          oAria: {
+            },
+            oAria: {
             sSortAscending:
-              ": Activar para ordenar la columna de manera ascendente",
+                ": Activar para ordenar la columna de manera ascendente",
             sSortDescending:
-              ": Activar para ordenar la columna de manera descendente",
-          },
+                ": Activar para ordenar la columna de manera descendente",
+            },
         },
-      });
-
-    $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": false,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
+        });
 
 
-    {% for message in messages %}
-          var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
-          var messageText = "{{ message }}"; // Obtiene el texto del mensaje
+        {% for message in messages %}
+            var messageType = "{{ message.tags }}"; // Obtiene el tipo de mensaje
+            var messageText = "{{ message }}"; // Obtiene el texto del mensaje
 
-          if (messageType === 'success') {
-              Swal.fire({        
-                type: 'success',
-                title: 'Éxito!',
-                text: messageText,   
-                showConfirmButton: false,   
-                timer: 3000,  
-            });
-          }
-      {% endfor %}
+            if (messageType === 'success') {
+                Swal.fire({        
+                    type: 'success',
+                    title: 'Éxito!',
+                    text: messageText,   
+                    showConfirmButton: false,   
+                    timer: 3000,  
+                });
+            }
+        {% endfor %}
   });
 </script>
 
 <script>
-    // Script para manejar la carga de datos en los modales
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var co_edo = button.data('coEstado');
-        var des_edo = button.data('desEstado');
-        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
-        
-        var modal = $(this);
-        modal.find('#edit-code').val(co_edo);
-        modal.find('#edit-nombre').val(des_edo);
-        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
-    });
-
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var codigo = button.data('codigo');
-        var nombre = button.data('nombre');
-        
-        console.log('codigo:', codigo); // Para depuración
-        console.log('nombre:', nombre); // Para depuración
-        
-        var modal = $(this);
-        modal.find('#delete-co_edo').val(codigo);
-        modal.find('#delete-des_edo').text(nombre);
-    });
-
     // Script para manejar la creación de un nuevo estado
     $('#createForm').on('submit', function (event) {
         event.preventDefault(); // Evita el envío normal del formulario
@@ -332,6 +296,21 @@
             }
         });
     });
+
+    // Script para manejar la carga de datos en los modales
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var co_edo = button.data('coEstado');
+        var des_edo = button.data('desEstado');
+        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+        
+        var modal = $(this);
+        modal.find('#edit-code').val(co_edo);
+        modal.find('#edit-nombre').val(des_edo);
+        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
+    });
+
+    
 
     // Script para manejar la actualización de un estado
     $('#editForm').on('submit', function (event) {
@@ -381,39 +360,52 @@
         });
     });
 
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var codigo = button.data('codigo');
+        var nombre = button.data('nombre');
+                
+        var modal = $(this);
+        modal.find('#delete-co_edo').val(codigo);
+        modal.find('#delete-des_edo').text(nombre);
+    });
+
     // Script para manejar la eliminación de un estado
     $('#deleteForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_edo').val(); // Obtener el ID del estado
+        event.preventDefault();
+        var id = $('#delete-co_edo').val();
         $.ajax({
             type: 'DELETE',
-            url: '/estados/' + id + '/eliminar/', // URL para eliminar un estado
+            url: '/estados/' + id + '/eliminar/',
             success: function (response) {
-                // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Estado eliminado correctamente.',
+                    text: response.message || 'Estado eliminado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
+                    location.reload();
                 });
             },
             error: function (xhr) {
-                 // Manejar errores
-                 let errorMessage = 'Ocurrió un error.';
+                let errorMessage = 'Ocurrió un error.';
+                
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.error === 'protected_relation') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.error === 'not_found') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                }
 
-                 // Verifica si el error es por CSRF
-                 if (xhr.responseJSON && xhr.responseJSON.detail) {
-                     errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
-                 }
- 
-                 Swal.fire({
-                     title: 'Error!',
-                     text: errorMessage,
-                     type: 'error',
-                     confirmButtonText: 'Aceptar'
-                 });
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
             }
         });
     });

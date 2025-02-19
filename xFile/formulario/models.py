@@ -141,7 +141,7 @@ class Municipios(ModeloAuditoria):
     class Meta:
         verbose_name = 'Municipio'
         verbose_name_plural = 'Municipios'
-        ordering = ['des_mpo']
+        ordering = ['estado']
 
     def save(self, *args, **kwargs):
         if not self.us_in:

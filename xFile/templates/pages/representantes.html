@@ -179,17 +179,17 @@
                         </div>    
                     </div>
                     <div class="row mb-3"> 
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <label for="region" class="form-label">Región</label>
                             <div class="input-group mb-3">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text"><i class='bx bxs-map-alt' ></i></span>
-                              </div>
-                              <input type="text" class="form-control" id="region" name="region" 
-                              aria-label="Región" placeholder="Región">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-alt' ></i></span>
+                                </div>
+                                <input type="text" class="form-control" id="region" name="region" 
+                                aria-label="Región" placeholder="Región">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <label for="entidad" class="form-label">Representante de</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -299,7 +299,7 @@
                         </div>    
                     </div>
                     <div class="row mb-3"> 
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <label for="edit-region" class="form-label">Región</label>
                             <div class="input-group mb-3">
                               <div class="input-group-prepend">
@@ -309,7 +309,7 @@
                               aria-label="Región" placeholder="Región">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <label for="edit-entidad" class="form-label">Representante de</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -386,21 +386,32 @@
             // Inicializar DataTable
             $("#example1").DataTable({
                 responsive: true,
-                autoWidth: false,
+                autoWidth: true,
                 language: {
                     sProcessing: "Procesando...",
                     sLengthMenu: "Mostrar _MENU_ registros",
                     sZeroRecords: "No se encontraron registros",
                     sEmptyTable: "No hay datos disponibles en la tabla",
-                    sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    sInfo:
+                    "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
                     sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
                     sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+                    sInfoPostFix: "",
                     sSearch: "Buscar:",
+                    sUrl: "",
+                    sInfoThousands: ",",
+                    sLoadingRecords: "Cargando...",
                     oPaginate: {
-                        sFirst: "Primero",
-                        sLast: "Último",
-                        sNext: "Siguiente",
-                        sPrevious: "Anterior",
+                    sFirst: "Primero",
+                    sLast: "Último",
+                    sNext: "Siguiente",
+                    sPrevious: "Anterior",
+                    },
+                    oAria: {
+                    sSortAscending:
+                        ": Activar para ordenar la columna de manera ascendente",
+                    sSortDescending:
+                        ": Activar para ordenar la columna de manera descendente",
                     },
                 },
             });
