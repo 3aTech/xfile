@@ -104,7 +104,7 @@
                 <div class="modal-body">
                     <div class="form-group">                                
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" {% if parroquia.status %}checked{% endif %}>
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
                             <label class="custom-control-label" for="customSwitch1">Activo</label>
                         </div>
                     </div>
@@ -117,25 +117,49 @@
                         <input type="text" class="form-control" id="des_pquia" name="des_pquia" required>
                     </div>
                     <div class="form-group">
-                        <label>Minimal</label>
-                        <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" data-select2-id="17" tabindex="-1" aria-hidden="true">
-                          <option selected="selected" data-select2-id="19">Alabama</option>
-                          <option data-select2-id="103">Alaska</option>
-                          <option data-select2-id="104">California</option>
-                          <option data-select2-id="105">Delaware</option>
-                          <option data-select2-id="106">Tennessee</option>
-                          <option data-select2-id="107">Texas</option>
-                          <option data-select2-id="108">Washington</option>
-                        </select><span class="select2 select2-container select2-container--bootstrap4 select2-container--below select2-container--focus" dir="ltr" data-select2-id="18" style="width: 100%;"><span class="selection"><span class="select2-selection select2-selection--single" role="combobox" aria-haspopup="true" aria-expanded="false" tabindex="0" aria-disabled="false" aria-labelledby="select2-i8v7-container"><span class="select2-selection__rendered" id="select2-i8v7-container" role="textbox" aria-readonly="true" title="Alabama">Alabama</span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span></span></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>
-                      </div>
-
+                        <label for="estado" class="form-label">Estado</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                            </div>
+                            <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
+                                <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Estado</option>
+                                {% for estado in estados %}
+                                    <option value="{{ estado.co_edo  }}" {% if object.estado.co_edo  == estado.co_edo  %}selected{% endif %}>
+                                        {{ estado.co_edo  }} - {{ estado.des_edo  }}
+                                    </option>
+                                {% empty %}
+                                    <option value="">No hay estados disponibles</option>
+                                {% endfor %}
+                              </select>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="municipio" class="form-label">Municipio</label>
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
-                            <select class="form-control select2bs4" id="municipio" name="municipio" required aria-label="municipio">
+                            <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                              <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
+                              {% for municipio in municipios %}
+                                  <option value="{{ municipio.co_mpo }}" {% if object.municipio.co_mpo == municipio.co_mpo %}selected{% endif %}>
+                                      {{ municipio.co_mpo }} - {{ municipio.des_mpo }}
+                                  </option>
+                              {% empty %}
+                                  <option value="">No hay municipios disponibles</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="municipio" class="form-label">Municipio</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                            </div>
+                            <select class="form-control select2bs4 select2-hidden-accessible" style="width: 100%;" data-select2-id="17" tabindex="-1" aria-hidden="true"" id="municipio" name="municipio" required aria-label="municipio">
                                 <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un municipio</option>
                                 {% for municipio in municipios %}
                                     <option value="{{ municipio.co_mpo }}" {% if object.municipio.co_mpo == municipio.co_mpo %}selected{% endif %}>
@@ -286,15 +310,7 @@
         },
       },
     });
-    $("#example2").DataTable({
-      paging: true,
-      lengthChange: false,
-      searching: false,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      responsive: true,
-    });
+   
   });
 </script>
 
@@ -397,7 +413,7 @@
             data: JSON.stringify({
                 'co_pquia': $('#edit-code').val(),
                 'des_pquia': $('#edit-nombre').val(),
-                'municipio': $('#edit-municipio').val()
+                'municipio': $('#edit-municipio').val(),
                 'status': $('#edit-status').val()
             }),
             contentType: 'application/json',
@@ -514,6 +530,41 @@ $(document).ready(function() {
       })
   
     })
+
+    function cargarMunicipios() {
+        const estadoId = document.getElementById('estado').value;
+        fetch(`/api/municipios/?estado=${estadoId}`)
+            .then(response => response.json())
+            .then(data => {
+                const municipioSelect = document.getElementById('municipio');
+                municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+                data.forEach(municipio => {
+                    municipioSelect.innerHTML += `<option value="${municipio.co_municipio}">${municipio.co_municipio} - ${municipio.des_municipio}</option>`;
+                });
+                // Si hay un municipio seleccionado, lo seleccionamos
+                if ("{{ object.municipio.co_municipio }}" !== "") {
+                    municipioSelect.value = "{{ object.municipio.co_municipio }}";
+                    cargarParroquias(); // Cargar parroquias para el municipio seleccionado
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar los municipios:', error);
+            });
+    }
+
+    $(document).ready(function() {
+        $('#estado').select2bs4({
+            placeholder: "Seleccione un Estado",
+            allowClear: true
+        });
+    });
+
+    $(document).ready(function() {
+        $('#municipio').select2bs4({
+            placeholder: "Seleccione un Municipio",
+            allowClear: true
+        });
+    });
 </script>
 
 
