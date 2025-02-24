@@ -90,7 +90,7 @@
         <div class="modal-content">
             <form method="post" id="createForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-primary">
                     <h5 class="modal-title" id="createModalLabel">Agregar Entidad</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -169,7 +169,7 @@
         <div class="modal-content">
             <form method="post" id="editForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-success">
                     <h5 class="modal-title" id="editModalLabel">Editar Entidad</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -236,7 +236,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                    <button type="submit" class="btn btn-success">Actualizar</button>
                 </div>
             </form>
         </div>
@@ -249,7 +249,7 @@
         <div class="modal-content">
             <form method="post" id="deleteForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-danger">
                     <h5 class="modal-title" id="deleteModalLabel">Eliminar Entidad</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -332,6 +332,8 @@
                   type: 'success',
                   confirmButtonText: 'Aceptar'
               }).then(() => {
+                  limpiarModal('createModal');
+                  $('#createModal').modal('hide');
                   location.reload();
               });
           },
@@ -413,6 +415,8 @@
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
+                    limpiarModal('editModal');
+                    $('#editModal').modal('hide');
                     location.reload();
                 });
             },
@@ -458,6 +462,8 @@
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
+                    limpiarModal('deleteModal');
+                    $('#deleteModal').modal('hide');
                     location.reload();
                 });
             },
@@ -493,5 +499,49 @@
   }
 
   const csrftoken = getCookie('csrftoken');
+
+  function limpiarModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+          // Resetear el formulario
+          const form = modal.querySelector('form');
+          if (form) {
+              form.reset();
+          }
+          
+          // Limpiar selects si existen
+          const selects = modal.querySelectorAll('select');
+          selects.forEach(select => {
+              select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+          });
+          
+          // Limpiar validaciones
+          const invalidElements = modal.querySelectorAll('.is-invalid');
+          invalidElements.forEach(element => {
+              element.classList.remove('is-invalid');
+          });
+          
+          // Limpiar mensajes de error
+          const errorMessages = modal.querySelectorAll('.invalid-feedback');
+          errorMessages.forEach(message => {
+              message.remove();
+          });
+      }
+  }
+
+  // Limpiar modal de creación al cerrarse
+  $('#createModal').on('hidden.bs.modal', function () {
+      limpiarModal('createModal');
+  });
+
+  // Limpiar modal de edición al cerrarse
+  $('#editModal').on('hidden.bs.modal', function () {
+      limpiarModal('editModal');
+  });
+
+  // Limpiar modal de eliminación al cerrarse
+  $('#deleteModal').on('hidden.bs.modal', function () {
+      limpiarModal('deleteModal');
+  });
 </script>
 {% endblock %}

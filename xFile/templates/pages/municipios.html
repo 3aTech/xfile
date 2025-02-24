@@ -99,7 +99,7 @@
         <div class="modal-content">
             <form method="post" id="createForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-primary">
                     <h5 class="modal-title" id="createModalLabel">Agregar Municipio</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -150,7 +150,7 @@
         <div class="modal-content">
             <form method="post" id="editForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-success">
                     <h5 class="modal-title" id="editModalLabel">Editar Municipio</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -192,7 +192,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                    <button type="submit" class="btn btn-success">Actualizar</button>
                 </div>
             </form>
         </div>
@@ -205,7 +205,7 @@
         <div class="modal-content">
             <form method="post" id="deleteForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-danger">
                     <h5 class="modal-title" id="deleteModalLabel">Eliminar Municipio</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -303,6 +303,49 @@
 
 
     <script>
+        function limpiarModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                // Resetear el formulario
+                const form = modal.querySelector('form');
+                if (form) {
+                    form.reset();
+                }
+                
+                // Limpiar selects si existen
+                const selects = modal.querySelectorAll('select');
+                selects.forEach(select => {
+                    select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+                });
+                
+                // Limpiar validaciones
+                const invalidElements = modal.querySelectorAll('.is-invalid');
+                invalidElements.forEach(element => {
+                    element.classList.remove('is-invalid');
+                });
+                
+                // Limpiar mensajes de error
+                const errorMessages = modal.querySelectorAll('.invalid-feedback');
+                errorMessages.forEach(message => {
+                    message.remove();
+                });
+            }
+        }
+
+        // Limpiar modal de creación al cerrarse
+        $('#createModal').on('hidden.bs.modal', function () {
+            limpiarModal('createModal');
+        });
+
+        // Limpiar modal de edición al cerrarse
+        $('#editModal').on('hidden.bs.modal', function () {
+            limpiarModal('editModal');
+        });
+
+        // Limpiar modal de eliminación al cerrarse
+        $('#deleteModal').on('hidden.bs.modal', function () {
+            limpiarModal('deleteModal');
+        });
 
         // Script para manejar la creación de un nuevo municipio
         $('#createForm').on('submit', function (event) {
@@ -323,6 +366,8 @@
                         type: 'success',
                         confirmButtonText: 'Aceptar'
                     }).then(() => {
+                        limpiarModal('createModal');
+                        $('#createModal').modal('hide');
                         location.reload();
                     });
                 },
@@ -399,6 +444,8 @@
                         type: 'success',
                         confirmButtonText: 'Aceptar'
                     }).then(() => {
+                        limpiarModal('editModal');
+                        $('#editModal').modal('hide');
                         location.reload();
                     });
                 },
@@ -445,6 +492,8 @@
                         type: 'success',
                         confirmButtonText: 'Aceptar'
                     }).then(() => {
+                        limpiarModal('deleteModal');
+                        $('#deleteModal').modal('hide');
                         location.reload(); // Recargar la página para ver los cambios
                     });
                 },

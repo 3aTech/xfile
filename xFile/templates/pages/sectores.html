@@ -49,27 +49,38 @@
                 <th>Código</th>
                 <th>Sector</th>
                 <th>Parroquia</th>
+                <th>Municipio</th>
+                <th>Estado</th>
+                <th>Status</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for sector in registros %}
             <tr>
-                <td>{{ sector.co_sector }}</td>
-                <td>{{ sector.des_sector }}</td>
-                <td>{{ sector.parroquia }}</td>
+                <td>{{ sector.co_sec }}</td>
+                <td>{{ sector.des_sec }}</td>
+                <td>{{ sector.parroquia.des_pquia }}</td>
+                <td class="text-center">
+                    {% if municipio.status %}
+                    <span class="badge bg-success color-palette">Activo</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
                 <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
-                            data-co-sector="{{ sector.co_sector }}"
-                            data-des-sector="{{ sector.des_sector }}"
-                            data-parroquia="{{ sector.parroquia.co_parroquia }}">
+                            data-co-sec="{{ sector.co_sec }}"
+                            data-des-sec="{{ sector.des_sec }}"
+                            data-parroquia="{{ sector.parroquia.co_pquia }}"
+                            data-stats="{{ sector.status }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ sector.co_sector }}" 
-                            data-nombre="{{ sector.des_sector }}">
+                            data-codigo="{{ sector.co_sec }}" 
+                            data-nombre="{{ sector.des_sec }}">
                             <i class='bx bx-trash' ></i>
                     </button>
                 </td>
@@ -86,20 +97,26 @@
         <div class="modal-content">
             <form method="post" id="createForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-primary">
                     <h5 class="modal-title" id="createModalLabel">Agregar Sector</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label for="co_sector">Código</label>
-                        <input type="text" class="form-control" id="co_sector" name="co_sector" required>
+                    <div class="form-group">                                
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
+                            <label class="custom-control-label" for="customSwitch1">Activo</label>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="des_sector">Nombre</label>
-                        <input type="text" class="form-control" id="des_sector" name="des_sector" required>
+                        <label for="co_sec">Código</label>
+                        <input type="text" class="form-control" id="co_sec" name="co_sec" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="des_sec">Nombre</label>
+                        <input type="text" class="form-control" id="des_sec" name="des_sec" required>
                     </div>
                     <div class="form-group">
                         <label for="parroquia" class="form-label">Parroquia</label>
@@ -110,8 +127,8 @@
                             <select class="form-control select2bs4" id="parroquia" name="parroquia" required onchange="cargarSectors()" aria-label="parroquia">
                                 <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un parroquia</option>
                                 {% for parroquia in parroquias %}
-                                    <option value="{{ parroquia.co_parroquia }}" {% if object.parroquia.co_parroquia == parroquia.co_parroquia %}selected{% endif %}>
-                                        {{ parroquia.co_parroquia }} - {{ parroquia.des_parroquia }}
+                                    <option value="{{ parroquia.co_pquia }}" {% if object.parroquia.co_pquia == parroquia.co_pquia %}selected{% endif %}>
+                                        {{ parroquia.co_pquia }} - {{ parroquia.des_pquia }}
                                     </option>
                                 {% empty %}
                                     <option value="">No hay parroquias disponibles</option>
@@ -135,7 +152,7 @@
         <div class="modal-content">
             <form method="post" id="editForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-success">
                     <h5 class="modal-title" id="editModalLabel">Editar Sector</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -143,12 +160,18 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="edit-status" name="status" {% if municipio.status %}checked{% endif %}>
+                            <label class="custom-control-label" for="edit-status">Activo</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="edit-code">Código</label>
-                        <input type="text" class="form-control" id="edit-code" name="co_sector" required readonly>
+                        <input type="text" class="form-control" id="edit-code" name="co_sec" required readonly>
                     </div>
                     <div class="form-group">
                         <label for="edit-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="edit-nombre" name="des_sector" required>
+                        <input type="text" class="form-control" id="edit-nombre" name="des_sec" required>
                     </div>
                     <div class="form-group">
                         <label for="edit-parroquia" class="form-label">Parroquia</label>
@@ -159,8 +182,8 @@
                             <select class="form-control select2bs4" id="edit-parroquia" name="parroquia" required aria-label="parroquia">
                                 <option value="" disabled>Seleccione un parroquia</option>
                                 {% for parroquia in parroquias %}
-                                    <option value="{{ parroquia.co_parroquia }}" {% if parroquia.co_parroquia == object.parroquia.co_parroquia %}selected{% endif %}>
-                                        {{ parroquia.co_parroquia }} - {{ parroquia.des_parroquia }}
+                                    <option value="{{ parroquia.co_pquia }}" {% if parroquia.co_pquia == object.parroquia.co_pquia %}selected{% endif %}>
+                                        {{ parroquia.co_pquia }} - {{ parroquia.des_pquia }}
                                     </option>
                                 {% empty %}
                                     <option value="">No hay parroquias disponibles</option>
@@ -171,7 +194,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-warning">Actualizar</button>
+                    <button type="submit" class="btn btn-success">Actualizar</button>
                 </div>
             </form>
         </div>
@@ -184,15 +207,15 @@
         <div class="modal-content">
             <form method="post" id="deleteForm">
                 {% csrf_token %}
-                <div class="modal-header">
+                <div class="modal-header bg-danger">
                     <h5 class="modal-title" id="deleteModalLabel">Eliminar Sector</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Estás seguro de que deseas eliminar el sector "<span id="delete-des_sector"></span>"?</p>
-                    <input type="hidden" id="delete-co_sector" name="co_sector">
+                    <p>¿Estás seguro de que deseas eliminar el sector "<span id="delete-des_sec"></span>"?</p>
+                    <input type="hidden" id="delete-co_sec" name="co_sec">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -252,15 +275,6 @@
         },
       },
     });
-    $("#example2").DataTable({
-      paging: true,
-      lengthChange: false,
-      searching: false,
-      ordering: true,
-      info: true,
-      autoWidth: false,
-      responsive: true,
-    });
   });
 </script>
 
@@ -287,57 +301,52 @@
     // Script para manejar la carga de datos en el modal de edición
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var co_sector = button.data('co-sector');
-        var des_sector = button.data('des-sector');
+        var co_sec = button.data('co-sec');
+        var des_sec = button.data('des-sec');
         var parroquia = button.data('parroquia');
+        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+
 
         var modal = $(this);
-        modal.find('#edit-code').val(co_sector);
-        modal.find('#edit-nombre').val(des_sector);
+        modal.find('#edit-code').val(co_sec);
+        modal.find('#edit-nombre').val(des_sec);
         modal.find('#edit-parroquia').val(parroquia).trigger('change');
+        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
+
     });
 
     $('#deleteModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var codigo = button.data('codigo');
         var nombre = button.data('nombre');
-        
-        console.log('codigo:', codigo); // Para depuración
-        console.log('nombre:', nombre); // Para depuración
-        
+                
         var modal = $(this);
-        modal.find('#delete-co_sector').val(codigo);
-        modal.find('#delete-des_sector').text(nombre);
+        modal.find('#delete-co_sec').val(codigo);
+        modal.find('#delete-des_sec').text(nombre);
     });
 
-    // Script para manejar la creación de un nuevo sector
+    // Función para manejar la creación de un sector
     $('#createForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
+        event.preventDefault();
         $.ajax({
             type: 'POST',
-            url: '/sectores/crear/', // Asegúrate de que esta URL sea correcta
+            url: '/sectores/crear/',
             data: $(this).serialize(),
-            headers: {
-                'X-CSRFToken': csrftoken // Incluye el token CSRF
-            },
             success: function (response) {
-                // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
                     text: 'Sector creado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
+                    location.reload();
                 });
             },
             error: function (xhr) {
-                // Manejar errores
-                let errorMessage = 'Ocurrió un error.';
-
-                // Verifica si el error es por CSRF
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                let errorMessage = 'Ocurrió un error al crear el sector.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    // Mostrar errores específicos del formulario
+                    errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
                 }
                 Swal.fire({
                     title: 'Error!',
@@ -349,7 +358,7 @@
         });
     });
 
-    // Script para manejar la actualización de un sector
+    // Función para manejar la edición de un sector
     $('#editForm').on('submit', function (event) {
         event.preventDefault();
         var codigo = $('#edit-code').val();
@@ -357,11 +366,7 @@
         $.ajax({
             type: 'PUT',
             url: '/sectores/' + codigo + '/editar/',
-            data: {
-                co_sector: $('#edit-code').val(),
-                des_sector: $('#edit-nombre').val(),
-                parroquia: $('#edit-parroquia').val()
-            },
+            data: $(this).serialize(),
             headers: {
                 'X-CSRFToken': csrftoken
             },
@@ -376,8 +381,11 @@
                 });
             },
             error: function (xhr) {
-                let errorMessage = 'Ocurrió un error.';
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                let errorMessage = 'Ocurrió un error al actualizar el sector.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    // Mostrar errores específicos del formulario
+                    errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
+                } else if (xhr.responseJSON && xhr.responseJSON.detail) {
                     errorMessage = xhr.responseJSON.detail;
                 }
                 Swal.fire({
@@ -390,79 +398,132 @@
         });
     });
 
-    // Script para manejar la eliminación de un sector
+    // Función para manejar la eliminación de un sector
     $('#deleteForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_sector').val(); // Obtener el ID del sector
+        event.preventDefault();
+        var id = $('#delete-co_sec').val();
         $.ajax({
             type: 'DELETE',
-            url: '/sectores/' + id + '/eliminar/', // URL para eliminar un sector
+            url: '/sectores/' + id + '/eliminar/',
             success: function (response) {
-                // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
                     text: 'Sector eliminado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
+                    location.reload();
                 });
             },
             error: function (xhr) {
-                 // Manejar errores
-                 let errorMessage = 'Ocurrió un error.';
-
-                 // Verifica si el error es por CSRF
-                 if (xhr.responseJSON && xhr.responseJSON.detail) {
-                     errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
-                 }
- 
-                 Swal.fire({
-                     title: 'Error!',
-                     text: errorMessage,
-                     type: 'error',
-                     confirmButtonText: 'Aceptar'
-                 });
+                let errorMessage = 'Ocurrió un error al eliminar el sector.';
+                if (xhr.responseJSON) {
+                    // Mostrar errores específicos
+                    if (xhr.responseJSON.detail) {
+                        errorMessage = xhr.responseJSON.detail;
+                    } else if (xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+                }
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
             }
         });
     });
 
-    <!-- Obtener el token CSRF de la cookie -->
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Verifica si este es el cookie que buscamos
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    // Obtener el token CSRF de la cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
+        return cookieValue;
     }
-    return cookieValue;
-}
 
-const csrftoken = getCookie('csrftoken');
+    const csrftoken = getCookie('csrftoken');
 
-// Incluir el token CSRF en los encabezados de la solicitud AJAX
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-            // Si no es una solicitud a otro dominio, agrega el token CSRF
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+    // Incluir el token CSRF en los encabezados de la solicitud AJAX
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                // Si no es una solicitud a otro dominio, agrega el token CSRF
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
         }
-    }
-});
-
-$(document).ready(function() {
-    $('#parroquia').select2bs4({
-        placeholder: "Seleccione un Parroquia",
-        allowClear: true
     });
-});
+
+    $(document).ready(function() {
+        $('#parroquia').select2bs4({
+            placeholder: "Seleccione un Parroquia",
+            allowClear: true
+        });
+    });
 </script>
 
+<script>
+    function limpiarModal(modalId) {
+        // No limpiar el modal de edición si está mostrando datos
+        if (modalId === 'editModal' && $('#editModal').hasClass('show')) {
+            return;
+        }
+
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            // Resetear el formulario
+            const form = modal.querySelector('form');
+            if (form) {
+                form.reset();
+            }
+            
+            // Limpiar selects si existen, excepto en edición
+            if (modalId !== 'editModal') {
+                const selects = modal.querySelectorAll('select');
+                selects.forEach(select => {
+                    select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+                });
+            }
+            
+            // Limpiar validaciones
+            const invalidElements = modal.querySelectorAll('.is-invalid');
+            invalidElements.forEach(element => {
+                element.classList.remove('is-invalid');
+            });
+            
+            // Limpiar mensajes de error
+            const errorMessages = modal.querySelectorAll('.invalid-feedback');
+            errorMessages.forEach(message => {
+                message.remove();
+            });
+        }
+    }
+
+    // Limpiar modal de creación al cerrarse
+    $('#createModal').on('hidden.bs.modal', function () {
+        limpiarModal('createModal');
+    });
+
+    // Limpiar modal de edición solo si no se está mostrando
+    $('#editModal').on('hidden.bs.modal', function () {
+        if (!$('#editModal').hasClass('show')) {
+            limpiarModal('editModal');
+        }
+    });
+
+    // Limpiar modal de eliminación al cerrarse
+    $('#deleteModal').on('hidden.bs.modal', function () {
+        limpiarModal('deleteModal');
+    });
+</script>
 
 {% endblock scripts %}

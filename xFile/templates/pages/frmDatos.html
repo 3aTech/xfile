@@ -332,8 +332,8 @@
                             <select class="form-control select2bs4" id="sector" name="sector" required aria-label="sector">
                             <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Sector</option>
                             {% for sector in sectores %}
-                                <option value="{{ sector.co_sector }}" {% if object.sector.co_sector == sector.co_sector %}selected{% endif %}>
-                                    {{ sector.co_sector }} - {{ sector.des_sector }}
+                                <option value="{{ sector.co_sec }}" {% if object.sector.co_sec == sector.co_sec %}selected{% endif %}>
+                                    {{ sector.co_sec }} - {{ sector.des_sec }}
                                 </option>
                             {% empty %}
                                 <option value="">No hay sectores disponibles</option>
@@ -826,11 +826,11 @@ function cargarSectores() {
             const sectorSelect = document.getElementById('sector');
             sectorSelect.innerHTML = '<option value="" disabled selected>Seleccione un Sector</option>';
             data.forEach(sector => {
-                sectorSelect.innerHTML += `<option value="${sector.co_sector}">${sector.co_sector} - ${sector.des_sector}</option>`;
+                sectorSelect.innerHTML += `<option value="${sector.co_sec}">${sector.co_sec} - ${sector.des_sec}</option>`;
             });
             // Si hay un sector seleccionado, lo seleccionamos
-            if ("{{ object.sector.co_sector }}" !== "") {
-                sectorSelect.value = "{{ object.sector.co_sector }}";
+            if ("{{ object.sector.co_sec }}" !== "") {
+                sectorSelect.value = "{{ object.sector.co_sec }}";
             }
         })
         .catch(error => {

@@ -85,11 +85,11 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['representantes'] = Representantes.objects.all()
-        context['estados'] = Estados.objects.all()
-        context['municipios'] = Municipios.objects.all()
-        context['parroquias'] = Parroquias.objects.all()
-        context['sectores'] = Sectores.objects.all()
+        context['representantes'] = Representantes.objects.filter(status=True)
+        context['estados'] = Estados.objects.filter(status=True)
+        context['municipios'] = Municipios.objects.filter(status=True)
+        context['parroquias'] = Parroquias.objects.filter(status=True)
+        context['sectores'] = Sectores.objects.filter(status=True)
         
         return context
     
@@ -122,11 +122,11 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['representantes'] = Representantes.objects.all()
-        context['estados'] = Estados.objects.all()
-        context['municipios'] = Municipios.objects.all()
-        context['parroquias'] = Parroquias.objects.all()
-        context['sectores'] = Sectores.objects.all()
+        context['representantes'] = Representantes.objects.filter(status=True)
+        context['estados'] = Estados.objects.filter(status=True)
+        context['municipios'] = Municipios.objects.filter(status=True)
+        context['parroquias'] = Parroquias.objects.filter(status=True)
+        context['sectores'] = Sectores.objects.filter(status=True)
         return context
     
     def form_valid(self, form):
@@ -453,17 +453,21 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         search = self.request.GET.get('search', '')
         municipio = self.request.GET.get('municipio', '')
+        estado = self.request.GET.get('estado', '')
         
         if search:
             queryset = queryset.filter(des_pquia__icontains=search)
         if municipio:
             queryset = queryset.filter(municipio__co_mpo=municipio)
+        if estado:
+            queryset = queryset.filter(estado__co_edo=estado)    
 
         return queryset.select_related('municipio').order_by('des_pquia')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['municipios'] = Municipios.objects.all()  # Agregar la lista de municipio
+        context['municipios'] = Municipios.objects.filter(status=True)
+        context['estados'] = Estados.objects.filter(status=True)
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -482,11 +486,13 @@ def parroquia_create(request):
 def parroquia_update(request, pk):
     try:
         parroquia = Parroquias.objects.get(co_pquia=pk)
+        estado = Estados.objects.get(co_edo=request.data.get('estado'))
         municipio = Municipios.objects.get(co_mpo=request.data.get('municipio'))
         
         serializer = ParroquiaSerializer(parroquia, data={
             'co_pquia': request.data.get('co_pquia'),
             'des_pquia': request.data.get('des_pquia'),
+            'estado': estado.co_edo,
             'municipio': municipio.co_mpo,
             'status': request.data.get('status')
         })
@@ -522,15 +528,15 @@ class SectorListView(LoginRequiredMixin, ListView):
         parroquia = self.request.GET.get('parroquia', '')
         
         if search:
-            queryset = queryset.filter(des_sector__icontains=search)
+            queryset = queryset.filter(des_sec__icontains=search)
         if parroquia:
             queryset = queryset.filter(parroquia__co_pquia=parroquia)
 
-        return queryset.select_related('parroquia').order_by('des_sector')
+        return queryset.select_related('parroquia').order_by('des_sec')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['parroquias'] = Parroquias.objects.all()  # Asegúrate de que esto esté presente
+        context['parroquias'] = Parroquias.objects.filter(status=True) # Asegúrate de que esto esté presente
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -548,12 +554,12 @@ def sector_create(request):
 @api_view(['PUT'])
 def sector_update(request, pk):
     try:
-        sector = Sectores.objects.get(co_sector=pk)
+        sector = Sectores.objects.get(co_sec=pk)
         parroquia = Parroquias.objects.get(co_pquia=request.data.get('parroquia'))
         
         serializer = SectorSerializer(sector, data={
-            'co_sector': request.data.get('co_sector'),
-            'des_sector': request.data.get('des_sector'),
+            'co_sec': request.data.get('co_sec'),
+            'des_sec': request.data.get('des_sec'),
             'parroquia': parroquia.co_pquia,
             'status': request.data.get('status')
         })

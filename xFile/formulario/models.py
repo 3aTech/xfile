@@ -154,6 +154,7 @@ class Parroquias(ModeloAuditoria):
     """Modelo para almacenar parroquias"""
     co_pquia = models.CharField('Código', help_text='Código de la parroquia', max_length=6, primary_key=True)
     des_pquia = models.CharField('Nombre', help_text='Nombre de la parroquia', max_length=60)
+    estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='parroquias')
     municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='parroquias')
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
@@ -176,6 +177,8 @@ class Sectores(ModeloAuditoria):
     """Modelo para almacenar sectores"""
     co_sec = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
     des_sec = models.CharField('Nombre', help_text='Nombre del sector', max_length=60)
+    estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='sectores')
+    municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='sectores')
     parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='sectores')
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
@@ -202,6 +205,7 @@ class Urbanismos(ModeloAuditoria):
     estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='urbanismos')
     municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='urbanismos')
     parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='urbanismos')
+    sector = models.ForeignKey(Sectores, on_delete=models.PROTECT, related_name='urbanismos')
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
