@@ -806,11 +806,11 @@ function cargarParroquias() {
             const parroquiaSelect = document.getElementById('parroquia');
             parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
             data.forEach(parroquia => {
-                parroquiaSelect.innerHTML += `<option value="${parroquia.co_parroquia}">${parroquia.co_parroquia} - ${parroquia.des_parroquia}</option>`;
+                parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
             });
             // Si hay una parroquia seleccionada, la seleccionamos
-            if ("{{ object.parroquia.co_parroquia }}" !== "") {
-                parroquiaSelect.value = "{{ object.parroquia.co_parroquia }}";
+            if ("{{ object.parroquia.co_pquia }}" !== "") {
+                parroquiaSelect.value = "{{ object.parroquia.co_pquia }}";
             }
         })
         .catch(error => {

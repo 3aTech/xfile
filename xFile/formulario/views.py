@@ -3,14 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .models import (Datos, Ambientes, Linderos, Representantes, 
-                     Estados, Municipios, Parroquias, Sectores, Entidades)
+                     Estados, Municipios, Parroquias, Sectores, Entidades, Urbanismos)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render
 from .serializers import (DatosSerializer, 
                           AmbienteSerializer, LinderoSerializer,
                           EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer,
-                          EntidadesSerializer, RepresentanteSerializer)
+                          EntidadesSerializer, RepresentanteSerializer, UrbanismoSerializer)
 from rest_framework import status
 from django.db.models import ProtectedError
 
@@ -360,7 +360,6 @@ class MunicipioListView(LoginRequiredMixin, ListView):
     model = Municipios
     template_name = 'pages/municipios.html'
     context_object_name = 'registros'
-    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -447,7 +446,6 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
     model = Parroquias
     template_name = 'pages/parroquias.html'
     context_object_name = 'registros'
-    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -462,7 +460,7 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
         if estado:
             queryset = queryset.filter(estado__co_edo=estado)    
 
-        return queryset.select_related('municipio').order_by('des_pquia')
+        return queryset.select_related('estado', 'municipio').order_by('des_pquia')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -520,7 +518,6 @@ class SectorListView(LoginRequiredMixin, ListView):
     model = Sectores
     template_name = 'pages/sectores.html'
     context_object_name = 'registros'
-    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -532,11 +529,14 @@ class SectorListView(LoginRequiredMixin, ListView):
         if parroquia:
             queryset = queryset.filter(parroquia__co_pquia=parroquia)
 
-        return queryset.select_related('parroquia').order_by('des_sec')
+        return queryset.select_related('estado', 'municipio', 'parroquia').order_by('des_sec')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['parroquias'] = Parroquias.objects.filter(status=True) # Asegúrate de que esto esté presente
+        context['estados'] = Estados.objects.filter(status=True)
+        context['municipios'] = Municipios.objects.filter(status=True)
+        context['parroquias'] = Parroquias.objects.filter(status=True)
+        
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -556,10 +556,14 @@ def sector_update(request, pk):
     try:
         sector = Sectores.objects.get(co_sec=pk)
         parroquia = Parroquias.objects.get(co_pquia=request.data.get('parroquia'))
+        estado = Estados.objects.get(co_edo=request.data.get('estado'))
+        municipio = Municipios.objects.get(co_mpo=request.data.get('municipio'))
         
         serializer = SectorSerializer(sector, data={
             'co_sec': request.data.get('co_sec'),
             'des_sec': request.data.get('des_sec'),
+            'estado': estado.co_edo,
+            'municipio': municipio.co_mpo,
             'parroquia': parroquia.co_pquia,
             'status': request.data.get('status')
         })
@@ -587,7 +591,6 @@ class EntidadesListView(LoginRequiredMixin, ListView):
     model = Entidades
     template_name = 'pages/entidades.html'
     context_object_name = 'registros'
-    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -656,7 +659,6 @@ class RepresentantesListView(LoginRequiredMixin, ListView):
     model = Representantes
     template_name = 'pages/representantes.html'
     context_object_name = 'registros'
-    # paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -723,3 +725,68 @@ def representantes_detail(request, pk):
         return Response(serializer.data)
     except Representantes.DoesNotExist:
         return Response({'error': 'Representante no encontrado.'}, status=404)
+
+# Vista para manejar las solicitudes AJAX para crear, editar y eliminar Urbanismos
+@api_view(['POST'])
+def urbanismo_create(request):
+    serializer = UrbanismoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(us_in=request.user.username)
+        return Response({'message': 'Urbanismo creado exitosamente.'}, status=201)
+    else:
+        # Devolver errores de validación detallados
+        errors = {}
+        for field, error_list in serializer.errors.items():
+            errors[field] = [str(error) for error in error_list]
+        return Response({'error': 'Error de validación', 'details': errors}, status=400)
+
+@api_view(['PUT'])
+def urbanismo_update(request, pk):
+    try:
+        urbanismo = Urbanismos.objects.get(id=pk)
+        serializer = UrbanismoSerializer(urbanismo, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save(us_mo=request.user.username)
+            return Response({'message': 'Urbanismo actualizado exitosamente.'}, status=200)
+        else:
+            # Devolver errores de validación detallados
+            errors = {}
+            for field, error_list in serializer.errors.items():
+                errors[field] = [str(error) for error in error_list]
+            return Response({'error': 'Error de validación', 'details': errors}, status=400)
+    except Urbanismos.DoesNotExist:
+        return Response({'error': 'Urbanismo no encontrado.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+@api_view(['DELETE'])
+def urbanismo_delete(request, pk):
+    try:
+        urbanismo = Urbanismos.objects.get(id=pk)
+        urbanismo.delete()
+        return Response({'message': 'Urbanismo eliminado exitosamente.'}, status=204)
+    except Urbanismos.DoesNotExist:
+        return Response({'error': 'Urbanismo no encontrado.'}, status=404)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
+# Vista basada en clase para listar Urbanismos
+class UrbanismoListView(LoginRequiredMixin, ListView):
+    model = Urbanismos
+    template_name = 'pages/urbanismos.html'
+    context_object_name = 'registros'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search', '')
+        if search:
+            queryset = queryset.filter(des_urb__icontains=search)
+        return queryset.select_related('estado', 'municipio', 'parroquia', 'sector').order_by('des_urb')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['estados'] = Estados.objects.filter(status=True)
+        context['municipios'] = Municipios.objects.filter(status=True)
+        context['parroquias'] = Parroquias.objects.filter(status=True)
+        context['sectores'] = Sectores.objects.filter(status=True)
+        return context

@@ -84,8 +84,8 @@ class UrbanismosResource(resources.ModelResource):
         model = Urbanismos
 
 class UrbanismosAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ['co_urb', 'des_urb']
-    list_display = ['co_urb', 'des_urb']
+    search_fields = ['id', 'des_urb']
+    list_display = ['id', 'des_urb']
     resource_class = UrbanismosResource
 
 admin.site.register(Urbanismos, UrbanismosAdmin)

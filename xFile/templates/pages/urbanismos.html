@@ -1,0 +1,534 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<!-- DataTables -->
+<link rel="stylesheet" href="{% static '3atech/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}" />
+<link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
+{% endblock extrahead %}
+
+{% block title %}Gestión de Urbanismos{% endblock title %}
+
+{% block contentheader %}
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Listado de Urbanismos</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
+          <li class="breadcrumb-item">Urbanismos</li>
+          <li class="breadcrumb-item active">Gestión de Urbanismos</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock contentheader %}
+
+{% block content %}
+<div class="card" style="width: 60%; margin: auto;">
+    <div class="card-header d-flex justify-content-end">
+       <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
+        <i class="fas fa-solid fa-plus me-1"></i>
+       </button>
+    </div>
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Sector</th>
+                <th>Parroquia</th>
+                <th>Municipio</th>
+                <th>Estado</th>
+                <th>Status</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for urbanismo in registros %}
+            <tr>
+                <td>{{ urbanismo.des_urb }}</td>
+                <td>{{ urbanismo.direccion }}</td>
+                <td>{{ urbanismo.sector.des_sec }}</td>
+                <td>{{ urbanismo.parroquia.des_pquia }}</td>
+                <td>{{ urbanismo.municipio.des_mpo }}</td>
+                <td>{{ urbanismo.estado.des_edo }}</td>
+                <td class="text-center">
+                    {% if urbanismo.status %}
+                    <span class="badge bg-success color-palette">Activo</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-warning" data-toggle="modal" 
+                            data-target="#editModal" 
+                            data-co-urb="{{ urbanismo.id }}"
+                            data-des-urb="{{ urbanismo.des_urb }}"
+                            data-direccion="{{ urbanismo.direccion }}"
+                            data-estado="{{ urbanismo.estado.co_edo }}"
+                            data-municipio="{{ urbanismo.municipio.co_mpo }}"
+                            data-parroquia="{{ urbanismo.parroquia.co_pquia }}"
+                            data-sector="{{ urbanismo.sector.co_sec }}"
+                            data-stats="{{ urbanismo.status }}">
+                            <i class='bx bx-edit' ></i>
+                    </button>
+                    <button class="btn btn-danger" data-toggle="modal" 
+                            data-target="#deleteModal" 
+                            data-codigo="{{ urbanismo.id }}" 
+                            data-nombre="{{ urbanismo.des_urb }}">
+                            <i class='bx bx-trash' ></i>
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<!-- Modal para crear un nuevo urbanismo -->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form method="post" id="createForm">
+                {% csrf_token %}
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title" id="createModalLabel">Agregar Urbanismo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-12">                                                           
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
+                                <label class="custom-control-label" for="customSwitch1">Activo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="des_urb">Nombre</label>
+                            <input type="text" class="form-control" id="des_urb" name="des_urb" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="direccion">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="estado">Estado</label>
+                            <select class="form-control" id="estado" name="estado" required>
+                                <option value="" disabled selected>Seleccione un Estado</option>
+                                {% for estado in estados %}
+                                <option value="{{ estado.co_edo }}">{{ estado.des_edo }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="municipio">Municipio</label>
+                            <select class="form-control" id="municipio" name="municipio" required>
+                                <option value="" disabled selected>Seleccione un Municipio</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="parroquia">Parroquia</label>
+                            <select class="form-control" id="parroquia" name="parroquia" required>
+                                <option value="" disabled selected>Seleccione una Parroquia</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="sector">Sector</label>
+                            <select class="form-control" id="sector" name="sector" required>
+                                <option value="" disabled selected>Seleccione un Sector</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para editar un urbanismo -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <form method="post" id="editForm">
+                {% csrf_token %}
+                <div class="modal-header bg-success">
+                    <h5 class="modal-title" id="editModalLabel">Editar Urbanismo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="edit-status" name="status">
+                                <label class="custom-control-label" for="edit-status">Activo</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="edit-des_urb">Nombre</label>
+                            <input type="text" class="form-control" id="edit-des_urb" name="des_urb" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="edit-direccion">Dirección</label>
+                            <input type="text" class="form-control" id="edit-direccion" name="direccion" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="edit-estado">Estado</label>
+                            <select class="form-control" id="edit-estado" name="estado" required>
+                                <option value="" disabled selected>Seleccione un Estado</option>
+                                {% for estado in estados %}
+                                <option value="{{ estado.co_edo }}">{{ estado.des_edo }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-municipio">Municipio</label>
+                            <select class="form-control" id="edit-municipio" name="municipio" required>
+                                <option value="" disabled selected>Seleccione un Municipio</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-parroquia">Parroquia</label>
+                            <select class="form-control" id="edit-parroquia" name="parroquia" required>
+                                <option value="" disabled selected>Seleccione una Parroquia</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="edit-sector">Sector</label>
+                            <select class="form-control" id="edit-sector" name="sector" required>
+                                <option value="" disabled selected>Seleccione un Sector</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar un urbanismo -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form method="post" id="deleteForm">
+                {% csrf_token %}
+                <div class="modal-header bg-danger">
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar Urbanismo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro de eliminar el urbanismo <strong id="delete-des_urb"></strong>?</p>
+                    <input type="hidden" id="delete-co_urb" name="co_urb">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<!-- DataTables -->
+<script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            responsive: true,
+            autoWidth: true,
+            language: {
+              sProcessing: "Procesando...",
+              sLengthMenu: "Mostrar _MENU_ registros",
+              sZeroRecords: "No se encontraron registros",
+              sEmptyTable: "No hay datos disponibles en la tabla",
+              sInfo:
+                "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+              sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+              sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
+              sInfoPostFix: "",
+              sSearch: "Buscar:",
+              sUrl: "",
+              sInfoThousands: ",",
+              sLoadingRecords: "Cargando...",
+              oPaginate: {
+                sFirst: "Primero",
+                sLast: "Último",
+                sNext: "Siguiente",
+                sPrevious: "Anterior",
+              },
+              oAria: {
+                sSortAscending:
+                  ": Activar para ordenar la columna de manera ascendente",
+                sSortDescending:
+                  ": Activar para ordenar la columna de manera descendente",
+              },
+            },
+          });
+    });
+
+    // Script para manejar la creación de un urbanismo
+    $('#createForm').on('submit', function (event) {
+        event.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/urbanismos/crear/',
+            data: $(this).serialize(),
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: response.message || 'Urbanismo creado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    limpiarModal('createModal');
+                    $('#createModal').modal('hide');
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error al crear el urbanismo.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
+                }
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
+
+    // Script para manejar la edición de un urbanismo
+    $('#editForm').on('submit', function (event) {
+        event.preventDefault();
+        var codigo = $('#edit-co_urb').val();
+        $.ajax({
+            type: 'PUT',
+            url: '/urbanismos/' + codigo + '/editar/',
+            data: $(this).serialize(),
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: response.message || 'Urbanismo actualizado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    limpiarModal('editModal');
+                    $('#editModal').modal('hide');
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error al actualizar el urbanismo.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
+                }
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
+
+    // Script para manejar la eliminación de un urbanismo
+    $('#deleteForm').on('submit', function (event) {
+        event.preventDefault();
+        var id = $('#delete-co_urb').val();
+        $.ajax({
+            type: 'DELETE',
+            url: '/urbanismos/' + id + '/eliminar/',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito!',
+                    text: response.message || 'Urbanismo eliminado correctamente.',
+                    type: 'success',
+                    confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    limpiarModal('deleteModal');
+                    $('#deleteModal').modal('hide');
+                    location.reload();
+                });
+            },
+            error: function (xhr) {
+                let errorMessage = 'Ocurrió un error al eliminar el urbanismo.';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        });
+    });
+
+    // Script para cargar datos en el modal de edición
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Botón que activó el modal
+        var co_urb = button.data('co-urb'); // Extraer datos del atributo data-co-urb
+        var des_urb = button.data('des-urb'); // Extraer datos del atributo data-des-urb
+        var direccion = button.data('direccion'); // Extraer datos del atributo data-direccion
+        var estado = button.data('estado'); // Extraer datos del atributo data-estado
+        var municipio = button.data('municipio'); // Extraer datos del atributo data-municipio
+        var parroquia = button.data('parroquia'); // Extraer datos del atributo data-parroquia
+        var sector = button.data('sector'); // Extraer datos del atributo data-sector
+        var status = button.data('stats'); // Extraer datos del atributo data-stats
+
+        // Llenar el modal con los datos extraídos
+        var modal = $(this);
+        modal.find('#edit-co_urb').val(co_urb);
+        modal.find('#edit-des_urb').val(des_urb);
+        modal.find('#edit-direccion').val(direccion);
+        modal.find('#edit-estado').val(estado).trigger('change');
+        modal.find('#edit-municipio').val(municipio).trigger('change');
+        modal.find('#edit-parroquia').val(parroquia).trigger('change');
+        modal.find('#edit-sector').val(sector).trigger('change');
+        modal.find('#edit-status').prop('checked', status);
+    });
+
+    // Script para cargar datos en el modal de eliminación
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Botón que activó el modal
+        var co_urb = button.data('codigo'); // Extraer datos del atributo data-codigo
+        var des_urb = button.data('nombre'); // Extraer datos del atributo data-nombre
+
+        // Llenar el modal con los datos extraídos
+        var modal = $(this);
+        modal.find('#delete-co_urb').val(co_urb);
+        modal.find('#delete-des_urb').text(des_urb);
+    });
+
+    // Función para limpiar los modales
+    function limpiarModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            // Resetear el formulario
+            const form = modal.querySelector('form');
+            if (form) {
+                form.reset();
+            }
+
+            // Limpiar selects si existen
+            const selects = modal.querySelectorAll('select');
+            selects.forEach(select => {
+                select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+            });
+
+            // Limpiar validaciones
+            const invalidElements = modal.querySelectorAll('.is-invalid');
+            invalidElements.forEach(element => {
+                element.classList.remove('is-invalid');
+            });
+
+            // Limpiar mensajes de error
+            const errorMessages = modal.querySelectorAll('.invalid-feedback');
+            errorMessages.forEach(message => {
+                message.remove();
+            });
+        }
+    }
+
+    // Limpiar modal de creación al cerrarse
+    $('#createModal').on('hidden.bs.modal', function () {
+        limpiarModal('createModal');
+    });
+
+    // Limpiar modal de edición al cerrarse
+    $('#editModal').on('hidden.bs.modal', function () {
+        limpiarModal('editModal');
+    });
+
+    // Limpiar modal de eliminación al cerrarse
+    $('#deleteModal').on('hidden.bs.modal', function () {
+        limpiarModal('deleteModal');
+    });
+
+    // Obtener el token CSRF de la cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Verifica si este es el cookie que buscamos
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    // Incluir el token CSRF en los encabezados de la solicitud AJAX
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                // Si no es una solicitud a otro dominio, agrega el token CSRF
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+</script>
+{% endblock scripts %}

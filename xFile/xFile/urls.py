@@ -29,7 +29,8 @@ from formulario.views import (get_municipios, get_parroquias, get_sector,
                               ParroquiaListView, parroquia_create, parroquia_delete, parroquia_update,
                               SectorListView, sector_create, sector_delete, sector_update,
                               EntidadesListView, entidades_create, EntidadesDetailView, entidades_update, entidades_delete,
-                              RepresentantesListView, representantes_create, RepresentantesDetailView, representantes_update, representantes_delete
+                              RepresentantesListView, representantes_create, RepresentantesDetailView, representantes_update, representantes_delete,
+                              UrbanismoListView, urbanismo_create, urbanismo_update, urbanismo_delete
                               )
 from formulario.view_export import exportar_datos_xlsx
 from formulario.view_gen_contratos import genContratosTotales, genContratosUnico
@@ -107,7 +108,13 @@ urlpatterns = [
     
     path('exportar/', exportar_datos_xlsx, name='exportar_xlsx'),
     path('generar-contatos/', genContratosTotales, name='genContratosTotales'),
-    path('generar-contatos/<str:pk>', genContratosUnico, name='genContratosUnico')
+    path('generar-contatos/<str:pk>', genContratosUnico, name='genContratosUnico'),
+
+    # URLs para Urbanismos
+    path('urbanismos/', UrbanismoListView.as_view(), name='urbanismo_list'),
+    path('urbanismos/crear/', urbanismo_create, name='urbanismo_create'),
+    path('urbanismos/<str:pk>/editar/', urbanismo_update, name='urbanismo_update'),
+    path('urbanismos/<str:pk>/eliminar/', urbanismo_delete, name='urbanismo_delete'),
 ]
 
 if settings.DEBUG:

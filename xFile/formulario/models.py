@@ -199,7 +199,7 @@ class Sectores(ModeloAuditoria):
 
 class Urbanismos(ModeloAuditoria):
     """Modelo para almacenar sectores"""
-    co_urb = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
+    id = models.AutoField('Código', help_text='Código', primary_key=True)
     des_urb = models.CharField('Nombre', help_text='Nombre del sector', max_length=120)
     direccion = models.CharField('Dirección', help_text='Dirección', max_length=250, null=True, blank=True)
     estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='urbanismos')

@@ -61,8 +61,10 @@
                 <td>{{ sector.co_sec }}</td>
                 <td>{{ sector.des_sec }}</td>
                 <td>{{ sector.parroquia.des_pquia }}</td>
+                <td>{{ sector.municipio.des_mpo }}</td>
+                <td>{{ sector.estado.des_edo }}</td>
                 <td class="text-center">
-                    {% if municipio.status %}
+                    {% if sector.status %}
                     <span class="badge bg-success color-palette">Activo</span>
                     {% else %}
                     <span class="badge bg-secondary">Inactivo</span>
@@ -73,6 +75,8 @@
                             data-target="#editModal" 
                             data-co-sec="{{ sector.co_sec }}"
                             data-des-sec="{{ sector.des_sec }}"
+                            data-estado="{{ sector.estado.co_edo }}"
+                            data-municipio="{{ sector.municipio.co_mpo }}"
                             data-parroquia="{{ sector.parroquia.co_pquia }}"
                             data-stats="{{ sector.status }}">
                             <i class='bx bx-edit' ></i>
@@ -93,7 +97,7 @@
 
 <!-- Modal para crear un nuevo sector -->
 <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <form method="post" id="createForm">
                 {% csrf_token %}
@@ -104,36 +108,80 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">                                
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
-                            <label class="custom-control-label" for="customSwitch1">Activo</label>
+                    <div class="row mb-3">
+                        <div class="col-md-12">                                                           
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitch1" name="status" checked>
+                                <label class="custom-control-label" for="customSwitch1">Activo</label>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="co_sec">Código</label>
-                        <input type="text" class="form-control" id="co_sec" name="co_sec" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="des_sec">Nombre</label>
-                        <input type="text" class="form-control" id="des_sec" name="des_sec" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="parroquia" class="form-label">Parroquia</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="co_sec">Código</label>
+                            <input type="text" class="form-control" id="co_sec" name="co_sec" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="des_sec">Nombre</label>
+                            <input type="text" class="form-control" id="des_sec" name="des_sec" required>
+                        </div>
+                    </div>    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="estado" class="form-label">Estado</label>
+                          <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                              </div>
+                              <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Estado</option>
+                                  {% for estado in estados %}
+                                      <option value="{{ estado.co_edo  }}" {% if object.estado.co_edo  == estado.co_edo  %}selected{% endif %}>
+                                          {{ estado.co_edo  }} - {{ estado.des_edo  }}
+                                      </option>
+                                  {% empty %}
+                                      <option value="">No hay estados disponibles</option>
+                                  {% endfor %}
+                                </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="municipio" class="form-label">Municipio</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
+                                  {% for municipio in municipios %}
+                                      <option value="{{ municipio.co_mpo }}" {% if object.municipio.co_mpo == municipio.co_mpo %}selected{% endif %}>
+                                          {{ municipio.co_mpo }} - {{ municipio.des_mpo }}
+                                      </option>
+                                  {% empty %}
+                                      <option value="">No hay municipios disponibles</option>
+                                  {% endfor %}
+                                </select>
                             </div>
-                            <select class="form-control select2bs4" id="parroquia" name="parroquia" required onchange="cargarSectors()" aria-label="parroquia">
-                                <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un parroquia</option>
-                                {% for parroquia in parroquias %}
-                                    <option value="{{ parroquia.co_pquia }}" {% if object.parroquia.co_pquia == parroquia.co_pquia %}selected{% endif %}>
-                                        {{ parroquia.co_pquia }} - {{ parroquia.des_pquia }}
-                                    </option>
-                                {% empty %}
-                                    <option value="">No hay parroquias disponibles</option>
-                                {% endfor %}
-                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="parroquia" class="form-label">Parroquia</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2bs4" id="parroquia" name="parroquia" required aria-label="parroquia">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione una Parroquia</option>
+                                  {% for parroquia in parroquias %}
+                                      <option value="{{ parroquia.co_pquia}}" {% if object.parroquia.co_pquia == parroquia.co_pquia%}selected{% endif %}>
+                                          {{ parroquia.co_pquia}} - {{ parroquia.des_pquia}}
+                                      </option>
+                                  {% empty %}
+                                      <option value="">No hay parroquias disponibles</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -148,7 +196,7 @@
 
 <!-- Modal para editar un sector -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <form method="post" id="editForm">
                 {% csrf_token %}
@@ -159,36 +207,80 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="edit-status" name="status" {% if municipio.status %}checked{% endif %}>
-                            <label class="custom-control-label" for="edit-status">Activo</label>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="edit-status" name="status" {% if sector.status %}checked{% endif %}>
+                                <label class="custom-control-label" for="edit-status">Activo</label>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="edit-code">Código</label>
-                        <input type="text" class="form-control" id="edit-code" name="co_sec" required readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-nombre">Nombre</label>
-                        <input type="text" class="form-control" id="edit-nombre" name="des_sec" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-parroquia" class="form-label">Parroquia</label>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="edit-co_sec">Código</label>
+                            <input type="text" class="form-control" id="edit-co_sec" name="co_sec" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="edit-des_sec">Nombre</label>
+                            <input type="text" class="form-control" id="edit-des_sec" name="des_sec" required>
+                        </div>
+                    </div>    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="edit-estado" class="form-label">Estado</label>
+                          <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                              </div>
+                              <select class="form-control select2bs4" id="edit-estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Estado</option>
+                                  {% for estado in estados %}
+                                      <option value="{{ estado.co_edo  }}" {% if object.estado.co_edo  == estado.co_edo  %}selected{% endif %}>
+                                          {{ estado.co_edo  }} - {{ estado.des_edo  }}
+                                      </option>
+                                  {% empty %}
+                                      <option value="">No hay estados disponibles</option>
+                                  {% endfor %}
+                                </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit-municipio" class="form-label">Municipio</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2bs4" id="edit-municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
+                                  {% for municipio in municipios %}
+                                      <option value="{{ municipio.co_mpo }}" {% if object.municipio.co_mpo == municipio.co_mpo %}selected{% endif %}>
+                                          {{ municipio.co_mpo }} - {{ municipio.des_mpo }}
+                                      </option>
+                                  {% empty %}
+                                      <option value="">No hay municipios disponibles</option>
+                                  {% endfor %}
+                                </select>
                             </div>
-                            <select class="form-control select2bs4" id="edit-parroquia" name="parroquia" required aria-label="parroquia">
-                                <option value="" disabled>Seleccione un parroquia</option>
-                                {% for parroquia in parroquias %}
-                                    <option value="{{ parroquia.co_pquia }}" {% if parroquia.co_pquia == object.parroquia.co_pquia %}selected{% endif %}>
-                                        {{ parroquia.co_pquia }} - {{ parroquia.des_pquia }}
-                                    </option>
-                                {% empty %}
-                                    <option value="">No hay parroquias disponibles</option>
-                                {% endfor %}
-                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="edit-parroquia" class="form-label">Parroquia</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2bs4" id="edit-parroquia" name="parroquia" required aria-label="parroquia">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione una Parroquia</option>
+                                  {% for parroquia in parroquias %}
+                                      <option value="{{ parroquia.co_pquia}}" {% if object.parroquia.co_pquia == parroquia.co_pquia%}selected{% endif %}>
+                                          {{ parroquia.co_pquia}} - {{ parroquia.des_pquia}}
+                                      </option>
+                                  {% empty %}
+                                      <option value="">No hay parroquias disponibles</option>
+                                  {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -246,7 +338,7 @@
   $(function () {
     $("#example1").DataTable({
       responsive: true,
-      autoWidth: false,
+      autoWidth: true,
       language: {
         sProcessing: "Procesando...",
         sLengthMenu: "Mostrar _MENU_ registros",
@@ -303,15 +395,19 @@
         var button = $(event.relatedTarget);
         var co_sec = button.data('co-sec');
         var des_sec = button.data('des-sec');
+        var estado = button.data('estado');
+        var municipio = button.data('municipio');
         var parroquia = button.data('parroquia');
-        var status = button.data('stats') === 'True' || button.data('stats') === true; // Asegurar valor booleano
+        var status = button.data('stats') === 'True' || button.data('stats') === true;
 
 
         var modal = $(this);
-        modal.find('#edit-code').val(co_sec);
-        modal.find('#edit-nombre').val(des_sec);
+        modal.find('#edit-co_sec').val(co_sec);
+        modal.find('#edit-des_sec').val(des_sec);
+        modal.find('#edit-estado').val(estado).trigger('change');
+        modal.find('#edit-municipio').val(municipio).trigger('change');
         modal.find('#edit-parroquia').val(parroquia).trigger('change');
-        modal.find('#edit-status').prop('checked', status); // Establecer estado del switch
+        modal.find('#edit-status').prop('checked', status); 
 
     });
 
@@ -332,6 +428,9 @@
             type: 'POST',
             url: '/sectores/crear/',
             data: $(this).serialize(),
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
             success: function (response) {
                 Swal.fire({
                     title: 'Éxito!',
@@ -339,13 +438,14 @@
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
+                    limpiarModal('createModal');
+                    $('#createModal').modal('hide');
                     location.reload();
                 });
             },
             error: function (xhr) {
                 let errorMessage = 'Ocurrió un error al crear el sector.';
                 if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    // Mostrar errores específicos del formulario
                     errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
                 }
                 Swal.fire({
@@ -361,7 +461,7 @@
     // Función para manejar la edición de un sector
     $('#editForm').on('submit', function (event) {
         event.preventDefault();
-        var codigo = $('#edit-code').val();
+        var codigo = $('#edit-co_sec').val();
         
         $.ajax({
             type: 'PUT',
@@ -377,13 +477,14 @@
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
+                    limpiarModal('editModal');
+                    $('#editModal').modal('hide');
                     location.reload();
                 });
             },
             error: function (xhr) {
                 let errorMessage = 'Ocurrió un error al actualizar el sector.';
                 if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    // Mostrar errores específicos del formulario
                     errorMessage = Object.values(xhr.responseJSON.errors).join('\n');
                 } else if (xhr.responseJSON && xhr.responseJSON.detail) {
                     errorMessage = xhr.responseJSON.detail;
@@ -405,6 +506,9 @@
         $.ajax({
             type: 'DELETE',
             url: '/sectores/' + id + '/eliminar/',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
             success: function (response) {
                 Swal.fire({
                     title: 'Éxito!',
@@ -412,18 +516,15 @@
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
+                    limpiarModal('deleteModal');
+                    $('#deleteModal').modal('hide');
                     location.reload();
                 });
             },
             error: function (xhr) {
                 let errorMessage = 'Ocurrió un error al eliminar el sector.';
-                if (xhr.responseJSON) {
-                    // Mostrar errores específicos
-                    if (xhr.responseJSON.detail) {
-                        errorMessage = xhr.responseJSON.detail;
-                    } else if (xhr.responseJSON.error) {
-                        errorMessage = xhr.responseJSON.error;
-                    }
+                if (xhr.responseJSON && xhr.responseJSON.detail) {
+                    errorMessage = xhr.responseJSON.detail;
                 }
                 Swal.fire({
                     title: 'Error!',
@@ -457,7 +558,6 @@
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
             if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                // Si no es una solicitud a otro dominio, agrega el token CSRF
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         }
@@ -473,11 +573,6 @@
 
 <script>
     function limpiarModal(modalId) {
-        // No limpiar el modal de edición si está mostrando datos
-        if (modalId === 'editModal' && $('#editModal').hasClass('show')) {
-            return;
-        }
-
         const modal = document.getElementById(modalId);
         if (modal) {
             // Resetear el formulario
@@ -486,13 +581,11 @@
                 form.reset();
             }
             
-            // Limpiar selects si existen, excepto en edición
-            if (modalId !== 'editModal') {
-                const selects = modal.querySelectorAll('select');
-                selects.forEach(select => {
-                    select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
-                });
-            }
+            // Limpiar selects si existen
+            const selects = modal.querySelectorAll('select');
+            selects.forEach(select => {
+                select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+            });
             
             // Limpiar validaciones
             const invalidElements = modal.querySelectorAll('.is-invalid');
@@ -513,17 +606,56 @@
         limpiarModal('createModal');
     });
 
-    // Limpiar modal de edición solo si no se está mostrando
+    // Limpiar modal de edición al cerrarse
     $('#editModal').on('hidden.bs.modal', function () {
-        if (!$('#editModal').hasClass('show')) {
-            limpiarModal('editModal');
-        }
+        limpiarModal('editModal');
     });
 
     // Limpiar modal de eliminación al cerrarse
     $('#deleteModal').on('hidden.bs.modal', function () {
         limpiarModal('deleteModal');
     });
+
+    function cargarMunicipios() {
+        const estadoId = document.getElementById('estado').value;
+        fetch(`/api/municipios/?estado=${estadoId}`)
+            .then(response => response.json())
+            .then(data => {
+                const municipioSelect = document.getElementById('municipio');
+                municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+                data.forEach(municipio => {
+                    municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
+                });
+                // Si hay un municipio seleccionado, lo seleccionamos
+                if ("{{ object.municipio.co_mpo }}" !== "") {
+                    municipioSelect.value = "{{ object.municipio.co_mpo }}";
+                    cargarParroquias(); // Cargar parroquias para el municipio seleccionado
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar los municipios:', error);
+            });
+    }
+    
+    function cargarParroquias() {
+        const municipioId = document.getElementById('municipio').value;
+        fetch(`/api/parroquias?municipio=${municipioId}`)
+            .then(response => response.json())
+            .then(data => {
+                const parroquiaSelect = document.getElementById('parroquia');
+                parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
+                data.forEach(parroquia => {
+                    parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
+                });
+                // Si hay una parroquia seleccionada, la seleccionamos
+                if ("{{ object.parroquia.co_pquia }}" !== "") {
+                    parroquiaSelect.value = "{{ object.parroquia.co_pquia }}";
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar las parroquias:', error);
+            });
+    }
 </script>
 
 {% endblock scripts %}

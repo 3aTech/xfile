@@ -55,7 +55,7 @@ class SectorSerializer(serializers.ModelSerializer):
 class UrbanismoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Urbanismos
-        fields = ['co_urb', 'des_urb', 'direccion', 'estado',
+        fields = ['id', 'des_urb', 'direccion', 'estado',
                   'municipio', 'parroquia', 'sector', 'status'
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
