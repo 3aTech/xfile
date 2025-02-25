@@ -610,7 +610,7 @@ def sector_delete(request, pk):
     try:
         sector = Sectores.objects.get(pk=pk)
         sector.delete()
-        return Response({'message': 'Sector eliminado exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Sector eliminado exitosamente.'}, status=status.HTTP_200_OK)
     except ProtectedError:
         return Response(
             {'error': 'protected_relation', 'message': 'No se puede eliminar el Sector porque tiene urbanismos asociados.'}, 

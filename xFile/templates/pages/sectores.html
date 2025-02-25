@@ -127,7 +127,7 @@
                               <div class="input-group-prepend">
                                   <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                               </div>
-                              <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
+                              <select class="form-control select2bs4" id="estado" name="estado" required onchange="cargarMunicipios('create')" aria-label="estado">
                                   <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Estado</option>
                                   {% for estado in estados %}
                                       <option value="{{ estado.co_edo  }}" {% if object.estado.co_edo  == estado.co_edo  %}selected{% endif %}>
@@ -145,7 +145,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                                 </div>
-                                <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                                <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias('create')" aria-label="municipio">
                                   <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
                                   {% for municipio in municipios %}
                                       <option value="{{ municipio.co_mpo }}" {% if object.municipio.co_mpo == municipio.co_mpo %}selected{% endif %}>
@@ -223,7 +223,7 @@
                               <div class="input-group-prepend">
                                   <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                               </div>
-                              <select class="form-control select2bs4" id="edit-estado" name="estado" required onchange="cargarMunicipios()" aria-label="estado">
+                              <select class="form-control select2bs4" id="edit-estado" name="estado" required onchange="cargarMunicipios('edit')" aria-label="estado">
                                   <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Estado</option>
                                   {% for estado in estados %}
                                       <option value="{{ estado.co_edo  }}" {% if object.estado.co_edo  == estado.co_edo  %}selected{% endif %}>
@@ -241,7 +241,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                                 </div>
-                                <select class="form-control select2bs4" id="edit-municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                                <select class="form-control select2bs4" id="edit-municipio" name="municipio" required onchange="cargarParroquias('edit')" aria-label="municipio">
                                   <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
                                   {% for municipio in municipios %}
                                       <option value="{{ municipio.co_mpo }}" {% if object.municipio.co_mpo == municipio.co_mpo %}selected{% endif %}>
@@ -328,7 +328,7 @@
   $(function () {
     $("#example1").DataTable({
       responsive: true,
-      autoWidth: true,
+      autoWidth: false,
       language: {
         sProcessing: "Procesando...",
         sLengthMenu: "Mostrar _MENU_ registros",
@@ -380,7 +380,81 @@
 </script>
 
 <script>
-    // Script para manejar la carga de datos en el modal de edición
+    // Función para cargar municipios
+    function cargarMunicipios(modalType = 'create') {
+        const estadoId = document.getElementById(modalType === 'create' ? 'estado' : 'edit-estado').value;
+        return fetch(`/api/municipios/?estado=${estadoId}`)
+            .then(response => response.json())
+            .then(data => {
+                const municipioSelect = document.getElementById(modalType === 'create' ? 'municipio' : 'edit-municipio');
+                municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+                data.forEach(municipio => {
+                    municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
+                });
+                
+                // Si estamos en el modal de edición, mantener el valor seleccionado
+                if (modalType === 'edit') {
+                    const selectedMunicipio = $(municipioSelect).data('selected');
+                    if (selectedMunicipio) {
+                        municipioSelect.value = selectedMunicipio;
+                        // Cargar las parroquias correspondientes
+                        cargarParroquias('edit');
+                    }
+                }
+                return data;
+            })
+            .catch(error => {
+                console.error('Error al cargar los municipios:', error);
+            });
+    }
+
+    // Función para cargar parroquias
+    function cargarParroquias(modalType = 'create') {
+        const municipioId = document.getElementById(modalType === 'create' ? 'municipio' : 'edit-municipio').value;
+        return fetch(`/api/parroquias/?municipio=${municipioId}`)
+            .then(response => response.json())
+            .then(data => {
+                const parroquiaSelect = document.getElementById(modalType === 'create' ? 'parroquia' : 'edit-parroquia');
+                parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
+                data.forEach(parroquia => {
+                    parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
+                });
+                
+                // Si estamos en el modal de edición, mantener el valor seleccionado
+                if (modalType === 'edit') {
+                    const selectedParroquia = $(parroquiaSelect).data('selected');
+                    if (selectedParroquia) {
+                        parroquiaSelect.value = selectedParroquia;
+                    }
+                }
+                return data;
+            })
+            .catch(error => {
+                console.error('Error al cargar las parroquias:', error);
+            });
+    }
+
+    // Evento para el cambio de estado en el modal de creación
+    $('#estado').on('change', function() {
+        cargarMunicipios('create');
+    });
+
+    // Evento para el cambio de municipio en el modal de creación
+    $('#municipio').on('change', function() {
+        cargarParroquias('create');
+    });
+
+    // Evento para el cambio de estado en el modal de edición
+    $('#edit-estado').on('change', function() {
+        cargarMunicipios('edit');
+    });
+
+    // Evento para el cambio de municipio en el modal de edición
+    $('#edit-municipio').on('change', function() {
+        cargarParroquias('edit');
+    });
+
+    // Modificar el evento show.bs.modal para el modal de edición
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
@@ -394,28 +468,19 @@
         modal.find('#edit-id').val(id);
         modal.find('#edit-des_sec').val(des_sec);
         
-        // Inicializar select2 para el estado si aún no está inicializado
-        if (!$('#edit-estado').data('select2')) {
-            $('#edit-estado').select2({
-                placeholder: "Seleccione un Estado",
-                allowClear: true
-            });
+        // Almacenar los valores seleccionados para uso posterior
+        $('#edit-municipio').data('selected', municipio);
+        $('#edit-parroquia').data('selected', parroquia);
+        
+        // Establecer el estado y disparar la carga en cascada
+        if (estado) {
+            modal.find('#edit-estado').val(estado).trigger('change');
         }
         
-        // Establecer el valor del estado
-        $('#edit-estado').val(estado).trigger('change');
-        
-        // Almacenar los valores seleccionados como datos del elemento
-        modal.find('#edit-municipio').data('selected', municipio);
-        modal.find('#edit-parroquia').data('selected', parroquia);
-        
-        // Cargar municipios y parroquias en cascada
-        cargarMunicipiosEdicion(estado, municipio, parroquia);
-        
-        modal.find('#edit-status').prop('checked', status); 
+        modal.find('#edit-status').prop('checked', status);
     });
 
-       // Función para manejar la creación de un sector
+    // Función para manejar la creación de un sector
     $('#createForm').on('submit', function (event) {
         event.preventDefault();
         $.ajax({
@@ -576,13 +641,36 @@
     });
 
     $(document).ready(function() {
-        // Inicializar select2 para todos los selectores necesarios
-        $('.select2bs4').each(function() {
-            $(this).select2({
-                theme: 'bootstrap4',
-                placeholder: "Seleccione una opción",
-                allowClear: true
-            });
+        // Inicializar Select2 para los selectores del modal de creación
+        $('#estado').select2bs4({
+            placeholder: "Seleccione un Estado",
+            allowClear: true
+        });
+
+        $('#municipio').select2bs4({
+            placeholder: "Seleccione un Municipio",
+            allowClear: true
+        });
+
+        $('#parroquia').select2bs4({
+            placeholder: "Seleccione una Parroquia",
+            allowClear: true
+        });
+
+        // Inicializar Select2 para los selectores del modal de edición
+        $('#edit-estado').select2bs4({
+            placeholder: "Seleccione un Estado",
+            allowClear: true
+        });
+
+        $('#edit-municipio').select2bs4({
+            placeholder: "Seleccione un Municipio",
+            allowClear: true
+        });
+
+        $('#edit-parroquia').select2bs4({
+            placeholder: "Seleccione una Parroquia",
+            allowClear: true
         });
     });
 </script>
@@ -630,69 +718,6 @@
     $('#deleteModal').on('hidden.bs.modal', function () {
         limpiarModal('deleteModal');
     });
-
-    function cargarMunicipiosEdicion(estadoId, municipioId, parroquiaId) {
-        fetch(`/api/municipios/?estado=${estadoId}`)
-            .then(response => response.json())
-            .then(data => {
-                const municipioSelect = document.getElementById('edit-municipio');
-                municipioSelect.innerHTML = '<option value="" disabled>Seleccione un Municipio</option>';
-                data.forEach(municipio => {
-                    municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
-                });
-                
-                // Establecer el municipio seleccionado
-                municipioSelect.value = municipioId;
-                
-                // Cargar las parroquias correspondientes
-                cargarParroquiasEdicion(municipioId, parroquiaId);
-            })
-            .catch(error => {
-                console.error('Error al cargar los municipios:', error);
-            });
-    }
-
-    function cargarParroquiasEdicion(municipioId, parroquiaId) {
-        fetch(`/api/parroquias?municipio=${municipioId}`)
-            .then(response => response.json())
-            .then(data => {
-                const parroquiaSelect = document.getElementById('edit-parroquia');
-                parroquiaSelect.innerHTML = '<option value="" disabled>Seleccione una Parroquia</option>';
-                data.forEach(parroquia => {
-                    parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
-                });
-                
-                // Establecer la parroquia seleccionada
-                parroquiaSelect.value = parroquiaId;
-            })
-            .catch(error => {
-                console.error('Error al cargar las parroquias:', error);
-            });
-    }
-
-    // Modificar las funciones existentes para manejar el prefijo
-    function cargarMunicipios(prefix = '') {
-        const estadoId = document.getElementById(prefix + 'estado').value;
-        if (prefix === 'edit-') {
-            const municipioId = $('#edit-municipio').data('selected');
-            const parroquiaId = $('#edit-parroquia').data('selected');
-            cargarMunicipiosEdicion(estadoId, municipioId, parroquiaId);
-        } else {
-            // Lógica existente para el modal de creación
-            fetch(`/api/municipios/?estado=${estadoId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const municipioSelect = document.getElementById(prefix + 'municipio');
-                    municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
-                    data.forEach(municipio => {
-                        municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
-                    });
-                })
-                .catch(error => {
-                    console.error('Error al cargar los municipios:', error);
-                });
-        }
-    }
 </script>
 
 {% endblock scripts %}

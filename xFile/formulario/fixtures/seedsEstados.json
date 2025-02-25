@@ -169,9 +169,9 @@
     },
     {
         "model": "formulario.Estados",
-        "pk": "MÉR",
+        "pk": "MER",
         "fields": {
-            "co_edo": "MÉR",
+            "co_edo": "MER",
             "des_edo": "MÉRIDA",
             "iso_3166_2": "VE-L",
             "status": true,
@@ -253,9 +253,9 @@
     },
     {
         "model": "formulario.Estados",
-        "pk": "TÁC",
+        "pk": "TAC",
         "fields": {
-            "co_edo": "TÁC",
+            "co_edo": "TAC",
             "des_edo": "TÁCHIRA",
             "iso_3166_2": "VE-S",
             "status": true,
