@@ -30,7 +30,7 @@ from formulario.views import (get_municipios, get_parroquias, get_sector, get_ur
                               SectorListView, sector_create, sector_delete, sector_update,
                               EntidadesListView, entidades_create, EntidadesDetailView, entidades_update, entidades_delete,
                               RepresentantesListView, representantes_create, RepresentantesDetailView, representantes_update, representantes_delete,
-                              UrbanismoListView, urbanismo_create, urbanismo_update, urbanismo_delete
+                              UrbanismoListView, urbanismo_create, urbanismo_update, urbanismo_delete, get_numToWord, get_numToMony
                               )
 from formulario.view_export import exportar_datos_xlsx
 from formulario.view_gen_contratos import genContratosTotales, genContratosUnico
@@ -43,6 +43,8 @@ urlpatterns = [
     path('api/parroquias/', get_parroquias, name='obtener_parroquias_por_municipio'), # /api/parroquias/?municipio=VAR
     path('api/municipios/', get_municipios, name='obtener_municipios_por_estado'), # /api/municipios/?estado=LGR
     path('api/urbanismos/', get_urbanismo, name='obtener_urbanismos_por_sector'), # /api/urbanismos/?sector=1
+    path('api/numtoword/<int:pk>', get_numToWord, name='numToWord'), # /api/numtoword/1
+    path('api/numtomony/<int:pk>', get_numToMony, name='numToMony'), # /api/numtomony/1
     
     path('admin/', admin.site.urls),
     

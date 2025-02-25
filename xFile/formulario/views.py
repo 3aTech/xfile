@@ -13,6 +13,21 @@ from .serializers import (DatosSerializer,
                           EntidadesSerializer, RepresentanteSerializer, UrbanismoSerializer)
 from rest_framework import status
 from django.db.models import ProtectedError
+from .fucnNumeroLetras import numero_a_letras, numero_a_moneda
+
+@api_view(['GET'])
+def get_numToWord(request, pk):
+    if not pk:
+        return Response({"error": "EL valor es requerido."}, status=status.HTTP_400_BAD_REQUEST)
+    word = numero_a_letras(pk)
+    return Response({"success": word})
+
+@api_view(['GET'])
+def get_numToMony(request, pk):
+    if not pk:
+        return Response({"error": "EL valor es requerido."}, status=status.HTTP_400_BAD_REQUEST)
+    word = numero_a_moneda(pk)
+    return Response({"success": word})
 
 # Vista para obtener urbanismos según el sector
 @api_view(['GET'])
