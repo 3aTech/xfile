@@ -159,7 +159,7 @@ class Parroquias(ModeloAuditoria):
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
-        return f'{self.des_parroquia}'
+        return f'{self.des_pquia}'
 
     class Meta:
         verbose_name = 'Parroquia'
@@ -175,7 +175,7 @@ class Parroquias(ModeloAuditoria):
 
 class Sectores(ModeloAuditoria):
     """Modelo para almacenar sectores"""
-    co_sec = models.CharField('Código', help_text='Código del sector', max_length=6, primary_key=True)
+    id = models.AutoField('Código', help_text='Código', primary_key=True)
     des_sec = models.CharField('Nombre', help_text='Nombre del sector', max_length=60)
     estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='sectores')
     municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='sectores')
@@ -183,7 +183,7 @@ class Sectores(ModeloAuditoria):
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
-        return f'{self.des_sector}'
+        return f'{self.des_sec}'
 
     class Meta:
         verbose_name = 'Sector'
@@ -200,8 +200,8 @@ class Sectores(ModeloAuditoria):
 class Urbanismos(ModeloAuditoria):
     """Modelo para almacenar sectores"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
-    des_urb = models.CharField('Nombre', help_text='Nombre del sector', max_length=120)
-    direccion = models.CharField('Dirección', help_text='Dirección', max_length=250, null=True, blank=True)
+    des_urb = models.CharField('Nombre del Urbanismo', max_length=255, help_text='Nombre del Urbanismo')
+    direccion = models.CharField('Dirección', max_length=255, help_text='Dirección del Urbanismo')
     estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='urbanismos')
     municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='urbanismos')
     parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='urbanismos')
@@ -209,7 +209,7 @@ class Urbanismos(ModeloAuditoria):
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
-        return f'{self.des_sector}'
+        return f'{self.des_urb}'
 
     class Meta:
         verbose_name = 'Urbanismo'

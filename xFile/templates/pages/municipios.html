@@ -223,7 +223,6 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -300,7 +299,6 @@
             {% endfor %}
         });
     </script>
-
 
     <script>
         function limpiarModal(modalId) {
@@ -468,9 +466,6 @@
             var button = $(event.relatedTarget);
             var codigo = button.data('codigo');
             var nombre = button.data('nombre');
-
-            console.log('codigo:', codigo); // Para depuración
-            console.log('nombre:', nombre); // Para depuración
                     
             var modal = $(this);
             modal.find('#delete-co_mpo').val(codigo);
@@ -485,25 +480,28 @@
                 type: 'DELETE',
                 url: '/municipios/' + id + '/eliminar/', // URL para eliminar un municipio
                 success: function (response) {
-                    // Manejar la respuesta exitosa
                     Swal.fire({
                         title: 'Éxito!',
-                        text: 'Municipio eliminado correctamente.',
+                        text: response.message || 'Municipio eliminado correctamente.',
                         type: 'success',
                         confirmButtonText: 'Aceptar'
                     }).then(() => {
                         limpiarModal('deleteModal');
                         $('#deleteModal').modal('hide');
-                        location.reload(); // Recargar la página para ver los cambios
+                        location.reload();
                     });
                 },
                 error: function (xhr) {
-                    // Manejar errores
                     let errorMessage = 'Ocurrió un error.';
-
-                    // Verifica si el error es por CSRF
-                    if (xhr.responseJSON && xhr.responseJSON.detail) {
-                        errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                    
+                    if (xhr.responseJSON) {
+                        if (xhr.responseJSON.error === 'protected_relation') {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr.responseJSON.error === 'not_found') {
+                            errorMessage = xhr.responseJSON.message;
+                        } else if (xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
                     }
     
                     Swal.fire({

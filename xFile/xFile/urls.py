@@ -21,7 +21,7 @@ from usuario.views import home, LoginView, RegisterView, SignOutView
 from django.conf import settings
 from django.conf.urls.static import static
 
-from formulario.views import (get_municipios, get_parroquias, get_sector,
+from formulario.views import (get_municipios, get_parroquias, get_sector, get_urbanismo,
                               ambiente_create, ambiente_delete, AmbienteListView, ambiente_update,
                               LinderoListView, lindero_create, lindero_delete, lindero_update,
                               EstadoListView, estado_create, estado_delete, estado_update,
@@ -42,6 +42,7 @@ urlpatterns = [
     path('api/sector/', get_sector, name='obtener_sector_por_parroquias'), # /api/sector/?parroquia=1
     path('api/parroquias/', get_parroquias, name='obtener_parroquias_por_municipio'), # /api/parroquias/?municipio=VAR
     path('api/municipios/', get_municipios, name='obtener_municipios_por_estado'), # /api/municipios/?estado=LGR
+    path('api/urbanismos/', get_urbanismo, name='obtener_urbanismos_por_sector'), # /api/urbanismos/?sector=1
     
     path('admin/', admin.site.urls),
     

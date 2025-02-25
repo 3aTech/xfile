@@ -14,6 +14,16 @@ from .serializers import (DatosSerializer,
 from rest_framework import status
 from django.db.models import ProtectedError
 
+# Vista para obtener urbanismos según el sector
+@api_view(['GET'])
+def get_urbanismo(request):
+    sector_id = request.GET.get('sector')
+    if not sector_id:
+        return Response({"error": "EL sector es requerido."}, status=status.HTTP_400_BAD_REQUEST)
+    urbanismos = Urbanismos.objects.filter(sector=sector_id)
+    serializer = UrbanismoSerializer(urbanismos, many=True)
+    return Response(serializer.data)
+
 # Vista para obtener sector según la parroquia
 @api_view(['GET'])
 def get_sector(request):
@@ -90,14 +100,13 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
         context['municipios'] = Municipios.objects.filter(status=True)
         context['parroquias'] = Parroquias.objects.filter(status=True)
         context['sectores'] = Sectores.objects.filter(status=True)
+        context['urbanismos'] = Urbanismos.objects.filter(status=True)
         
         return context
     
     def form_valid(self, form):
-        print(form.instance)
         form.instance.us_in = self.request.user.username
         messages.success(self.request, 'Datos creado exitosamente.')
-        print(form.instance)
         return super().form_valid(form)
     
     def form_invalid(self, form):
@@ -509,9 +518,26 @@ def parroquia_update(request, pk):
 
 @api_view(['DELETE'])
 def parroquia_delete(request, pk):
-    parroquia = Parroquias.objects.get(pk=pk)
-    parroquia.delete()
-    return Response({'message': 'Parroquia eliminado exitosamente.'}, status=204)
+    try:
+        parroquia = Parroquias.objects.get(pk=pk)
+        parroquia.delete()
+        return Response({'message': 'Parroquia eliminada exitosamente.'}, status=status.HTTP_200_OK)
+    except ProtectedError:
+        return Response(
+            {'error': 'protected_relation', 'message': 'No se puede eliminar la Parroquia porque tiene sectores asociados.'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    except Parroquias.DoesNotExist:
+        return Response(
+            {'error': 'not_found', 'message': 'Parroquia no encontrada.'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': 'server_error', 'message': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
 
 # Vistas para Sector
 class SectorListView(LoginRequiredMixin, ListView):
@@ -554,20 +580,8 @@ def sector_create(request):
 @api_view(['PUT'])
 def sector_update(request, pk):
     try:
-        sector = Sectores.objects.get(co_sec=pk)
-        parroquia = Parroquias.objects.get(co_pquia=request.data.get('parroquia'))
-        estado = Estados.objects.get(co_edo=request.data.get('estado'))
-        municipio = Municipios.objects.get(co_mpo=request.data.get('municipio'))
-        
-        serializer = SectorSerializer(sector, data={
-            'co_sec': request.data.get('co_sec'),
-            'des_sec': request.data.get('des_sec'),
-            'estado': estado.co_edo,
-            'municipio': municipio.co_mpo,
-            'parroquia': parroquia.co_pquia,
-            'status': request.data.get('status')
-        })
-        
+        sector = Sectores.objects.get(id=pk)  # Buscar el sector por ID
+        serializer = SectorSerializer(sector, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save(us_mo=request.user.username)
             return Response({'message': 'Sector actualizado exitosamente.'}, status=200)
@@ -575,16 +589,28 @@ def sector_update(request, pk):
             return Response(serializer.errors, status=400)
     except Sectores.DoesNotExist:
         return Response({'error': 'Sector no encontrado.'}, status=404)
-    except Parroquias.DoesNotExist:
-        return Response({'error': 'Parroquia no encontrada.'}, status=404)
-    except Exception as e:
-        return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
 def sector_delete(request, pk):
-    sector = Sectores.objects.get(pk=pk)
-    sector.delete()
-    return Response({'message': 'Sector eliminado exitosamente.'}, status=204)
+    try:
+        sector = Sectores.objects.get(pk=pk)
+        sector.delete()
+        return Response({'message': 'Sector eliminado exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
+    except ProtectedError:
+        return Response(
+            {'error': 'protected_relation', 'message': 'No se puede eliminar el Sector porque tiene urbanismos asociados.'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    except Estados.DoesNotExist:
+        return Response(
+            {'error': 'not_found', 'message': 'Sector no encontrado.'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        return Response(
+            {'error': 'server_error', 'message': str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 # Vistas para Entidades
 class EntidadesListView(LoginRequiredMixin, ListView):
@@ -631,13 +657,26 @@ def entidades_update(request, pk):
         return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
-def entidades_delete(request, pk):
+def entidades_delete(request, pk):   
     try:
         entidades = Entidades.objects.get(pk=pk)
         entidades.delete()
-        return Response({'message': 'Entidades eliminado exitosamente.'}, status=204)
-    except Entidades.DoesNotExist:
-        return Response({'error': 'Entidades no encontrado.'}, status=404)
+        return Response({'message': 'Entidad eliminada exitosamente.'}, status=status.HTTP_204_NO_CONTENT)
+    except ProtectedError:
+        return Response(
+            {'error': 'protected_relation', 'message': 'No se puede eliminar la entidad porque tiene responsables asociados.'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    except Estados.DoesNotExist:
+        return Response(
+            {'error': 'not_found', 'message': 'Entidad no encontrada.'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        return Response(
+            {'error': 'server_error', 'message': str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 # Vista para ver el detalle de un entidades
 class EntidadesDetailView(LoginRequiredMixin, DetailView):
@@ -675,14 +714,11 @@ class RepresentantesListView(LoginRequiredMixin, ListView):
 
 @api_view(['POST'])
 def representantes_create(request):
-    print("Datos recibidos:", request.data)  # Log para verificar los datos recibidos
     serializer = RepresentanteSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(us_in=request.user.username)
-        print("Representante creado exitosamente")  # Log para confirmar creación
         return Response({'message': 'Representante creado exitosamente.'}, status=201)
     else:
-        print("Errores de validación:", serializer.errors)  # Log para errores de validación
         for field, error in serializer.errors.items():
             messages.error(request, f"{field}: {error}")
     return Response(serializer.errors, status=400)
@@ -703,13 +739,26 @@ def representantes_update(request, pk):
         return Response({'error': str(e)}, status=500)
 
 @api_view(['DELETE'])
-def representantes_delete(request, pk):
+def representantes_delete(request, pk):   
     try:
         representante = Representantes.objects.get(pk=pk)
         representante.delete()
-        return Response({'message': 'Representante eliminado exitosamente.'}, status=204)
-    except Representantes.DoesNotExist:
-        return Response({'error': 'Representante no encontrado.'}, status=404)
+        return Response({'message': 'Representante eliminado exitosamente.'}, status=status.HTTP_200_OK)
+    except ProtectedError:
+        return Response(
+            {'error': 'protected_relation', 'message': 'No se puede eliminar el Representante.'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    except Parroquias.DoesNotExist:
+        return Response(
+            {'error': 'not_found', 'message': 'Representante no encontrado.'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': 'server_error', 'message': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        ) 
 
 # Vista para ver el detalle de un representante
 class RepresentantesDetailView(LoginRequiredMixin, DetailView):
@@ -725,6 +774,7 @@ def representantes_detail(request, pk):
         return Response(serializer.data)
     except Representantes.DoesNotExist:
         return Response({'error': 'Representante no encontrado.'}, status=404)
+
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar Urbanismos
 @api_view(['POST'])
@@ -764,7 +814,7 @@ def urbanismo_delete(request, pk):
     try:
         urbanismo = Urbanismos.objects.get(id=pk)
         urbanismo.delete()
-        return Response({'message': 'Urbanismo eliminado exitosamente.'}, status=204)
+        return Response({'message': 'Urbanismo eliminado exitosamente.'}, status=200)
     except Urbanismos.DoesNotExist:
         return Response({'error': 'Urbanismo no encontrado.'}, status=404)
     except Exception as e:

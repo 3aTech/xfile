@@ -49,14 +49,14 @@ class ParroquiaSerializer(serializers.ModelSerializer):
 class SectorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sectores
-        fields = ['co_sec', 'des_sec', 'estado', 'municipio', 'parroquia', 'status',
+        fields = ['id', 'des_sec', 'estado', 'municipio', 'parroquia', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class UrbanismoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Urbanismos
         fields = ['id', 'des_urb', 'direccion', 'estado',
-                  'municipio', 'parroquia', 'sector', 'status'
+                  'municipio', 'parroquia', 'sector', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
 class EntidadesSerializer(serializers.ModelSerializer):

@@ -376,8 +376,6 @@
     <script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
     <script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
 
-
-
     <script>
         $(function () {
 
@@ -553,7 +551,7 @@
                     success: function (response) {
                         Swal.fire({
                             title: 'Éxito!',
-                            text: 'Representante eliminado correctamente.',
+                            text: response.message || 'Representante eliminado correctamente.',
                             type: 'success',
                             confirmButtonText: 'Aceptar'
                         }).then(() => {
@@ -564,9 +562,17 @@
                     },
                     error: function (xhr) {
                         let errorMessage = 'Ocurrió un error.';
-                        if (xhr.responseJSON && xhr.responseJSON.detail) {
-                            errorMessage = xhr.responseJSON.detail;
+                        
+                        if (xhr.responseJSON) {
+                            if (xhr.responseJSON.error === 'protected_relation') {
+                                errorMessage = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON.error === 'not_found') {
+                                errorMessage = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            }
                         }
+        
                         Swal.fire({
                             title: 'Error!',
                             text: errorMessage,

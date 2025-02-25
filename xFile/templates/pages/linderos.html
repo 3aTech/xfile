@@ -169,7 +169,7 @@
   $(function () {
     $("#example1").DataTable({
       responsive: true,
-      autoWidth: false,
+      autoWidth: true,
       language: {
         sProcessing: "Procesando...",
         sLengthMenu: "Mostrar _MENU_ registros",
@@ -335,31 +335,36 @@
             type: 'DELETE',
             url: '/linderos/' + id + '/eliminar/', // URL para eliminar un lindero
             success: function (response) {
-                // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Lindero eliminado correctamente.',
+                    text: response.message || 'Lindero eliminado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
-                    location.reload(); // Recargar la página para ver los cambios
+                    limpiarModal('deleteModal');
+                    $('#deleteModal').modal('hide');
+                    location.reload();
                 });
             },
             error: function (xhr) {
-                 // Manejar errores
-                 let errorMessage = 'Ocurrió un error.';
+                let errorMessage = 'Ocurrió un error.';
+                
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.error === 'protected_relation') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.error === 'not_found') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                }
 
-                 // Verifica si el error es por CSRF
-                 if (xhr.responseJSON && xhr.responseJSON.detail) {
-                     errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
-                 }
- 
-                 Swal.fire({
-                     title: 'Error!',
-                     text: errorMessage,
-                     type: 'error',
-                     confirmButtonText: 'Aceptar'
-                 });
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
             }
         });
     });

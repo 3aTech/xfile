@@ -5,6 +5,9 @@
 <!-- DataTables -->
 <link rel="stylesheet" href="{% static '3atech/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}" />
 <link rel="stylesheet" href="{% static '3atech/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" />
+<!-- Select2bs4 -->
+<link rel="stylesheet" href="{% static '3atech/plugins/select2/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static '3atech/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
 {% endblock extrahead %}
 
 {% block title %}Gestión de Urbanismos{% endblock title %}
@@ -40,7 +43,6 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Dirección</th>
                 <th>Sector</th>
                 <th>Parroquia</th>
                 <th>Municipio</th>
@@ -53,7 +55,6 @@
             {% for urbanismo in registros %}
             <tr>
                 <td>{{ urbanismo.des_urb }}</td>
-                <td>{{ urbanismo.direccion }}</td>
                 <td>{{ urbanismo.sector.des_sec }}</td>
                 <td>{{ urbanismo.parroquia.des_pquia }}</td>
                 <td>{{ urbanismo.municipio.des_mpo }}</td>
@@ -68,19 +69,19 @@
                 <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
-                            data-co-urb="{{ urbanismo.id }}"
+                            data-id="{{ urbanismo.id }}"
                             data-des-urb="{{ urbanismo.des_urb }}"
                             data-direccion="{{ urbanismo.direccion }}"
                             data-estado="{{ urbanismo.estado.co_edo }}"
                             data-municipio="{{ urbanismo.municipio.co_mpo }}"
                             data-parroquia="{{ urbanismo.parroquia.co_pquia }}"
-                            data-sector="{{ urbanismo.sector.co_sec }}"
-                            data-stats="{{ urbanismo.status }}">
+                            data-sector="{{ urbanismo.sector.id }}"
+                            data-status="{{ urbanismo.status }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ urbanismo.id }}" 
+                            data-id="{{ urbanismo.id }}" 
                             data-nombre="{{ urbanismo.des_urb }}">
                             <i class='bx bx-trash' ></i>
                     </button>
@@ -113,48 +114,84 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-3"> 
                         <div class="col-md-12">
-                            <label for="des_urb">Nombre</label>
-                            <input type="text" class="form-control" id="des_urb" name="des_urb" required>
+                            <label for="des_urb" class="form-label">Nombre</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bx-message-alt-detail'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="des_urb" name="des_urb" 
+                              aria-label="Nombre del Urbanismo" placeholder="Nombre del Urbanismo">
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin' ></i></span>
+                              </div>
+                              <textarea type="text" class="form-control" id="direccion" name="direccion" 
+                              aria-label="Dirección" placeholder="Dirección"></textarea>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="estado" class="form-label">Estado</label>
+                          <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                              </div>
+                                <select class="form-control select2" id="estado" name="estado" 
+                                        required onchange="cargarMunicipios()" 
+                                        data-placeholder="Seleccione un Estado" aria-label="estado">
+                                    <option value="" disabled selected>Seleccione un Estado</option>
+                                    {% for estado in estados %}
+                                        <option value="{{ estado.co_edo }}">{{ estado.co_edo }} - {{ estado.des_edo }}</option>
+                                    {% empty %}
+                                        <option value="">No hay estados disponibles</option>
+                                    {% endfor %}
+                                </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="municipio" class="form-label">Municipio</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="direccion">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" name="direccion" required>
+                        <div class="col-md-6">
+                            <label for="parroquia" class="form-label">Parroquia</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2" id="parroquia" name="parroquia" required onchange="cargarSectores()" aria-label="parroquia">
+                                  <option value="" disabled {% if not object %}selected{% endif %}>Seleccione una Parroquia</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="estado">Estado</label>
-                            <select class="form-control" id="estado" name="estado" required>
-                                <option value="" disabled selected>Seleccione un Estado</option>
-                                {% for estado in estados %}
-                                <option value="{{ estado.co_edo }}">{{ estado.des_edo }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="municipio">Municipio</label>
-                            <select class="form-control" id="municipio" name="municipio" required>
-                                <option value="" disabled selected>Seleccione un Municipio</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="parroquia">Parroquia</label>
-                            <select class="form-control" id="parroquia" name="parroquia" required>
-                                <option value="" disabled selected>Seleccione una Parroquia</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="sector">Sector</label>
-                            <select class="form-control" id="sector" name="sector" required>
-                                <option value="" disabled selected>Seleccione un Sector</option>
-                            </select>
-                        </div>
+                          <div class="col-md-6">
+                              <label for="sector" class="form-label">Sector</label>
+                              <div class="input-group mb-3">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                  </div>
+                                  <select class="form-control select2" id="sector" name="sector" required aria-label="sector">
+                                    <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Sector</option>
+                                  </select>
+                              </div>
+                          </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -179,56 +216,99 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" id="edit-id" name="id">
+
                     <div class="row mb-3">
-                        <div class="col-md-12">
+                        <div class="col-md-12">                                                           
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" id="edit-status" name="status">
                                 <label class="custom-control-label" for="edit-status">Activo</label>
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-3"> 
                         <div class="col-md-12">
-                            <label for="edit-des_urb">Nombre</label>
-                            <input type="text" class="form-control" id="edit-des_urb" name="des_urb" required>
+                            <label for="edit-des_urb" class="form-label">Nombre</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bx-message-alt-detail'></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="edit-des_urb" name="des_urb" 
+                              aria-label="Nombre del Urbanismo" placeholder="Nombre del Urbanismo">
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row mb-3"> 
+                        <div class="col-md-12">
+                            <label for="edit-direccion" class="form-label">Dirección</label>
+                            <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class='bx bxs-map-pin' ></i></span>
+                              </div>
+                              <textarea type="text" class="form-control" id="edit-direccion" name="direccion" 
+                              aria-label="Dirección" placeholder="Dirección"></textarea>
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label for="edit-estado" class="form-label">Estado</label>
+                          <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                              </div>
+                                <select class="form-control select2" id="edit-estado" name="estado" 
+                                        required onchange="cargarMunicipios('edit-')" 
+                                        data-placeholder="Seleccione un Estado" aria-label="estado">
+                                    <option value="" disabled>Seleccione un Estado</option>
+                                    {% for estado in estados %}
+                                        <option value="{{ estado.co_edo }}">{{ estado.co_edo }} - {{ estado.des_edo }}</option>
+                                    {% empty %}
+                                        <option value="">No hay estados disponibles</option>
+                                    {% endfor %}
+                                </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit-municipio" class="form-label">Municipio</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2" id="edit-municipio" name="municipio" 
+                                        required onchange="cargarParroquias('edit-')" 
+                                        data-placeholder="Seleccione un Municipio" aria-label="municipio">
+                                  <option value="" disabled>Seleccione un Municipio</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="edit-direccion">Dirección</label>
-                            <input type="text" class="form-control" id="edit-direccion" name="direccion" required>
+                        <div class="col-md-6">
+                            <label for="edit-parroquia" class="form-label">Parroquia</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                </div>
+                                <select class="form-control select2" id="edit-parroquia" name="parroquia" 
+                                        required onchange="cargarSectores('edit-')" 
+                                        data-placeholder="Seleccione una Parroquia" aria-label="parroquia">
+                                  <option value="" disabled>Seleccione una Parroquia</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="edit-estado">Estado</label>
-                            <select class="form-control" id="edit-estado" name="estado" required>
-                                <option value="" disabled selected>Seleccione un Estado</option>
-                                {% for estado in estados %}
-                                <option value="{{ estado.co_edo }}">{{ estado.des_edo }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="edit-municipio">Municipio</label>
-                            <select class="form-control" id="edit-municipio" name="municipio" required>
-                                <option value="" disabled selected>Seleccione un Municipio</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="edit-parroquia">Parroquia</label>
-                            <select class="form-control" id="edit-parroquia" name="parroquia" required>
-                                <option value="" disabled selected>Seleccione una Parroquia</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="edit-sector">Sector</label>
-                            <select class="form-control" id="edit-sector" name="sector" required>
-                                <option value="" disabled selected>Seleccione un Sector</option>
-                            </select>
-                        </div>
+                          <div class="col-md-6">
+                              <label for="edit-sector" class="form-label">Sector</label>
+                              <div class="input-group mb-3">
+                                  <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
+                                  </div>
+                                  <select class="form-control select2" id="edit-sector" name="sector" 
+                                          required data-placeholder="Seleccione un Sector" aria-label="sector">
+                                    <option value="" disabled>Seleccione un Sector</option>
+                                  </select>
+                              </div>
+                          </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -253,8 +333,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>¿Está seguro de eliminar el urbanismo <strong id="delete-des_urb"></strong>?</p>
-                    <input type="hidden" id="delete-co_urb" name="co_urb">
+                    <p>¿Está seguro de eliminar el urbanismo <strong id="delete-nombre"></strong>?</p>
+                    <input type="hidden" id="delete-id" name="id">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -268,17 +348,25 @@
 {% endblock content %}
 
 {% block scripts %}
+<!-- jQuery -->
+<script src="{% static '3atech/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static '3atech/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <!-- DataTables -->
 <script src="{% static '3atech/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static '3atech/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static '3atech/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
 <script src="{% static '3atech/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<!-- Select2bs4 -->
+<script src="{% static '3atech/plugins/select2/js/select2.full.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static '3atech/dist/js/adminlte.min.js' %}"></script>
 
 <script>
     $(function () {
         $("#example1").DataTable({
             responsive: true,
-            autoWidth: true,
+            autoWidth: false,
             language: {
               sProcessing: "Procesando...",
               sLengthMenu: "Mostrar _MENU_ registros",
@@ -349,10 +437,10 @@
     // Script para manejar la edición de un urbanismo
     $('#editForm').on('submit', function (event) {
         event.preventDefault();
-        var codigo = $('#edit-co_urb').val();
+        var id = $('#edit-id').val();
         $.ajax({
             type: 'PUT',
-            url: '/urbanismos/' + codigo + '/editar/',
+            url: '/urbanismos/' + id + '/editar/',
             data: $(this).serialize(),
             headers: {
                 'X-CSRFToken': csrftoken
@@ -387,7 +475,7 @@
     // Script para manejar la eliminación de un urbanismo
     $('#deleteForm').on('submit', function (event) {
         event.preventDefault();
-        var id = $('#delete-co_urb').val();
+        var id = $('#delete-id').val();
         $.ajax({
             type: 'DELETE',
             url: '/urbanismos/' + id + '/eliminar/',
@@ -421,43 +509,7 @@
         });
     });
 
-    // Script para cargar datos en el modal de edición
-    $('#editModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Botón que activó el modal
-        var co_urb = button.data('co-urb'); // Extraer datos del atributo data-co-urb
-        var des_urb = button.data('des-urb'); // Extraer datos del atributo data-des-urb
-        var direccion = button.data('direccion'); // Extraer datos del atributo data-direccion
-        var estado = button.data('estado'); // Extraer datos del atributo data-estado
-        var municipio = button.data('municipio'); // Extraer datos del atributo data-municipio
-        var parroquia = button.data('parroquia'); // Extraer datos del atributo data-parroquia
-        var sector = button.data('sector'); // Extraer datos del atributo data-sector
-        var status = button.data('stats'); // Extraer datos del atributo data-stats
-
-        // Llenar el modal con los datos extraídos
-        var modal = $(this);
-        modal.find('#edit-co_urb').val(co_urb);
-        modal.find('#edit-des_urb').val(des_urb);
-        modal.find('#edit-direccion').val(direccion);
-        modal.find('#edit-estado').val(estado).trigger('change');
-        modal.find('#edit-municipio').val(municipio).trigger('change');
-        modal.find('#edit-parroquia').val(parroquia).trigger('change');
-        modal.find('#edit-sector').val(sector).trigger('change');
-        modal.find('#edit-status').prop('checked', status);
-    });
-
-    // Script para cargar datos en el modal de eliminación
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget); // Botón que activó el modal
-        var co_urb = button.data('codigo'); // Extraer datos del atributo data-codigo
-        var des_urb = button.data('nombre'); // Extraer datos del atributo data-nombre
-
-        // Llenar el modal con los datos extraídos
-        var modal = $(this);
-        modal.find('#delete-co_urb').val(co_urb);
-        modal.find('#delete-des_urb').text(des_urb);
-    });
-
-    // Función para limpiar los modales
+    // Modificar la función limpiarModal
     function limpiarModal(modalId) {
         const modal = document.getElementById(modalId);
         if (modal) {
@@ -467,11 +519,22 @@
                 form.reset();
             }
 
-            // Limpiar selects si existen
-            const selects = modal.querySelectorAll('select');
-            selects.forEach(select => {
-                select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
-            });
+            // Si es el modal de edición, no limpiar el select de estados
+            if (modalId !== 'editModal') {
+                const selects = modal.querySelectorAll('select');
+                selects.forEach(select => {
+                    select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+                });
+            } else {
+                // Para el modal de edición, solo limpiar municipio, parroquia y sector
+                const selectsToReset = ['edit-municipio', 'edit-parroquia', 'edit-sector'];
+                selectsToReset.forEach(selectId => {
+                    const select = document.getElementById(selectId);
+                    if (select) {
+                        select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+                    }
+                });
+            }
 
             // Limpiar validaciones
             const invalidElements = modal.querySelectorAll('.is-invalid');
@@ -487,19 +550,60 @@
         }
     }
 
-    // Limpiar modal de creación al cerrarse
-    $('#createModal').on('hidden.bs.modal', function () {
-        limpiarModal('createModal');
+    // Modificar el evento show.bs.modal para el modal de edición
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var urbanismoId = button.data('id');
+        var desUrb = button.data('des-urb');
+        var direccion = button.data('direccion');
+        var estado = button.data('estado');
+        var municipio = button.data('municipio');
+        var parroquia = button.data('parroquia');
+        var sector = button.data('sector');
+        var status = button.data('status') === true || button.data('status') === 'True';
+
+        var modal = $(this);
+        modal.find('#edit-id').val(urbanismoId);
+        modal.find('#edit-des_urb').val(desUrb);
+        modal.find('#edit-direccion').val(direccion);
+        modal.find('#edit-status').prop('checked', status);
+
+        // Guardar los valores seleccionados como data attributes
+        $('#edit-municipio').attr('data-selected', municipio);
+        $('#edit-parroquia').attr('data-selected', parroquia);
+        $('#edit-sector').attr('data-selected', sector);
+
+        // Reinicializar los select2bs4
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: function() {
+                return $(this).data('placeholder');
+            },
+            allowClear: true,
+            width: '100%',
+            language: {
+                noResults: function() {
+                    return "No se encontraron resultados";
+                },
+                searching: function() {
+                    return "Buscando...";
+                }
+            },
+            minimumInputLength: 0,
+            minimumResultsForSearch: 10
+        });
+
+        // Establecer el estado y disparar la carga en cascada
+        setTimeout(function() {
+            $('#edit-estado').val(estado).trigger('change');
+        }, 100);
     });
 
-    // Limpiar modal de edición al cerrarse
+    // Modificar el evento hidden.bs.modal
     $('#editModal').on('hidden.bs.modal', function () {
+        // Destruir las instancias de select2bs4 antes de limpiar
+        $('.select2bs4').select2('destroy');
         limpiarModal('editModal');
-    });
-
-    // Limpiar modal de eliminación al cerrarse
-    $('#deleteModal').on('hidden.bs.modal', function () {
-        limpiarModal('deleteModal');
     });
 
     // Obtener el token CSRF de la cookie
@@ -529,6 +633,131 @@
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         }
+    });
+
+    function cargarMunicipios(prefix = '') {
+        const estadoId = document.getElementById(prefix + 'estado').value;
+        fetch(`/api/municipios/?estado=${estadoId}`)
+            .then(response => response.json())
+            .then(data => {
+                const municipioSelect = document.getElementById(prefix + 'municipio');
+                municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+                data.forEach(municipio => {
+                    municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
+                });
+                // Si estamos en el modal de edición y hay un municipio seleccionado
+                if (prefix === 'edit-' && municipioSelect.dataset.selected) {
+                    municipioSelect.value = municipioSelect.dataset.selected;
+                    cargarParroquias(prefix);
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar los municipios:', error);
+            });
+    }
+    
+    function cargarParroquias(prefix = '') {
+        const municipioId = document.getElementById(prefix + 'municipio').value;
+        fetch(`/api/parroquias?municipio=${municipioId}`)
+            .then(response => response.json())
+            .then(data => {
+                const parroquiaSelect = document.getElementById(prefix + 'parroquia');
+                parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
+                data.forEach(parroquia => {
+                    parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
+                });
+                // Si estamos en el modal de edición y hay una parroquia seleccionada
+                if (prefix === 'edit-' && parroquiaSelect.dataset.selected) {
+                    parroquiaSelect.value = parroquiaSelect.dataset.selected;
+                    cargarSectores(prefix);
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar las parroquias:', error);
+            });
+    }
+    
+    function cargarSectores(prefix = '') {
+        const parroquiasId = document.getElementById(prefix + 'parroquia').value;
+        fetch(`/api/sector/?parroquia=${parroquiasId}`)
+            .then(response => response.json())
+            .then(data => {
+                const sectorSelect = document.getElementById(prefix + 'sector');
+                sectorSelect.innerHTML = '<option value="" disabled selected>Seleccione un Sector</option>';
+                data.forEach(sector => {
+                    sectorSelect.innerHTML += `<option value="${sector.id}">${sector.des_sec}</option>`;
+                });
+                // Si estamos en el modal de edición y hay un sector seleccionado
+                if (prefix === 'edit-' && sectorSelect.dataset.selected) {
+                    sectorSelect.value = sectorSelect.dataset.selected;
+                }
+            })
+            .catch(error => {
+                Swal.fire({  
+                    type: 'error',
+                    title: 'Error!',
+                    text: 'Error al cargar los sectores',
+                    //timer: 2000
+                });
+            });
+    }
+
+    // Modificar los event listeners para los selects
+    $('#estado, #edit-estado').on('change', function() {
+        const prefix = this.id.startsWith('edit-') ? 'edit-' : '';
+        cargarMunicipios(prefix);
+    });
+
+    $('#municipio, #edit-municipio').on('change', function() {
+        const prefix = this.id.startsWith('edit-') ? 'edit-' : '';
+        cargarParroquias(prefix);
+    });
+
+    $('#parroquia, #edit-parroquia').on('change', function() {
+        const prefix = this.id.startsWith('edit-') ? 'edit-' : '';
+        cargarSectores(prefix);
+    });
+
+    // Script para cargar datos en el modal de eliminación
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Botón que activó el modal
+        var urbanismoId = button.data('id');  // Extraer el ID del urbanismo
+        var urbanismoNombre = button.data('nombre');  // Extraer el nombre del urbanismo
+        var modal = $(this);
+
+        // Llenar el campo oculto con el ID del urbanismo
+        modal.find('#delete-id').val(urbanismoId);
+
+        // Mostrar el nombre del urbanismo en el modal
+        modal.find('#delete-nombre').text(urbanismoNombre);
+    });
+
+    // Agregar también el evento para limpiar el modal de eliminación
+    $('#deleteModal').on('hidden.bs.modal', function () {
+        limpiarModal('deleteModal');
+    });
+
+    // Modificar las inicializaciones de select2bs4
+    $(document).ready(function() {
+        //Initialize Select2bs4 Elements
+        $('.select2bs4').select2({
+            theme: 'bootstrap4',
+            placeholder: function() {
+                return $(this).data('placeholder');
+            },
+            allowClear: true,
+            width: '100%',
+            language: {
+                noResults: function() {
+                    return "No se encontraron resultados";
+                },
+                searching: function() {
+                    return "Buscando...";
+                }
+            },
+            minimumInputLength: 0,
+            minimumResultsForSearch: 10
+        });
     });
 </script>
 {% endblock scripts %}

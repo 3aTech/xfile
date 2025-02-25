@@ -84,8 +84,8 @@
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ parroquia.co_pquia }}" 
-                            data-nombre="{{ parroquia.des_pquia }}">
+                            data-co-parroquia="{{ parroquia.co_pquia }}"
+                            data-des-parroquia="{{ parroquia.des_pquia }}">
                             <i class='bx bx-trash' ></i>
                     </button>
                 </td>
@@ -249,7 +249,7 @@
                 </div>
                 <div class="modal-body">
                     <p>¿Estás seguro de que deseas eliminar el parroquia "<span id="delete-des_pquia"></span>"?</p>
-                    <input type="hidden" id="delete-co_pquia" name="co_pquia">
+                    <input type="hidden" id="delete-code" name="co_pquia">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -282,7 +282,7 @@
   $(function () {
     $("#example1").DataTable({
       responsive: true,
-      autoWidth: true,
+      autoWidth: false,
       language: {
         sProcessing: "Procesando...",
         sLengthMenu: "Mostrar _MENU_ registros",
@@ -311,7 +311,6 @@
         },
       },
     });
-   
   });
 </script>
 
@@ -364,15 +363,6 @@
         modal.find('#edit-status').prop('checked', status);
     });
 
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var codigo = button.data('codigo');
-        var nombre = button.data('nombre');
-                
-        var modal = $(this);
-        modal.find('#delete-co_pquia').val(codigo);
-        modal.find('#delete-des_pquia').text(nombre);
-    });
 
     // Script para manejar la creación de un nuevo parroquia
     $('#createForm').on('submit', function (event) {
@@ -385,25 +375,28 @@
                 'X-CSRFToken': csrftoken // Incluye el token CSRF
             },
             success: function (response) {
-                // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Parroquia creado correctamente.',
+                    text: response.message || 'Parroquia creada correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
-                    limpiarModal('createModal');
-                    $('#createModal').modal('hide');
-                    location.reload(); // Recargar la página para ver los cambios
+                    limpiarModal('deleteModal');
+                    $('#deleteModal').modal('hide');
+                    location.reload();
                 });
             },
             error: function (xhr) {
-                // Manejar errores
-                let errorMessage = 'Ocurrió un error.';
-
-                // Verifica si el error es por CSRF
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
+                let errorMessage = 'Ooh! Ocurrió un error.';
+                
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.error === 'protected_relation') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.error === 'not_found') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
                 }
 
                 Swal.fire({
@@ -467,44 +460,72 @@
         });
     });
 
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var co_pquia = button.data('co-parroquia');
+        var des_pquia = button.data('des-parroquia');
+                
+        var modal = $(this);
+        modal.find('#delete-code').val(co_pquia);
+        modal.find('#delete-des_pquia').text(des_pquia);
+    });
+    
     // Script para manejar la eliminación de un parroquia
     $('#deleteForm').on('submit', function (event) {
-        event.preventDefault(); // Evita el envío normal del formulario
-        var id = $('#delete-co_pquia').val(); // Obtener el ID del parroquia
+        event.preventDefault();
+        var codigo = $('#delete-code').val();     
+        if (!codigo) {
+            console.error('ID no válido');
+            Swal.fire({
+                title: 'Error!',
+                text: 'No se pudo obtener el ID de la parroquia',
+                type: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+        
         $.ajax({
             type: 'DELETE',
-            url: '/parroquias/' + id + '/eliminar/', // URL para eliminar un parroquia
+            url: '/parroquias/' + codigo + '/eliminar/',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
             success: function (response) {
-                // Manejar la respuesta exitosa
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Parroquia eliminado correctamente.',
+                    text: response.message || 'Parroquia eliminada correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     limpiarModal('deleteModal');
                     $('#deleteModal').modal('hide');
-                    location.reload(); // Recargar la página para ver los cambios
+                    location.reload();
                 });
             },
             error: function (xhr) {
-                 // Manejar errores
-                 let errorMessage = 'Ocurrió un error.';
+                let errorMessage = 'Ocurrió un error.';
+                
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.error === 'protected_relation') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.error === 'not_found') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                }
 
-                 // Verifica si el error es por CSRF
-                 if (xhr.responseJSON && xhr.responseJSON.detail) {
-                     errorMessage = xhr.responseJSON.detail; // Obtiene el mensaje de error
-                 }
- 
-                 Swal.fire({
-                     title: 'Error!',
-                     text: errorMessage,
-                     type: 'error',
-                     confirmButtonText: 'Aceptar'
-                 });
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    type: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
             }
         });
     });
+
 
     <!-- Obtener el token CSRF de la cookie -->
 function getCookie(name) {

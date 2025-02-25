@@ -285,7 +285,7 @@
 
     $("#example1").DataTable({
       responsive: true,
-      autoWidth: false,
+      autoWidth: true,
       language: {
         sProcessing: "Procesando...",
         sLengthMenu: "Mostrar _MENU_ registros",
@@ -458,7 +458,7 @@
             success: function (response) {
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Entidad eliminada correctamente.',
+                    text: response.message || 'Entidad eliminada correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -469,9 +469,17 @@
             },
             error: function (xhr) {
                 let errorMessage = 'Ocurrió un error.';
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail;
+                
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.error === 'protected_relation') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.error === 'not_found') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
                 }
+
                 Swal.fire({
                     title: 'Error!',
                     text: errorMessage,

@@ -46,7 +46,6 @@
       <table id="example1" class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Código</th>
                 <th>Sector</th>
                 <th>Parroquia</th>
                 <th>Municipio</th>
@@ -58,7 +57,6 @@
         <tbody>
             {% for sector in registros %}
             <tr>
-                <td>{{ sector.co_sec }}</td>
                 <td>{{ sector.des_sec }}</td>
                 <td>{{ sector.parroquia.des_pquia }}</td>
                 <td>{{ sector.municipio.des_mpo }}</td>
@@ -73,17 +71,17 @@
                 <td class="text-center">
                     <button class="btn btn-warning" data-toggle="modal" 
                             data-target="#editModal" 
-                            data-co-sec="{{ sector.co_sec }}"
+                            data-id="{{ sector.id }}"
                             data-des-sec="{{ sector.des_sec }}"
                             data-estado="{{ sector.estado.co_edo }}"
                             data-municipio="{{ sector.municipio.co_mpo }}"
                             data-parroquia="{{ sector.parroquia.co_pquia }}"
-                            data-stats="{{ sector.status }}">
+                            data-status="{{ sector.status }}">
                             <i class='bx bx-edit' ></i>
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" 
                             data-target="#deleteModal" 
-                            data-codigo="{{ sector.co_sec }}" 
+                            data-codigo="{{ sector.id }}" 
                             data-nombre="{{ sector.des_sec }}">
                             <i class='bx bx-trash' ></i>
                     </button>
@@ -117,11 +115,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="co_sec">Código</label>
-                            <input type="text" class="form-control" id="co_sec" name="co_sec" required>
-                        </div>
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <label for="des_sec">Nombre</label>
                             <input type="text" class="form-control" id="des_sec" name="des_sec" required>
                         </div>
@@ -207,6 +201,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" id="edit-id" name="id">
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <div class="custom-control custom-switch">
@@ -216,11 +211,7 @@
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="edit-co_sec">Código</label>
-                            <input type="text" class="form-control" id="edit-co_sec" name="co_sec" required>
-                        </div>
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <label for="edit-des_sec">Nombre</label>
                             <input type="text" class="form-control" id="edit-des_sec" name="des_sec" required>
                         </div>
@@ -307,7 +298,7 @@
                 </div>
                 <div class="modal-body">
                     <p>¿Estás seguro de que deseas eliminar el sector "<span id="delete-des_sec"></span>"?</p>
-                    <input type="hidden" id="delete-co_sec" name="co_sec">
+                    <input type="hidden" id="delete-id" name="id">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -317,7 +308,6 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -393,35 +383,39 @@
     // Script para manejar la carga de datos en el modal de edición
     $('#editModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
-        var co_sec = button.data('co-sec');
+        var id = button.data('id');
         var des_sec = button.data('des-sec');
         var estado = button.data('estado');
         var municipio = button.data('municipio');
         var parroquia = button.data('parroquia');
-        var status = button.data('stats') === 'True' || button.data('stats') === true;
-
+        var status = button.data('status') === 'True' || button.data('status') === true;
 
         var modal = $(this);
-        modal.find('#edit-co_sec').val(co_sec);
+        modal.find('#edit-id').val(id);
         modal.find('#edit-des_sec').val(des_sec);
-        modal.find('#edit-estado').val(estado).trigger('change');
-        modal.find('#edit-municipio').val(municipio).trigger('change');
-        modal.find('#edit-parroquia').val(parroquia).trigger('change');
+        
+        // Inicializar select2 para el estado si aún no está inicializado
+        if (!$('#edit-estado').data('select2')) {
+            $('#edit-estado').select2({
+                placeholder: "Seleccione un Estado",
+                allowClear: true
+            });
+        }
+        
+        // Establecer el valor del estado
+        $('#edit-estado').val(estado).trigger('change');
+        
+        // Almacenar los valores seleccionados como datos del elemento
+        modal.find('#edit-municipio').data('selected', municipio);
+        modal.find('#edit-parroquia').data('selected', parroquia);
+        
+        // Cargar municipios y parroquias en cascada
+        cargarMunicipiosEdicion(estado, municipio, parroquia);
+        
         modal.find('#edit-status').prop('checked', status); 
-
     });
 
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var codigo = button.data('codigo');
-        var nombre = button.data('nombre');
-                
-        var modal = $(this);
-        modal.find('#delete-co_sec').val(codigo);
-        modal.find('#delete-des_sec').text(nombre);
-    });
-
-    // Función para manejar la creación de un sector
+       // Función para manejar la creación de un sector
     $('#createForm').on('submit', function (event) {
         event.preventDefault();
         $.ajax({
@@ -461,7 +455,7 @@
     // Función para manejar la edición de un sector
     $('#editForm').on('submit', function (event) {
         event.preventDefault();
-        var codigo = $('#edit-co_sec').val();
+        var codigo = $('#edit-id').val();
         
         $.ajax({
             type: 'PUT',
@@ -499,10 +493,20 @@
         });
     });
 
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var codigo = button.data('codigo');
+        var nombre = button.data('nombre');
+                
+        var modal = $(this);
+        modal.find('#delete-id').val(codigo);
+        modal.find('#delete-des_sec').text(nombre);
+    });
+    
     // Función para manejar la eliminación de un sector
     $('#deleteForm').on('submit', function (event) {
         event.preventDefault();
-        var id = $('#delete-co_sec').val();
+        var id = $('#delete-id').val();
         $.ajax({
             type: 'DELETE',
             url: '/sectores/' + id + '/eliminar/',
@@ -512,7 +516,7 @@
             success: function (response) {
                 Swal.fire({
                     title: 'Éxito!',
-                    text: 'Sector eliminado correctamente.',
+                    text: response.message || 'Sector eliminado correctamente.',
                     type: 'success',
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
@@ -522,14 +526,22 @@
                 });
             },
             error: function (xhr) {
-                let errorMessage = 'Ocurrió un error al eliminar el sector.';
-                if (xhr.responseJSON && xhr.responseJSON.detail) {
-                    errorMessage = xhr.responseJSON.detail;
+                let errorMessage = 'Ocurrió un error.';
+                
+                if (xhr.responseJSON) {
+                    if (xhr.responseJSON.error === 'protected_relation') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.error === 'not_found') {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
                 }
+
                 Swal.fire({
                     title: 'Error!',
                     text: errorMessage,
-                    icon: 'error',
+                    type: 'error',
                     confirmButtonText: 'Aceptar'
                 });
             }
@@ -564,9 +576,13 @@
     });
 
     $(document).ready(function() {
-        $('#parroquia').select2bs4({
-            placeholder: "Seleccione un Parroquia",
-            allowClear: true
+        // Inicializar select2 para todos los selectores necesarios
+        $('.select2bs4').each(function() {
+            $(this).select2({
+                theme: 'bootstrap4',
+                placeholder: "Seleccione una opción",
+                allowClear: true
+            });
         });
     });
 </script>
@@ -581,10 +597,9 @@
                 form.reset();
             }
             
-            // Limpiar selects si existen
-            const selects = modal.querySelectorAll('select');
-            selects.forEach(select => {
-                select.innerHTML = '<option value="" disabled selected>Seleccione una opción</option>';
+            // Limpiar select2 si existen
+            $(modal).find('.select2bs4').each(function() {
+                $(this).val('').trigger('change');
             });
             
             // Limpiar validaciones
@@ -616,45 +631,67 @@
         limpiarModal('deleteModal');
     });
 
-    function cargarMunicipios() {
-        const estadoId = document.getElementById('estado').value;
+    function cargarMunicipiosEdicion(estadoId, municipioId, parroquiaId) {
         fetch(`/api/municipios/?estado=${estadoId}`)
             .then(response => response.json())
             .then(data => {
-                const municipioSelect = document.getElementById('municipio');
-                municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+                const municipioSelect = document.getElementById('edit-municipio');
+                municipioSelect.innerHTML = '<option value="" disabled>Seleccione un Municipio</option>';
                 data.forEach(municipio => {
                     municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
                 });
-                // Si hay un municipio seleccionado, lo seleccionamos
-                if ("{{ object.municipio.co_mpo }}" !== "") {
-                    municipioSelect.value = "{{ object.municipio.co_mpo }}";
-                    cargarParroquias(); // Cargar parroquias para el municipio seleccionado
-                }
+                
+                // Establecer el municipio seleccionado
+                municipioSelect.value = municipioId;
+                
+                // Cargar las parroquias correspondientes
+                cargarParroquiasEdicion(municipioId, parroquiaId);
             })
             .catch(error => {
                 console.error('Error al cargar los municipios:', error);
             });
     }
-    
-    function cargarParroquias() {
-        const municipioId = document.getElementById('municipio').value;
+
+    function cargarParroquiasEdicion(municipioId, parroquiaId) {
         fetch(`/api/parroquias?municipio=${municipioId}`)
             .then(response => response.json())
             .then(data => {
-                const parroquiaSelect = document.getElementById('parroquia');
-                parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
+                const parroquiaSelect = document.getElementById('edit-parroquia');
+                parroquiaSelect.innerHTML = '<option value="" disabled>Seleccione una Parroquia</option>';
                 data.forEach(parroquia => {
                     parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
                 });
-                // Si hay una parroquia seleccionada, la seleccionamos
-                if ("{{ object.parroquia.co_pquia }}" !== "") {
-                    parroquiaSelect.value = "{{ object.parroquia.co_pquia }}";
-                }
+                
+                // Establecer la parroquia seleccionada
+                parroquiaSelect.value = parroquiaId;
             })
             .catch(error => {
                 console.error('Error al cargar las parroquias:', error);
             });
+    }
+
+    // Modificar las funciones existentes para manejar el prefijo
+    function cargarMunicipios(prefix = '') {
+        const estadoId = document.getElementById(prefix + 'estado').value;
+        if (prefix === 'edit-') {
+            const municipioId = $('#edit-municipio').data('selected');
+            const parroquiaId = $('#edit-parroquia').data('selected');
+            cargarMunicipiosEdicion(estadoId, municipioId, parroquiaId);
+        } else {
+            // Lógica existente para el modal de creación
+            fetch(`/api/municipios/?estado=${estadoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const municipioSelect = document.getElementById(prefix + 'municipio');
+                    municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+                    data.forEach(municipio => {
+                        municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error al cargar los municipios:', error);
+                });
+        }
     }
 </script>
 

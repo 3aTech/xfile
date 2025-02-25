@@ -108,7 +108,9 @@
                           <label class="custom-control-label" for="customSwitch1">Sello Dorado</label>
                         </div>
                         <div class="custom-control custom-switch">                          
-                            <input type="checkbox" class="custom-control-input" id="customSwitch2" name="oficio" onchange="toggleCheckboxes(this)">
+                            <input type="checkbox" class="custom-control-input" id="customSwitch2" name="oficio" 
+                                   onchange="toggleCheckboxes(this)"
+                                   {% if not object.sello_dorado %} checked {% endif %}>
                             <label class="custom-control-label" for="customSwitch2">Oficio</label>
                         </div>
                     </div>
@@ -152,6 +154,7 @@
                           <label for="identificador" class="form-label">Identificado</label>
                           <select class="form-control select2bs4" style="width: 100%;" 
                               id="identificador" name="identificador" required>
+                              <option value="" disabled {% if not object %}selected{% endif %}>--</option>
                               {% if object.identificador %} 
                                   <option value="{{ object.identificador }}" selected>
                                       {{ object.identificador }}
@@ -174,6 +177,7 @@
                           <label for="denominara" class="form-label">Denominará</label>
                           <select class="form-control select2bs4" style="width: 100%;"
                               id="denominara" name="denominara" required>
+                              <option value="" disabled {% if not object %}selected{% endif %}>--</option>
                               {% if object.denominara %} 
                                   <option value="{{ object.denominara|default:'' }} " selected>
                                       {{ object.denominara }}
@@ -196,6 +200,7 @@
                           <label for="ciudadano_ciudadana" class="form-label">Ciudadano/Ciudadana</label>
                           <select class="form-control select2bs4" style="width: 100%;"
                               id="ciudadano_ciudadana" name="ciudadano_ciudadana" required>
+                              <option value="" disabled {% if not object %}selected{% endif %}>--</option>
                               {% if object.ciudadano_ciudadana %} 
                                   <option value="{{ object.ciudadano_ciudadana|default:'' }} " selected>
                                       {{ object.ciudadano_ciudadana }}
@@ -295,13 +300,7 @@
                           </div>
                           <select class="form-control select2bs4" id="municipio" name="municipio" required onchange="cargarParroquias()" aria-label="municipio">
                             <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Municipio</option>
-                            {% for municipio in municipios %}
-                                <option value="{{ municipio.co_municipio }}" {% if object.municipio.co_municipio == municipio.co_municipio %}selected{% endif %}>
-                                    {{ municipio.co_municipio }} - {{ municipio.des_municipio }}
-                                </option>
-                            {% empty %}
-                                <option value="">No hay municipios disponibles</option>
-                            {% endfor %}
+                            
                           </select>
                       </div>
                   </div>
@@ -311,15 +310,10 @@
                           <div class="input-group-prepend">
                               <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                           </div>
-                          <select class="form-control select2bs4" id="parroquia" name="parroquia" required onchange="cargarSectores()" aria-label="parroquia">
+                          <select class="form-control select2bs4" id="parroquia" name="parroquia" required 
+                                  onchange="cargarSectores()" aria-label="parroquia">
                             <option value="" disabled {% if not object %}selected{% endif %}>Seleccione una Parroquia</option>
-                            {% for parroquia in parroquias %}
-                                <option value="{{ parroquia.co_parroquia }}" {% if object.parroquia.co_parroquia == parroquia.co_parroquia %}selected{% endif %}>
-                                    {{ parroquia.co_parroquia }} - {{ parroquia.des_parroquia }}
-                                </option>
-                            {% empty %}
-                                <option value="">No hay parroquias disponibles</option>
-                            {% endfor %}
+                            
                           </select>
                       </div>
                   </div>
@@ -329,15 +323,10 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
-                            <select class="form-control select2bs4" id="sector" name="sector" required aria-label="sector">
+                            <select class="form-control select2bs4" id="sector" name="sector" required 
+                                    onchange="cargarUrbanismos()" aria-label="sector">
                             <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Sector</option>
-                            {% for sector in sectores %}
-                                <option value="{{ sector.co_sec }}" {% if object.sector.co_sec == sector.co_sec %}selected{% endif %}>
-                                    {{ sector.co_sec }} - {{ sector.des_sec }}
-                                </option>
-                            {% empty %}
-                                <option value="">No hay sectores disponibles</option>
-                            {% endfor %}
+                            
                             </select>
                         </div>
                     </div>
@@ -349,9 +338,10 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class='bx bxs-map-pin'></i></span>
                             </div>
-                            <input type="text" class="form-control" id="urbanismo" name="urbanismo" 
-                                value="{{ object.urbanismo|default:'' }}" required 
-                                aria-label="Urbanismo" placeholder="Urbanismo">
+                            <select class="form-control select2bs4" id="urbanismo" name="urbanismo" required aria-label="urbanismo">
+                                <option value="" disabled {% if not object %}selected{% endif %}>Seleccione un Urbanismo</option>
+                                
+                            </select>
                         </div>
                     </div>
                   <div class="col-md-3">
@@ -457,14 +447,14 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class='bx bx-home'></i></span>
                         </div>
-                        <textarea class="form-control" 
-                                  rows="3" 
+                        <textarea type="text" class="form-control" 
                                   id="ambientes" 
                                   name="ambientes" 
                                   required 
                                   aria-label="ambientes" 
                                   placeholder="Ambientes...">{{ object.ambientes|default:'' }}
-                        </textarea>                  
+                        </textarea>  
+             
                     </div>
                 </div>
               </div>
@@ -778,78 +768,143 @@
   });
 
   function cargarMunicipios() {
-    const estadoId = document.getElementById('estado').value;
-    fetch(`/api/municipios/?estado=${estadoId}`)
-        .then(response => response.json())
-        .then(data => {
-            const municipioSelect = document.getElementById('municipio');
-            municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
-            data.forEach(municipio => {
-                municipioSelect.innerHTML += `<option value="${municipio.co_municipio}">${municipio.co_municipio} - ${municipio.des_municipio}</option>`;
+    return new Promise((resolve, reject) => {
+        const estadoId = document.getElementById('estado').value;
+        fetch(`/api/municipios/?estado=${estadoId}`)
+            .then(response => response.json())
+            .then(data => {
+                const municipioSelect = document.getElementById('municipio');
+                municipioSelect.innerHTML = '<option value="" disabled selected>Seleccione un Municipio</option>';
+                data.forEach(municipio => {
+                    municipioSelect.innerHTML += `<option value="${municipio.co_mpo}">${municipio.co_mpo} - ${municipio.des_mpo}</option>`;
+                });
+                // Si hay un municipio seleccionado, lo seleccionamos
+                if ("{{ object.municipio.co_mpo }}" !== "") {
+                    municipioSelect.value = "{{ object.municipio.co_mpo }}";
+                    cargarParroquias(); // Cargar parroquias para el municipio seleccionado
+                }
+                resolve();
+            })
+            .catch(error => {
+                console.error('Error al cargar los municipios:', error);
+                reject(error);
             });
-            // Si hay un municipio seleccionado, lo seleccionamos
-            if ("{{ object.municipio.co_municipio }}" !== "") {
-                municipioSelect.value = "{{ object.municipio.co_municipio }}";
-                cargarParroquias(); // Cargar parroquias para el municipio seleccionado
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar los municipios:', error);
-        });
+    });
 }
 
 function cargarParroquias() {
-    const municipioId = document.getElementById('municipio').value;
-    fetch(`/api/parroquias?municipio=${municipioId}`)
-        .then(response => response.json())
-        .then(data => {
-            const parroquiaSelect = document.getElementById('parroquia');
-            parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
-            data.forEach(parroquia => {
-                parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
+    return new Promise((resolve, reject) => {
+        const municipioId = document.getElementById('municipio').value;
+        fetch(`/api/parroquias?municipio=${municipioId}`)
+            .then(response => response.json())
+            .then(data => {
+                const parroquiaSelect = document.getElementById('parroquia');
+                parroquiaSelect.innerHTML = '<option value="" disabled selected>Seleccione una Parroquia</option>';
+                data.forEach(parroquia => {
+                    parroquiaSelect.innerHTML += `<option value="${parroquia.co_pquia}">${parroquia.co_pquia} - ${parroquia.des_pquia}</option>`;
+                });
+                // Si hay una parroquia seleccionada, la seleccionamos
+                if ("{{ object.parroquia.co_pquia }}" !== "") {
+                    parroquiaSelect.value = "{{ object.parroquia.co_pquia }}";
+                }
+                resolve();
+            })
+            .catch(error => {
+                console.error('Error al cargar las parroquias:', error);
+                reject(error);
             });
-            // Si hay una parroquia seleccionada, la seleccionamos
-            if ("{{ object.parroquia.co_pquia }}" !== "") {
-                parroquiaSelect.value = "{{ object.parroquia.co_pquia }}";
-            }
-        })
-        .catch(error => {
-            console.error('Error al cargar las parroquias:', error);
-        });
+    });
 }
 
 function cargarSectores() {
-    const parroquiasId = document.getElementById('parroquia').value;
-    fetch(`/api/sector/?parroquia=${parroquiasId}`)
-        .then(response => response.json())
-        .then(data => {
-            const sectorSelect = document.getElementById('sector');
-            sectorSelect.innerHTML = '<option value="" disabled selected>Seleccione un Sector</option>';
-            data.forEach(sector => {
-                sectorSelect.innerHTML += `<option value="${sector.co_sec}">${sector.co_sec} - ${sector.des_sec}</option>`;
+    return new Promise((resolve, reject) => {
+        const parroquiasId = document.getElementById('parroquia').value;
+        console.log('Cargando sectores para parroquia:', parroquiasId);
+        
+        fetch(`/api/sector/?parroquia=${parroquiasId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Datos de sectores recibidos:', data);
+                const sectorSelect = document.getElementById('sector');
+                sectorSelect.innerHTML = '<option value="" disabled selected>Seleccione un Sector</option>';
+                data.forEach(sector => {
+                    sectorSelect.innerHTML += `<option value="${sector.id}">${sector.des_sec}</option>`;
+                });
+                
+                if ("{{ object.sector.id }}" !== "") {
+                    console.log('Intentando seleccionar sector:', "{{ object.sector.id }}");
+                    sectorSelect.value = "{{ object.sector.id }}";
+                }
+                resolve();
+            })
+            .catch(error => {
+                console.error('Error al cargar los sectores:', error);
+                reject(error);
             });
-            // Si hay un sector seleccionado, lo seleccionamos
-            if ("{{ object.sector.co_sec }}" !== "") {
-                sectorSelect.value = "{{ object.sector.co_sec }}";
-            }
-        })
-        .catch(error => {
-            Swal.fire({  
-                type: 'error',
-                title: 'Error!',
-                text: 'Error al cargar los sectores:', error,
-                //timer: 2000
-              });
-            
-        });
+    });
 }
 
-    // Cargar municipios y parroquias al cargar la página si estamos editando
-    document.addEventListener('DOMContentLoaded', function() {
-    if ("{{ object }}" !== "") {
-        cargarMunicipios(); // Cargar municipios al cargar la página
-    }
+function cargarUrbanismos() {
+    return new Promise((resolve, reject) => {
+        const sectorId = document.getElementById('sector').value;
+        console.log('Cargando urbanismos para sector:', sectorId);
+        
+        fetch(`/api/urbanismos/?sector=${sectorId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Datos de urbanismos recibidos:', data);
+                const urbanismoSelect = document.getElementById('urbanismo');
+                urbanismoSelect.innerHTML = '<option value="" disabled selected>Seleccione un Urbanismo</option>';
+                data.forEach(urbanismo => {
+                    urbanismoSelect.innerHTML += `<option value="${urbanismo.id}">${urbanismo.des_urb}</option>`;
+                });
+                
+                if ("{{ object.urbanismo.id }}" !== "") {
+                    console.log('Intentando seleccionar urbanismo:', "{{ object.urbanismo.id }}");
+                    urbanismoSelect.value = "{{ object.urbanismo.id }}";
+                }
+                resolve();
+            })
+            .catch(error => {
+                console.error('Error al cargar los urbanismos:', error);
+                reject(error);
+            });
     });
+}
+
+// Modificar el evento DOMContentLoaded para usar async/await
+document.addEventListener('DOMContentLoaded', async function() {
+    if ("{{ object }}" !== "") {
+        console.log('Objeto encontrado para editar');
+        console.log('Estado:', "{{ object.estado.co_edo }}");
+        console.log('Municipio:', "{{ object.municipio.co_mpo }}");
+        console.log('Parroquia:', "{{ object.parroquia.co_pquia }}");
+        console.log('Sector ID:', "{{ object.sector.id }}");
+        console.log('Urbanismo ID:', "{{ object.urbanismo.id }}");
+        
+        try {
+            await cargarMunicipios();
+            if ("{{ object.municipio.co_mpo }}" !== "") {
+                await cargarParroquias();
+                if ("{{ object.parroquia.co_pquia }}" !== "") {
+                    console.log('Cargando sectores...');
+                    await cargarSectores();
+                    if ("{{ object.sector.id }}" !== "") {
+                        console.log('Cargando urbanismos...');
+                        await cargarUrbanismos();
+                    }
+                }
+            }
+            
+            // Forzar actualización de Select2 después de cargar todo
+            $('#sector').trigger('change');
+            $('#urbanismo').trigger('change');
+            
+        } catch (error) {
+            console.error('Error en la carga de datos:', error);
+        }
+    }
+});
 
     $(document).ready(function() {
         $('#representante').select2bs4({
@@ -887,6 +942,13 @@ function cargarSectores() {
     });
 
     $(document).ready(function() {
+        $('#urbanismo').select2bs4({
+            placeholder: "Seleccione un Urbanismo",
+            allowClear: true
+        });
+    });
+
+    $(document).ready(function() {
         // Cambiar el texto del label según el estado del checkbox
         $('#customSwitch3').change(function() {
             if ($(this).is(':checked')) {
@@ -898,12 +960,30 @@ function cargarSectores() {
     });
 
     function toggleCheckboxes(checkbox) {
+        const selloDoradoCheckbox = document.getElementById('customSwitch1');
+        const oficioCheckbox = document.getElementById('customSwitch2');
+        
         if (checkbox.id === 'customSwitch1') {
-            document.getElementById('customSwitch2').checked = false; // Desmarcar 'Oficio' si 'Sello Dorado' está seleccionado
+            // Si se marca Sello Dorado, desmarcar Oficio
+            if (checkbox.checked) {
+                oficioCheckbox.checked = false;
+            }
         } else {
-            document.getElementById('customSwitch1').checked = false; // Desmarcar 'Sello Dorado' si 'Oficio' está seleccionado
+            // Si se marca Oficio, desmarcar Sello Dorado
+            if (checkbox.checked) {
+                selloDoradoCheckbox.checked = false;
+            }
         }
     }
+
+    // Agregar eventos change para debugging
+    $('#sector').on('change', function() {
+        console.log('Sector seleccionado:', $(this).val());
+    });
+
+    $('#urbanismo').on('change', function() {
+        console.log('Urbanismo seleccionado:', $(this).val());
+    });
   </script>
 
 

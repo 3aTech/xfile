@@ -71,8 +71,8 @@ class SectoresResource(resources.ModelResource):
         model = Sectores
 
 class SectoresAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    search_fields = ['co_sec', 'des_sec']
-    list_display = ['co_sec', 'des_sec']
+    search_fields = ['id', 'des_sec']
+    list_display = ['id', 'des_sec']
     resource_class = SectoresResource
 
 admin.site.register(Sectores, SectoresAdmin)

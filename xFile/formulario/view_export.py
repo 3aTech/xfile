@@ -56,6 +56,7 @@ def exportar_datos_xlsx(request):
         municipio_nombre = str(registro.municipio) if registro.municipio else 'Sin municipio'  
         parroquia_nombre = str(registro.parroquia) if registro.parroquia else 'Sin parroquia'  
         sector_nombre = str(registro.sector) if registro.sector else 'Sin sector'  
+        urbanismo = str(registro.urbanismo) if registro.urbanismo else 'Sin sector'  
         fecha_creacion = registro.fe_us_in.replace(tzinfo=None) if registro.fe_us_in else None
         fecha_modificacion = registro.fe_us_mo.replace(tzinfo=None) if registro.fe_us_mo else None
 
@@ -63,7 +64,7 @@ def exportar_datos_xlsx(request):
                       representante_nombre, selloDorado, registro.nro_dorado_oficio, 
                       registro.cedula, registro.identificador, registro.denominara, registro.ciudadano_ciudadana,
                       registro.nombre1, registro.nombre2, registro.apellido1, registro.apellido2, 
-                      estado_nombre, municipio_nombre, parroquia_nombre, sector_nombre, registro.urbanismo,
+                      estado_nombre, municipio_nombre, parroquia_nombre, sector_nombre, urbanismo,
                       registro.torre, registro.piso, registro.apartamento, registro.metros_cuadrados,
                       registro.lindero_norte, registro.lindero_sur, registro.lindero_este, registro.lindero_oeste, registro.ambientes,
                       registro.monto_credito, registro.precio_venta, registro.precio_venta_divisa, registro.inicial, registro.inicial_divisa, registro.inicial_porcentaje,
