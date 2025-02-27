@@ -2,13 +2,13 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .models import (Datos, Ambientes, Linderos, Representantes, 
+from .models import (Datos, Ambientes, Linderos, Representantes, Tipologias_URB,
                      Estados, Municipios, Parroquias, Sectores, Entidades, Urbanismos)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import render
 from .serializers import (DatosSerializer, 
-                          AmbienteSerializer, LinderoSerializer,
+                          AmbienteSerializer, LinderoSerializer, TipologiasSerializer,
                           EstadoSerializer, MunicipioSerializer, ParroquiaSerializer, SectorSerializer,
                           EntidadesSerializer, RepresentanteSerializer, UrbanismoSerializer)
 from rest_framework import status
@@ -854,4 +854,5 @@ class UrbanismoListView(LoginRequiredMixin, ListView):
         context['municipios'] = Municipios.objects.filter(status=True)
         context['parroquias'] = Parroquias.objects.filter(status=True)
         context['sectores'] = Sectores.objects.filter(status=True)
+        context['tipologias'] = Tipologias_URB.objects.filter(status=True)
         return context

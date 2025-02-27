@@ -43,6 +43,7 @@
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Tipología</th>
                 <th>Sector</th>
                 <th>Parroquia</th>
                 <th>Municipio</th>
@@ -55,6 +56,7 @@
             {% for urbanismo in registros %}
             <tr>
                 <td>{{ urbanismo.des_urb }}</td>
+                <td>{{ urbanismo.Tipologias_URB.tipologia }}</td>
                 <td>{{ urbanismo.sector.des_sec }}</td>
                 <td>{{ urbanismo.parroquia.des_pquia }}</td>
                 <td>{{ urbanismo.municipio.des_mpo }}</td>
