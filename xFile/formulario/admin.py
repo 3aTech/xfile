@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Datos, Contratos, Estados, Municipios, Parroquias, Sectores, Urbanismos, Representantes, Entidades
+from .models import Datos, Contratos, Estados, Municipios, Parroquias, Sectores, Urbanismos, Representantes, Entidades, Tipologias_URB
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
 
@@ -115,5 +115,17 @@ class EntidadesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = EntidadesResource
 
 admin.site.register(Entidades, EntidadesAdmin)
+
+
+class TipologiasResource(resources.ModelResource):
+    class Meta:
+        model = Tipologias_URB
+
+class TipologiasAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    search_fields = ['id', 'tipologia', 'status']
+    list_display = ['id', 'tipologia', 'status']
+    resource_class = TipologiasResource
+
+admin.site.register(Tipologias_URB, TipologiasAdmin)
 
 

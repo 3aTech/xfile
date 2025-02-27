@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import (Datos, Ambientes, Linderos, 
-                     Estados, Municipios, Parroquias, Sectores, Urbanismos, Entidades, Representantes)
+                     Estados, Municipios, Parroquias, Sectores, Urbanismos, Entidades, Representantes,
+                     Tipologias_URB)
 
 class DatosSerializer(serializers.ModelSerializer):
     class Meta:
@@ -72,4 +73,9 @@ class RepresentanteSerializer(serializers.ModelSerializer):
                   'entidad', 'condicion', 'region', 'status',
                   'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 
+class TipologiasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tipologias_URB
+        fields = ['id', 'tipologia', 'status',
+                  'us_in', 'fe_us_in', 'us_mo', 'fe_us_mo']
 

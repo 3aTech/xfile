@@ -1,0 +1,80 @@
+[
+    {
+        "model": "formulario.Tipologias_URB",
+        "pk": 1,
+        "fields": {
+            "id": 1,
+            "tipologia": "MULTIFAMILIAR",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2025-02-16T12:00:00Z",
+            "us_mo": null,
+            "fe_us_mo": "2025-02-16T12:00:00Z"
+        }
+    },
+    {
+        "model": "formulario.Tipologias_URB",
+        "pk": 2,
+        "fields": {
+            "id": 2,
+            "tipologia": "UNIFAMILIAR",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2024-11-04T08:31:30Z",
+            "us_mo": null,
+            "fe_us_mo": "2024-11-19T04:11:04Z"
+        }
+    },
+    {
+        "model": "formulario.Tipologias_URB",
+        "pk": 3,
+        "fields": {
+            "id": 3,
+            "tipologia": "TOWNHOUSE",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2024-11-04T08:31:55Z",
+            "us_mo": null,
+            "fe_us_mo": "2024-11-19T04:11:04Z"
+        }
+    },
+    {
+        "model": "formulario.Tipologias_URB",
+        "pk": 4,
+        "fields": {
+            "id": 4,
+            "tipologia": "TETRACASAS",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2024-11-06T10:04:41Z",
+            "us_mo": null,
+            "fe_us_mo": "2024-11-19T04:11:04Z"
+        }
+    },
+    {
+        "model": "formulario.Tipologias_URB",
+        "pk": 5,
+        "fields": {
+            "id": 5,
+            "tipologia": "MULTIFAMILIARES",
+            "status": false,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2024-11-19T14:06:30Z",
+            "us_mo": null,
+            "fe_us_mo": "2024-11-19T02:11:33Z"
+        }
+    },
+    {
+        "model": "formulario.Tipologias_URB",
+        "pk": 6,
+        "fields": {
+            "id": 6,
+            "tipologia": "BIFAMILIAR",
+            "status": true,
+            "us_in": "tripleasoft",
+            "fe_us_in": "2024-11-19T16:55:46Z",
+            "us_mo": null,
+            "fe_us_mo": "2024-11-19T04:11:04Z"
+        }
+    }
+]

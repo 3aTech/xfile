@@ -197,15 +197,38 @@ class Sectores(ModeloAuditoria):
         print(f'Usuario que modifica: {self.us_mo}')
         super().save(*args, **kwargs)
 
+class Tipologias_URB(ModeloAuditoria):
+    """Modelo para almacenar sectores"""
+    id = models.AutoField('ID', help_text='ID', primary_key=True)
+    tipologia = models.CharField('Nombre de la Tipología', max_length=255, help_text='Nombre de la Tipología')
+    status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
+
+    def __str__(self) -> str:
+        return f'{self.tipologia}'
+
+    class Meta:
+        verbose_name = 'Tipología'
+        verbose_name_plural = 'Tipologías'
+        ordering = ['tipologia']
+
+    def save(self, *args, **kwargs):
+        if not self.us_in:
+            self.us_in = kwargs.pop('usuario', None)
+        self.us_mo = kwargs.pop('usuario_modificador', None)
+        print(f'Usuario que modifica: {self.us_mo}')
+        super().save(*args, **kwargs)
+
+
 class Urbanismos(ModeloAuditoria):
     """Modelo para almacenar sectores"""
     id = models.AutoField('Código', help_text='Código', primary_key=True)
     des_urb = models.CharField('Nombre del Urbanismo', max_length=255, help_text='Nombre del Urbanismo')
-    direccion = models.CharField('Dirección', max_length=255, help_text='Dirección del Urbanismo')
-    estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='urbanismos')
-    municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='urbanismos')
-    parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='urbanismos')
-    sector = models.ForeignKey(Sectores, on_delete=models.PROTECT, related_name='urbanismos')
+    direccion = models.CharField('Dirección', max_length=255, help_text='Dirección del Urbanismo', null=True, blank=True)
+    tipologia = models.ForeignKey(Tipologias_URB, on_delete=models.PROTECT, related_name='urbanismos')
+    estado = models.ForeignKey(Estados, on_delete=models.PROTECT, related_name='urbanismos', null=True, blank=True)
+    municipio = models.ForeignKey(Municipios, on_delete=models.PROTECT, related_name='urbanismos', null=True, blank=True)
+    parroquia = models.ForeignKey(Parroquias, on_delete=models.PROTECT, related_name='urbanismos', null=True, blank=True)
+    sector = models.ForeignKey(Sectores, on_delete=models.PROTECT, related_name='urbanismos', null=True, blank=True)
     status = models.BooleanField('Estado', default=True, help_text='Estado de actividad')
 
     def __str__(self) -> str:
