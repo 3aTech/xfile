@@ -27,13 +27,13 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-            <li class="nav-item">
+            <li class="nav-item ml-3">
               <a href="{% url 'home' %}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tablero</p>
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item ml-3">
               <a href="{% url 'home' %}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Tablero v2</p>
@@ -42,68 +42,75 @@
           </ul>
         </li>
         <li class="nav-header">REGISTROS</li>
-        <li class="nav-item has-treeview menu-open">
-          <a href="#" class="nav-link active">
+        <li class="nav-item has-treeview {% if current_page == 'datos' %}menu-open{% endif %}">
+          <a href="#" class="nav-link {% if current_page == 'datos' %}active{% endif %}">
             <i class="nav-icon fas fa-th"></i>
             <p>
               Formulario <i class="right fas fa-angle-left"></i>
             </p>
           </a>
           <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="{% url 'datos_list' %}" class="nav-link active">
+            <li class="nav-item  ml-3">
+              <a href="{% url 'datos_list' %}" class="nav-link {% if current_page == 'datos' %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Lista <span class="badge badge-info right">{{ total_registros }}</span></p>
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item  ml-3">
               <a href="#" class="nav-link">
                 <i class="nav-icon far fa-calendar-alt"></i>
-                <p>Generar Contratos <span class="right badge badge-success">Nuevo</span></p>
+                <p>Gen. Contratos <span class="right badge badge-success">New</span></p>
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item  ml-3">
               <a href="#" class="nav-link">
                 <i class="nav-icon far fa-calendar-alt"></i>
-                <p>Reporte <span class="right badge badge-danger">Nuevo</span></p>
+                <p>Reporte <span class="right badge badge-danger">New</span></p>
               </a>
             </li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link">
+        <li class="nav-item 
+          {% if current_page == 'entidades' or current_page == 'representantes' or current_page == 'ambientes' or current_page == 'linderos' or current_page == 'urbanismos' or current_page == 'estados' or current_page == 'municipios' or current_page == 'parroquias' or current_page == 'sectores' %}
+            menu-open
+          {% endif %}">
+          <a href="#" class="nav-link {% if current_page == 'entidades' or current_page == 'representantes' or current_page == 'ambientes' or current_page == 'linderos' %}
+            active
+          {% endif %}">
             <i class='nav-icon bx bx-table'></i>
             <p>
               Tablas Master
               <i class="right fas fa-angle-left"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview ml-3">
             <li class="nav-item">
-              <a href="{% url 'entidades_list' %}" class="nav-link">
+              <a href="{% url 'entidades_list' %}" class="nav-link {% if current_page == 'entidades' %}active{% endif %}">
                 <i class='bx bx-buildings' ></i>
                 <p>Entidades</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'representantes_list' %}" class="nav-link">
+              <a href="{% url 'representantes_list' %}" class="nav-link {% if current_page == 'representantes' %}active{% endif %}">
                 <i class="fas fa-light fa-street-view"></i>
                 <p>Representante Legal</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'ambiente_list' %}" class="nav-link">
+              <a href="{% url 'ambiente_list' %}" class="nav-link {% if current_page == 'ambientes' %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Ambientes</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'lindero_list' %}" class="nav-link">
+              <a href="{% url 'lindero_list' %}" class="nav-link {% if current_page == 'linderos' %}active{% endif %}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Linderos</p>
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if current_page == 'urbanismos' or current_page == 'estados' or current_page == 'municipios' or current_page == 'parroquias' or current_page == 'sectores' %}
+                menu-open
+              {% endif %}">
               <a href="#" class="nav-link">
                 <i class='nav-icon bx bx-map-pin'></i>
                 <p>
@@ -112,34 +119,34 @@
                 </p>
               </a>
               <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="{% url 'estado_list' %}" class="nav-link">
+                <li class="nav-item ml-3">
+                  <a href="{% url 'urbanismo_list' %}" class="nav-link {% if current_page == 'urbanismos' %}active{% endif %}">
+                    <i class='bx bx-buildings'></i>
+                    <p>Urbanismos</p>
+                  </a>
+                </li>
+                <li class="nav-item ml-3">
+                  <a href="{% url 'estado_list' %}" class="nav-link {% if current_page == 'estados' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Estados</p>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="{% url 'municipio_list' %}" class="nav-link">
+                <li class="nav-item ml-3">
+                  <a href="{% url 'municipio_list' %}" class="nav-link {% if current_page == 'municipios' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Municipios</p>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="{% url 'parroquia_list' %}" class="nav-link">
+                <li class="nav-item ml-3">
+                  <a href="{% url 'parroquia_list' %}" class="nav-link {% if current_page == 'parroquias' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Parroquias</p>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="{% url 'sector_list' %}" class="nav-link">
+                <li class="nav-item ml-3">
+                  <a href="{% url 'sector_list' %}" class="nav-link {% if current_page == 'sectores' %}active{% endif %}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Sectores</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'urbanismo_list' %}" class="nav-link">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Urbanismos</p>
                   </a>
                 </li>
               </ul>

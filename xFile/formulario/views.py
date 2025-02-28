@@ -90,6 +90,9 @@ class DatosListView(LoginRequiredMixin, ListView):
         context['municipios'] = Municipios.objects.all()
         context['parroquias'] = Parroquias.objects.all()
         context['sectores'] = Sectores.objects.all()
+        
+        context['current_page'] = 'datos'
+        
         context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
         return context
 
@@ -116,6 +119,8 @@ class DatosCreateView(LoginRequiredMixin, CreateView):
         context['parroquias'] = Parroquias.objects.filter(status=True)
         context['sectores'] = Sectores.objects.filter(status=True)
         context['urbanismos'] = Urbanismos.objects.filter(status=True)
+        
+        context['current_page'] = 'datos'
         
         return context
     
@@ -151,6 +156,9 @@ class DatosUpdateView(LoginRequiredMixin, UpdateView):
         context['municipios'] = Municipios.objects.filter(status=True)
         context['parroquias'] = Parroquias.objects.filter(status=True)
         context['sectores'] = Sectores.objects.filter(status=True)
+        
+        context['current_page'] = 'datos'
+        
         return context
     
     def form_valid(self, form):
@@ -189,6 +197,9 @@ class AmbienteListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+        
+        context['current_page'] = 'ambientes'
+        
         return context
 
 # Vista para crear un nuevo ambiente
@@ -196,6 +207,13 @@ class AmbienteCreateView(LoginRequiredMixin, CreateView):
     model = Ambientes
     fields = ['ambiente']
     success_url = reverse_lazy('ambiente_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context['current_page'] = 'ambientes'
+        
+        return context
 
     def form_valid(self, form):
         form.instance.us_in = self.request.user.username
@@ -207,6 +225,13 @@ class AmbienteUpdateView(LoginRequiredMixin, UpdateView):
     model = Ambientes
     fields = ['ambiente']
     success_url = reverse_lazy('ambiente_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context['current_page'] = 'ambientes'
+        
+        return context
 
     def form_valid(self, form):
         form.instance.us_mo = self.request.user.username
@@ -217,6 +242,13 @@ class AmbienteUpdateView(LoginRequiredMixin, UpdateView):
 class AmbienteDeleteView(LoginRequiredMixin, DeleteView):
     model = Ambientes
     success_url = reverse_lazy('ambiente_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context['current_page'] = 'ambientes'
+        
+        return context
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, 'Ambiente eliminado exitosamente.')
@@ -263,6 +295,9 @@ class LinderoListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+       
+        context['current_page'] = 'linderos'
+        
         return context
 
 # Vista para crear un nuevo ambiente
@@ -270,6 +305,14 @@ class LinderoCreateView(LoginRequiredMixin, CreateView):
     model = Linderos
     fields = ['lindero']
     success_url = reverse_lazy('lindero_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+       
+        context['current_page'] = 'linderos'
+        
+        return context
 
     def form_valid(self, form):
         form.instance.us_in = self.request.user.username
@@ -281,7 +324,14 @@ class LinderoUpdateView(LoginRequiredMixin, UpdateView):
     model = Linderos
     fields = ['lindero']
     success_url = reverse_lazy('lindero_list')
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+       
+        context['current_page'] = 'linderos'
+        
+        return context
     def form_valid(self, form):
         form.instance.us_mo = self.request.user.username
         messages.success(self.request, 'Lindero actualizado exitosamente.')
@@ -291,7 +341,15 @@ class LinderoUpdateView(LoginRequiredMixin, UpdateView):
 class LinderoDeleteView(LoginRequiredMixin, DeleteView):
     model = Linderos
     success_url = reverse_lazy('lindero_list')
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+       
+        context['current_page'] = 'linderos'
+        
+        return context
+    
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, 'Lindero eliminado exitosamente.')
         return super().delete(request, *args, **kwargs)
@@ -325,6 +383,14 @@ class EstadoListView(LoginRequiredMixin, ListView):
     model = Estados
     template_name = 'pages/estados.html'
     context_object_name = 'registros'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+       
+        context['current_page'] = 'estados'
+        
+        return context
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -399,7 +465,11 @@ class MunicipioListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['estados'] = Estados.objects.filter(status=True)
+        context['estados'] = Estados.objects.filter(status=True)        
+        context['total_registros'] = self.get_queryset().count()  # Agregar la cantidad de registros
+       
+        context['current_page'] = 'municipios'
+        
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -490,6 +560,9 @@ class ParroquiaListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['municipios'] = Municipios.objects.filter(status=True)
         context['estados'] = Estados.objects.filter(status=True)
+       
+        context['current_page'] = 'parroquias'
+        
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -578,6 +651,8 @@ class SectorListView(LoginRequiredMixin, ListView):
         context['municipios'] = Municipios.objects.filter(status=True)
         context['parroquias'] = Parroquias.objects.filter(status=True)
         
+        context['current_page'] = 'sectores'
+        
         return context
 
 # Vista para manejar las solicitudes AJAX para crear, editar y eliminar
@@ -643,6 +718,9 @@ class EntidadesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_registros'] = self.get_queryset().count()
+        
+        context['current_page'] = 'entidades'
+        
         return context
 
 @api_view(['POST'])
@@ -725,6 +803,9 @@ class RepresentantesListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['entidades'] = Entidades.objects.filter(status=True)
         context['total_registros'] = self.get_queryset().count()
+        
+        context['current_page'] = 'representantes'
+        
         return context
 
 @api_view(['POST'])
@@ -855,5 +936,7 @@ class UrbanismoListView(LoginRequiredMixin, ListView):
         context['parroquias'] = Parroquias.objects.filter(status=True)
         context['sectores'] = Sectores.objects.filter(status=True)
         context['tipologias'] = Tipologias_URB.objects.filter(status=True)
+        
+        context['current_page'] = 'urbanismos'
 
         return context
