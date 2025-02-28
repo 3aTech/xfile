@@ -846,7 +846,7 @@ class UrbanismoListView(LoginRequiredMixin, ListView):
         search = self.request.GET.get('search', '')
         if search:
             queryset = queryset.filter(des_urb__icontains=search)
-        return queryset.select_related('estado', 'municipio', 'parroquia', 'sector').order_by('des_urb')
+        return queryset.select_related('tipologia', 'estado', 'municipio', 'parroquia', 'sector').order_by('des_urb')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -855,4 +855,5 @@ class UrbanismoListView(LoginRequiredMixin, ListView):
         context['parroquias'] = Parroquias.objects.filter(status=True)
         context['sectores'] = Sectores.objects.filter(status=True)
         context['tipologias'] = Tipologias_URB.objects.filter(status=True)
+
         return context
