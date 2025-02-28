@@ -701,7 +701,7 @@
     
     function cargarParroquias(prefix = '') {
         const municipioId = document.getElementById(prefix + 'municipio').value;
-        fetch(`/api/parroquias?municipio=${municipioId}`)
+        fetch(`/api/parroquias/?municipio=${municipioId}`)
             .then(response => response.json())
             .then(data => {
                 const parroquiaSelect = document.getElementById(prefix + 'parroquia');
@@ -717,6 +717,12 @@
             })
             .catch(error => {
                 console.error('Error al cargar las parroquias:', error);
+                Swal.fire({
+                    type: 'error',
+                    title: 'Error!',
+                    text: 'Error al cargar las parroquias',
+                    confirmButtonText: 'Aceptar'
+                });
             });
     }
     
