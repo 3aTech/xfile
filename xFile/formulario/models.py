@@ -1,8 +1,10 @@
 from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import User
 
 class ModeloAuditoria(models.Model):
     """Modelo base abstracto para campos de auditoría"""
-    us_in = models.CharField('Creado por', max_length=150, null=True, blank=True)
+    us_in = models.ForeignKey(User, on_delete=models.PROTECT, related_name='auditoria_modelo')
     fe_us_in = models.DateTimeField('Fecha de Creación', auto_now_add=True)
     us_mo = models.CharField('Modificado por', max_length=150, null=True, blank=True)
     fe_us_mo = models.DateTimeField('Fecha de Modificación', auto_now=True)
